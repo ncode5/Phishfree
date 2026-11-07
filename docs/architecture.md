@@ -38,8 +38,20 @@ FASTAPI SERVERLESS BACKEND (Vercel Python Functions)
        │        ├── Cryptographic strength audit (TLS 1.3/1.2, RSA 2048+, ECC)
        │        └── Certificate Transparency audit (crt.sh historical logs)
        │
+       ├── 8. Module 3: AI Scam & Message Analysis Engine
+       │        ├── PII redaction (OTPs, passwords, card numbers)
+       │        ├── Entity extraction (URLs, crypto wallets, UPI, emails, phones)
+       │        ├── Adversarial prompt injection defenses
+       │        └── Urgency, impersonation, and KYC fraud heuristic classification
+       │
+       ├── 9. Module 4: Intelligent Threat Correlation Engine
+       │        ├── RFC-compliant indicator normalization (domains, URLs, IPs, certs)
+       │        ├── Relational threat graph linking and neighborhood expansion
+       │        ├── 8 explainable campaign rules & shared CDN false-positive guards
+       │        └── Non-linear correlation risk engine with evidence transparency
+       │
        ▼
-EVIDENCE AGGREGATION ENGINE
+EVIDENCE AGGREGATION & GRAPH CORRELATION ENGINE
        │
        ▼
 EXPLAINABLE RISK ASSESSMENT ENGINE

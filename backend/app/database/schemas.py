@@ -85,6 +85,10 @@ class FindingSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+
+
+
+
 class DNSRecordsSchema(BaseModel):
     """DNS records breakdown."""
     a_records: List[str] = []
@@ -182,6 +186,10 @@ class AnalysisReportResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+
+
+
+
 class AnalysisReportListItem(BaseModel):
     """Compact analysis report for tables and history."""
     id: str
@@ -195,6 +203,10 @@ class AnalysisReportListItem(BaseModel):
     findings_count: int = 0
 
     model_config = ConfigDict(from_attributes=True)
+
+
+
+
 
 
 class DashboardStatsResponse(BaseModel):
@@ -216,3 +228,354 @@ class HealthResponse(BaseModel):
     timestamp: datetime
     version: str = "1.0.0"
     active_module: str = "Module 1 - Intelligent URL and Website Analysis"
+
+
+# ==========================================
+# MODULE 3: Scam & Message Analysis Schemas
+# ==========================================
+
+class MessageAnalyzeRequest(BaseModel):
+    """Submission payload for scam and message analysis."""
+    message: str = Field(..., description="Raw text of the suspicious message, email, or communication", min_length=1, max_length=15000)
+    analyze_urls: bool = Field(True, description="Whether to automatically run Module 1 & 2 analysis on extracted URLs")
+
+
+class ExtractedEntitiesSchema(BaseModel):
+    """Entities extracted from analyzed message."""
+    urls: List[str] = []
+    domains: List[str] = []
+    emails: List[str] = []
+    phone_numbers: List[str] = []
+    crypto_addresses: List[Dict[str, str]] = []
+    payment_handles: List[str] = []
+
+
+class SuspiciousIndicatorSchema(BaseModel):
+    """Specific suspicious pattern detected in message."""
+    category: str  # urgency, financial, credential_theft, impersonation, suspicious_offer, prompt_injection
+    title: str
+    description: str
+    severity: str  # Informational, Low, Medium, High, Critical
+    matched_phrases: List[str] = []
+    evidence: Optional[Dict[str, Any]] = None
+
+
+class ExtractedURLAnalysisSchema(BaseModel):
+    """Result of Module 1 & 2 analysis on an extracted URL."""
+    url: str
+    domain: str
+    risk_level: str
+    risk_score: float
+    is_malicious: bool
+    report_id: Optional[str] = None
+    summary: str
+    tls_status: Optional[str] = None
+    error: Optional[str] = None
+
+
+class MessageExplanationSchema(BaseModel):
+    """Grounded AI explanation for message analysis."""
+    summary: str
+    risk_level: str
+    likely_scam_category: str
+    suspicious_phrases: List[str] = []
+    explanation_points: List[str] = []
+    manipulation_techniques: List[str] = []
+    recommendations: List[str] = []
+    limitations: str = ""
+    is_deterministic_fallback: bool = True
+
+
+class MessageAnalysisResponse(BaseModel):
+    """Module 3: Complete AI-Powered Scam and Message Analysis Report."""
+    id: str
+    message_preview: str
+    message_length: int
+    risk_level: str  # LOW_RISK, SUSPICIOUS, HIGH_RISK, CONFIRMED_MALICIOUS, INCONCLUSIVE
+    risk_score: float
+    confidence: float
+    primary_category: str
+    categories: List[str] = []
+    summary: str
+    indicators: List[SuspiciousIndicatorSchema] = []
+    entities: ExtractedEntitiesSchema
+    extracted_url_analyses: List[ExtractedURLAnalysisSchema] = []
+    ai_explanation: MessageExplanationSchema
+    recommendations: List[str] = []
+    analysis_status: str = "COMPLETED"
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+
+
+
+
+class MessageAnalysisListItem(BaseModel):
+    """Compact message report for listings and history."""
+    id: str
+    message_preview: str
+    risk_level: str
+    risk_score: float
+    confidence: float
+    primary_category: str
+    created_at: datetime
+    urls_count: int = 0
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ====================================================
+# MODULE 4: Intelligent Threat Correlation Schemas
+# ====================================================
+
+class CorrelateRequest(BaseModel):
+    """Submission payload to trigger or retrieve threat correlation."""
+    report_id: str = Field(..., description="UUID of URL AnalysisReport or MessageAnalysisReport", min_length=1)
+    report_type: Optional[str] = Field("AUTO", description="URL, MESSAGE, or AUTO")
+
+
+class ThreatIndicatorSchema(BaseModel):
+    """Normalized threat indicator entity."""
+    id: str
+    indicator_type: str  # URL, DOMAIN, IP, EMAIL, PHONE, CERT_FINGERPRINT, CERT_ISSUER
+    indicator_value: str
+    normalized_value: Optional[str] = None
+    raw_value: Optional[str] = None
+    threat_category: str
+    source: str
+    occurrence_count: int = 1
+    risk_score: float = 0.0
+    first_seen: Optional[datetime] = None
+    last_seen: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ThreatRelationshipSchema(BaseModel):
+    """Directed connection between two indicators."""
+    id: str
+    source_indicator_id: str
+    target_indicator_id: str
+    relationship_type: str  # HOSTED_ON_IP, HAS_CERTIFICATE, ISSUED_BY_CA, EXTRACTED_FROM_MESSAGE, REDIRECTS_TO, RESOLVES_TO_DOMAIN, SHARED_HOSTING
+    evidence_source: str
+    confidence: float = 1.0
+    details: Optional[Dict[str, Any]] = None
+    created_at: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ThreatGraphNodeSchema(BaseModel):
+    """Visual node for interactive graph representation."""
+    id: str
+    label: str
+    indicator_type: str  # URL, DOMAIN, IP, CERTIFICATE, ISSUER, MESSAGE, THREAT_INTEL, EMAIL, PHONE
+    normalized_value: str
+    risk_level: str  # LOW_RISK, SUSPICIOUS, HIGH_RISK, CONFIRMED_MALICIOUS, INFO
+    risk_score: float = 0.0
+    occurrence_count: int = 1
+    source_report: Optional[str] = None
+    details: Optional[Dict[str, Any]] = None
+
+
+class ThreatGraphEdgeSchema(BaseModel):
+    """Visual edge connecting nodes in interactive graph."""
+    id: str
+    source: str
+    target: str
+    relationship_type: str
+    label: str
+    evidence_source: str = "CORRELATION_ENGINE"
+    confidence: float = 1.0
+
+
+class ThreatGraphResponse(BaseModel):
+    """Complete graph network topology."""
+    nodes: List[ThreatGraphNodeSchema] = []
+    edges: List[ThreatGraphEdgeSchema] = []
+
+
+class ThreatPatternSchema(BaseModel):
+    """Specific cross-module or historical pattern detected."""
+    id: Optional[str] = None
+    pattern_name: str
+    description: str
+    severity: str  # INFO, LOW, MEDIUM, HIGH, CRITICAL
+    confidence: float = 1.0
+    supporting_evidence: List[Dict[str, Any]] = []
+    related_reports: List[str] = []
+    reason: Optional[str] = None
+
+
+class CorrelationExplanationSchema(BaseModel):
+    """Human-readable, evidence-grounded AI narrative."""
+    summary: str
+    risk_level: str
+    reasoning: List[str] = []
+    corroborating_factors: List[str] = []
+    mitigating_factors: List[str] = []
+    recommendations: List[str] = []
+    is_deterministic_fallback: bool = True
+
+
+class EvidenceTransparencySchema(BaseModel):
+    """Transparent evidence demarcation preventing false certainties."""
+    verified_external_evidence: List[Dict[str, Any]] = []
+    technical_observations: List[Dict[str, Any]] = []
+    rule_based_correlations: List[Dict[str, Any]] = []
+    ai_generated_insights: List[str] = []
+
+
+class CorrelationReportResponse(BaseModel):
+    """Module 4: Complete Cross-Module Intelligent Threat Correlation Report."""
+    id: str
+    report_id: str
+    report_type: str  # URL or MESSAGE
+    correlation_score: float
+    risk_level: str  # LOW_RISK, SUSPICIOUS, HIGH_RISK, CONFIRMED_MALICIOUS, INCONCLUSIVE
+    confidence: float
+    summary: str
+    graph: ThreatGraphResponse
+    patterns: List[ThreatPatternSchema] = []
+    explanation: CorrelationExplanationSchema
+    evidence_transparency: EvidenceTransparencySchema
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class RelatedThreatsResponse(BaseModel):
+    """Neighborhood query for a specific indicator."""
+    root_indicator: ThreatIndicatorSchema
+    direct_connections: List[ThreatRelationshipSchema] = []
+    connected_indicators: List[ThreatIndicatorSchema] = []
+    graph: ThreatGraphResponse
+
+
+class ThreatIntelOverviewResponse(BaseModel):
+    """System-wide threat intelligence metrics and recent correlations."""
+    total_indicators: int
+    unique_domains: int
+    unique_ips: int
+    unique_certificates: int
+    suspicious_relationships: int
+    detected_threat_patterns: int
+    total_correlations: int
+    recent_correlations: List[Dict[str, Any]] = []
+    top_patterns: List[Dict[str, Any]] = []
+
+
+# ====================================================
+# MODULE 5: Website Security Assessment Schemas
+# ====================================================
+
+class SecurityAssessRequest(BaseModel):
+    """Submission payload for website security configuration assessment."""
+    url: str = Field(..., description="Target website URL to assess", min_length=3, max_length=2048)
+    include_headers: bool = Field(True, description="Whether to evaluate HTTP security headers")
+    include_cookies: bool = Field(True, description="Whether to evaluate cookie security flags")
+    include_mixed_content: bool = Field(True, description="Whether to inspect HTML for mixed HTTP content")
+    include_public_files: bool = Field(True, description="Whether to check standard security files (robots.txt, security.txt)")
+    report_id: Optional[str] = Field(None, description="Optional associated Module 1 AnalysisReport UUID")
+
+
+class SecurityFindingSchema(BaseModel):
+    """Granular observable security configuration finding or recommendation."""
+    id: Optional[str] = None
+    category: str  # HTTPS_TRANSPORT, SECURITY_HEADERS, COOKIE_SECURITY, MIXED_CONTENT, INFORMATION_EXPOSURE, SECURITY_CONFIG
+    title: str
+    description: str
+    evidence: Optional[Dict[str, Any]] = None
+    severity: str  # Informational, Low, Medium, High, Critical
+    confidence: float = 1.0
+    recommendation: Optional[str] = None
+    source: str = "SECURITY_ASSESSMENT_ENGINE"
+    created_at: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class CategoryScoreSchema(BaseModel):
+    """Score breakdown for a specific security dimension."""
+    category: str
+    score: float
+    weight: float
+    status: str  # STRONG, ACCEPTABLE, WEAK, INSECURE, NOT_APPLICABLE
+    description: str
+
+
+class CoverageSchema(BaseModel):
+    """Inspection completeness and coverage metrics."""
+    completed: int
+    total: int
+    percentage: float
+    unavailable_checks: List[str] = []
+
+
+class SecurityHeaderEvaluationSchema(BaseModel):
+    """Structured assessment for an individual HTTP response header."""
+    header_name: str
+    exists: bool
+    observed_value: Optional[str] = None
+    security_purpose: str
+    assessment: str  # STRONG, ACCEPTABLE, WEAK, MISSING, INSECURE
+    recommended_improvement: Optional[str] = None
+
+
+class CookieEvaluationSchema(BaseModel):
+    """Security attributes audit for an observed Set-Cookie directive (values redacted for privacy)."""
+    cookie_name: str
+    secure: bool
+    http_only: bool
+    same_site: Optional[str] = None
+    domain: Optional[str] = None
+    path: Optional[str] = None
+    expires: Optional[str] = None
+    assessment: str  # SECURE, POTENTIALLY_VULNERABLE, WEAK
+
+
+class SecurityAssessmentResponse(BaseModel):
+    """Module 5: Complete Passive Website Security Configuration Assessment Report."""
+    report_id: str
+    target_url: str
+    security_score: float
+    security_label: str  # Strong Configuration, Good Configuration, Needs Improvement, Weak Configuration, Poor Configuration
+    coverage: CoverageSchema
+    categories: List[CategoryScoreSchema] = []
+    headers_evaluation: List[SecurityHeaderEvaluationSchema] = []
+    cookies_evaluation: List[CookieEvaluationSchema] = []
+    findings: List[SecurityFindingSchema] = []
+    recommendations: List[str] = []
+    status: str = "COMPLETED"
+    summary: str = ""
+    distinction_note: str = (
+        "Note: A strong security configuration does not guarantee a website is legitimate or safe from phishing. "
+        "Security configurations defend against client-side exploitation, while threat detection evaluates malicious intent."
+    )
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class SecurityAssessmentListItem(BaseModel):
+    """Compact summary for security assessment listing."""
+    id: str
+    target_url: str
+    security_score: float
+    security_label: str
+    status: str
+    findings_count: int = 0
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class SecurityFindingsFilterResponse(BaseModel):
+    """Filtered and paginated findings query response."""
+    total: int
+    findings: List[SecurityFindingSchema] = []
+    limit: int = 50
+    skip: int = 0
+

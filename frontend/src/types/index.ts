@@ -199,3 +199,224 @@ export interface DashboardStats {
   risk_distribution: RiskDistributionItem[];
 }
 
+// Module 3: Scam and Message Analysis Types
+export interface MessageAnalyzeRequest {
+  message: string;
+  analyze_urls?: boolean;
+}
+
+export interface CryptoAddressEntity {
+  type: string;
+  address: string;
+}
+
+export interface ExtractedEntities {
+  urls: string[];
+  domains: string[];
+  emails: string[];
+  phone_numbers: string[];
+  crypto_addresses: Array<CryptoAddressEntity | string>;
+  payment_handles?: string[];
+  upi_handles?: string[];
+  gift_card_codes?: string[];
+}
+
+export interface SuspiciousIndicator {
+  id?: string;
+  category: string;
+  title: string;
+  description: string;
+  severity: SeverityLevel | string;
+  matched_phrases?: string[];
+  matched_text?: string;
+  evidence?: Record<string, any>;
+  weight?: number;
+}
+
+export interface ExtractedURLAnalysis {
+  url: string;
+  domain: string;
+  risk_level: RiskLevel;
+  risk_score: number;
+  is_malicious?: boolean;
+  summary: string;
+  report_id?: string;
+  tls_status?: string;
+  threat_status?: string;
+  error?: string | null;
+}
+
+export interface MessageExplanation {
+  summary: string;
+  threat_category?: string;
+  likely_scam_category?: string;
+  risk_level: string;
+  explanation_points?: string[];
+  key_findings?: string[];
+  manipulation_techniques?: string[];
+  social_engineering_tactics?: string[];
+  suspicious_phrases?: string[];
+  recommendations: string[];
+  limitations?: string;
+  is_deterministic_fallback: boolean;
+}
+
+export interface MessageAnalysisReport {
+  id: string;
+  message_preview: string;
+  message_length: number;
+  risk_level: RiskLevel;
+  risk_score: number;
+  confidence: number;
+  primary_category: string;
+  categories: string[];
+  summary: string;
+  indicators: SuspiciousIndicator[];
+  entities: ExtractedEntities;
+  extracted_url_analyses: ExtractedURLAnalysis[];
+  ai_explanation?: MessageExplanation;
+  recommendations: string[];
+  analysis_status: string;
+  created_at: string;
+}
+
+export interface MessageAnalysisListItem {
+  id: string;
+  message_preview: string;
+  risk_level: RiskLevel;
+  risk_score: number;
+  confidence: number;
+  primary_category: string;
+  created_at: string;
+  urls_count: number;
+}
+
+// ==========================================
+// MODULE 4: Intelligent Threat Correlation
+// ==========================================
+
+export interface ThreatGraphNode {
+  id: string;
+  label: string;
+  indicator_type: 'URL' | 'DOMAIN' | 'IP' | 'CERTIFICATE' | 'CERT_FINGERPRINT' | 'ISSUER' | 'CERT_ISSUER' | 'MESSAGE' | 'THREAT_INTEL' | 'EMAIL' | 'PHONE';
+  normalized_value: string;
+  risk_level: 'LOW_RISK' | 'SUSPICIOUS' | 'HIGH_RISK' | 'CONFIRMED_MALICIOUS' | 'INFO';
+  risk_score: number;
+  occurrence_count: number;
+  source_report?: string;
+  details?: Record<string, any>;
+}
+
+export interface ThreatGraphEdge {
+  id: string;
+  source: string;
+  target: string;
+  relationship_type: string;
+  label: string;
+  evidence_source: string;
+  confidence: number;
+}
+
+export interface ThreatGraphData {
+  nodes: ThreatGraphNode[];
+  edges: ThreatGraphEdge[];
+}
+
+export interface ThreatPattern {
+  id?: string;
+  pattern_name: string;
+  description: string;
+  severity: SeverityLevel;
+  confidence: number;
+  supporting_evidence: Record<string, any>[];
+  related_reports: string[];
+  reason?: string;
+}
+
+export interface CorrelationExplanation {
+  summary: string;
+  risk_level: string;
+  reasoning: string[];
+  corroborating_factors: string[];
+  mitigating_factors: string[];
+  recommendations: string[];
+  is_deterministic_fallback: boolean;
+}
+
+export interface EvidenceTransparency {
+  verified_external_evidence: Record<string, any>[];
+  technical_observations: Record<string, any>[];
+  rule_based_correlations: Record<string, any>[];
+  ai_generated_insights: string[];
+}
+
+export interface CorrelationReport {
+  id: string;
+  report_id: string;
+  report_type: 'URL' | 'MESSAGE';
+  correlation_score: number;
+  risk_level: RiskLevel;
+  confidence: number;
+  summary: string;
+  graph: ThreatGraphData;
+  patterns: ThreatPattern[];
+  explanation: CorrelationExplanation;
+  evidence_transparency: EvidenceTransparency;
+  created_at: string;
+}
+
+export interface ThreatIndicatorItem {
+  id: string;
+  indicator_type: string;
+  indicator_value: string;
+  normalized_value?: string;
+  raw_value?: string;
+  threat_category: string;
+  source: string;
+  occurrence_count: number;
+  risk_score: number;
+  first_seen?: string;
+  last_seen?: string;
+}
+
+export interface ThreatRelationshipItem {
+  id: string;
+  source_indicator_id: string;
+  target_indicator_id: string;
+  relationship_type: string;
+  evidence_source: string;
+  confidence: number;
+  details?: Record<string, any>;
+}
+
+export interface RelatedThreatsResponse {
+  root_indicator: ThreatIndicatorItem;
+  direct_connections: ThreatRelationshipItem[];
+  connected_indicators: ThreatIndicatorItem[];
+  graph: ThreatGraphData;
+}
+
+export interface ThreatIntelOverview {
+  total_indicators: number;
+  unique_domains: number;
+  unique_ips: number;
+  unique_certificates: number;
+  suspicious_relationships: number;
+  detected_threat_patterns: number;
+  total_correlations: number;
+  recent_correlations: {
+    id: string;
+    report_id: string;
+    report_type: string;
+    risk_level: string;
+    score: number;
+    patterns_count: number;
+    created_at?: string;
+  }[];
+  top_patterns: {
+    pattern_name: string;
+    occurrences: number;
+  }[];
+}
+
+

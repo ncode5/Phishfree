@@ -1,5 +1,15 @@
 import axios from 'axios';
-import { AnalysisReport, AnalysisReportListItem, DashboardStats, TLSAnalysis } from '../types';
+import {
+  AnalysisReport,
+  AnalysisReportListItem,
+  DashboardStats,
+  TLSAnalysis,
+  MessageAnalysisReport,
+  MessageAnalysisListItem,
+  CorrelationReport,
+  RelatedThreatsResponse,
+  ThreatIntelOverview
+} from '../types';
 
 const getApiBase = (): string => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;
@@ -20,7 +30,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 15000,
+  timeout: 30000,
 });
 
 export const api = {
@@ -65,5 +75,52 @@ export const api = {
     const response = await apiClient.post(`/blockchain/anchor/${reportId}`);
     return response.data;
   },
+
+  async analyzeMessage(message: string, analyzeUrls: boolean = true): Promise<MessageAnalysisReport> {
+    const response = await apiClient.post<MessageAnalysisReport>('/analyze/message', {
+      message,
+      analyze_urls: analyzeUrls,
+    });
+    return response.data;
+  },
+
+  async getMessageReport(reportId: string): Promise<MessageAnalysisReport> {
+    const response = await apiClient.get<MessageAnalysisReport>(`/analyze/message/${reportId}`);
+    return response.data;
+  },
+
+  async getMessageReports(limit: number = 50, skip: number = 0): Promise<MessageAnalysisListItem[]> {
+    const response = await apiClient.get<MessageAnalysisListItem[]>('/messages', {
+      params: { limit, skip },
+    });
+    return response.data;
+  },
+
+  // Module 4: Threat Correlation & Intelligence
+  async correlateReport(reportId: string, reportType: string = 'AUTO'): Promise<CorrelationReport> {
+    const response = await apiClient.post<CorrelationReport>('/correlate', {
+      report_id: reportId,
+      report_type: reportType,
+    });
+    return response.data;
+  },
+
+  async getCorrelation(reportId: string): Promise<CorrelationReport> {
+    const response = await apiClient.get<CorrelationReport>(`/correlations/${reportId}`);
+    return response.data;
+  },
+
+  async getRelatedThreats(indicatorId: string): Promise<RelatedThreatsResponse> {
+    const response = await apiClient.get<RelatedThreatsResponse>(`/threats/${indicatorId}/related`);
+    return response.data;
+  },
+
+  async getThreatIntelOverview(): Promise<ThreatIntelOverview> {
+    const response = await apiClient.get<ThreatIntelOverview>('/threat-intelligence/overview');
+    return response.data;
+  },
 };
+
+export const apiService = api;
+
 

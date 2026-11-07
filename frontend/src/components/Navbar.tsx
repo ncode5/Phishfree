@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Activity, Search, History, Info, ExternalLink } from 'lucide-react';
+import { Shield, Activity, Search, History, Info, ExternalLink, MessageSquare, Network } from 'lucide-react';
 import { api } from '../services/api';
 
 export const Navbar: React.FC = () => {
@@ -28,6 +28,8 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { to: '/', label: 'Dashboard', icon: Activity },
     { to: '/scanner', label: 'URL Scanner', icon: Search },
+    { to: '/scam-analyzer', label: 'Scam Analyzer', icon: MessageSquare },
+    { to: '/threat-intel', label: 'Threat Intel', icon: Network },
     { to: '/history', label: 'Scan History', icon: History },
     { to: '/about', label: 'About & Arch', icon: Info },
   ];

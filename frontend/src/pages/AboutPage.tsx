@@ -165,28 +165,29 @@ export const AboutPage: React.FC = () => {
         </div>
 
         <div className="space-y-3">
-          <div className="p-4 rounded-lg bg-cyber-950/60 border border-slate-800 flex items-start gap-3">
-            <span className="px-2 py-0.5 rounded bg-slate-800 text-[11px] font-mono font-bold text-slate-300 shrink-0 mt-0.5">
-              MODULE 2
+          <div className="p-4 rounded-lg bg-emerald-950/20 border border-emerald-500/30 flex items-start gap-3">
+            <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-[11px] font-mono font-bold text-emerald-400 border border-emerald-500/30 shrink-0 mt-0.5">
+              MODULE 2 · LIVE
             </span>
             <div>
-              <span className="text-sm font-semibold text-white block">TLS Certificate & Web Trust Analysis</span>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Will inspect HTTPS configurations, public key strength, Certificate Authority trust chains,
-                Certificate Transparency logs, and detect distrusted/compromised CAs (e.g., eMudhra-style incidents).
+              <span className="text-sm font-semibold text-white block">TLS Certificate & Digital Trust Analysis</span>
+              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                Evaluates HTTPS connections, X.509 certificate metadata, SAN hostname matching, expiration windows,
+                trust store chains, cryptographic cipher suites, and Certificate Transparency logs via crt.sh.
               </p>
             </div>
           </div>
 
-          <div className="p-4 rounded-lg bg-cyber-950/60 border border-slate-800 flex items-start gap-3">
-            <span className="px-2 py-0.5 rounded bg-slate-800 text-[11px] font-mono font-bold text-slate-300 shrink-0 mt-0.5">
-              MODULE 3
+          <div className="p-4 rounded-lg bg-indigo-950/20 border border-indigo-500/30 flex items-start gap-3">
+            <span className="px-2 py-0.5 rounded bg-indigo-500/20 text-[11px] font-mono font-bold text-indigo-400 border border-indigo-500/30 shrink-0 mt-0.5">
+              MODULE 3 · LIVE
             </span>
             <div>
               <span className="text-sm font-semibold text-white block">AI-Powered Scam & Message Analysis</span>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Will accept pasted phishing SMS, scam emails, and job offer messages to detect social
-                engineering manipulation, urgency tactics, fake recruiter identities, and extracted malicious URLs.
+              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                Analyzes suspicious SMS, WhatsApp messages, phishing emails, fake KYC alerts, delivery scams, and fraudulent job offers.
+                Extracts URLs, crypto wallets, and UPI IDs, detects social engineering manipulation, guards against adversarial prompt injection,
+                and generates grounded AI risk explanations.
               </p>
             </div>
           </div>

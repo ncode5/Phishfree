@@ -24,7 +24,8 @@ import {
   Key,
   FileCheck,
   XCircle,
-  ShieldCheck
+  ShieldCheck,
+  Network
 } from 'lucide-react';
 import { api } from '../services/api';
 import { AnalysisReport, Finding } from '../types';
@@ -170,9 +171,18 @@ export const ReportPage: React.FC = () => {
 
             {/* AI Threat Summary Callout */}
             <div className="p-4 rounded-lg bg-cyber-950/80 border border-slate-800 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-semibold text-blue-400 uppercase tracking-wider">
-                <Sparkles className="w-4 h-4" />
-                <span>AI Security Assessment Summary</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-semibold text-blue-400 uppercase tracking-wider">
+                  <Sparkles className="w-4 h-4" />
+                  <span>AI Security Assessment Summary</span>
+                </div>
+                <Link
+                  to={`/threat-intel?reportId=${report.id}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600/30 border border-indigo-500/30 transition shadow-sm"
+                >
+                  <Network className="w-3.5 h-3.5 text-indigo-400" />
+                  View Correlation Graph
+                </Link>
               </div>
               <p className="text-sm text-slate-300 leading-relaxed font-sans">{report.summary}</p>
             </div>

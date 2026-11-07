@@ -139,36 +139,98 @@ Returns detailed TLS handshake, cryptographic parameters, X.509 certificate meta
 
 ---
 
-### 3. Retrieve Report by ID
+### 3. AI-Powered Scam & Message Analysis (Module 3)
+**Endpoint:** `POST /api/v1/analyze/message`  
+**Description:** Evaluates suspicious messages, phishing emails, fake KYC alerts, delivery scams, and job propositions. Extracts URLs, crypto addresses, and phone numbers, detects social engineering manipulation, guards against adversarial prompt injection, and executes cross-module URL/TLS analysis.
+
+#### Request Payload
+```json
+{
+  "message": "URGENT: Your HDFC bank account has been blocked due to pending KYC. Update at http://hdfc-kyc.com",
+  "analyze_urls": true
+}
+```
+
+#### Response (`schemas.MessageAnalysisResponse`)
+Returns risk score, risk level, confidence, extracted entities, suspicious indicators, cross-module URL/TLS analyses, and grounded AI explanation.
+
+---
+
+### 4. Retrieve Message Analysis Report by ID
+**Endpoint:** `GET /api/v1/analyze/message/{report_id}`  
+**Description:** Fetches a full historical message analysis report by its UUID.
+
+---
+
+### 5. List Message Analysis History
+**Endpoint:** `GET /api/v1/messages?limit=50&skip=0`  
+**Description:** Returns a paginated list of previous message analysis sessions.
+
+---
+
+### 6. Retrieve Report by ID
 **Endpoint:** `GET /api/v1/reports/{report_id}`  
 **Description:** Fetches a full historical investigation report by its UUID.
 
 ---
 
-### 4. List Reports History
+### 7. List Reports History
 **Endpoint:** `GET /api/v1/reports?limit=50&skip=0`  
 **Description:** Returns a paginated array of previous security analysis reports.
 
 ---
 
-### 5. Dashboard Statistics
+### 8. Dashboard Statistics
 **Endpoint:** `GET /api/v1/dashboard/stats`  
 **Description:** Returns platform-wide aggregate counts, risk distributions, and recent investigations for dashboard charting.
 
 ---
 
-### 6. Health Check
+### 9. Health Check
 **Endpoint:** `GET /api/v1/health`  
 **Description:** Returns operational health status, connected database engine, and active modules.
 
 ---
 
-### 7. Web3 / Blockchain Network Status (Sepolia Testnet)
+### 10. Web3 / Blockchain Network Status (Sepolia Testnet)
 **Endpoint:** `GET /api/v1/blockchain/status`  
 **Description:** Queries live Ethereum Sepolia Testnet block number, JSON-RPC latency, and registry smart contract deployment.
 
 ---
 
-### 8. Anchor Cryptographic Commitment on Sepolia
+### 11. Anchor Cryptographic Commitment on Sepolia
 **Endpoint:** `POST /api/v1/blockchain/anchor/{report_id}`  
 **Description:** Calculates a deterministic SHA-256 cryptographic digest of the report and publishes an immutable threat commitment to the Sepolia Testnet registry.
+
+---
+
+### 12. Correlate Report Findings (Module 4)
+**Endpoint:** `POST /api/v1/correlate`  
+**Description:** Links cross-module findings from URL, TLS, and Scam Message modules across historical reports, maps infrastructure relationships, and detects campaign patterns.
+
+#### Request Payload
+```json
+{
+  "report_id": "c1f7a28b-9023-4e4b-97e3-0d34f0d61109",
+  "report_type": "URL"
+}
+```
+
+---
+
+### 13. Retrieve Correlation Report
+**Endpoint:** `GET /api/v1/correlations/{report_id}`  
+**Description:** Retrieves persistent or on-demand multi-module correlation intelligence, graph nodes, and detected campaign patterns.
+
+---
+
+### 14. Query Connected Threat Neighborhood
+**Endpoint:** `GET /api/v1/threats/{indicator_id}/related`  
+**Description:** Traverses 1-hop and 2-hop connected graph nodes and edges for a specific threat indicator.
+
+---
+
+### 15. Platform Threat Intelligence Overview
+**Endpoint:** `GET /api/v1/threat-intelligence/overview`  
+**Description:** Returns platform-wide indicator counts, unique domains, IPs, certificates, relationship edge counts, detected patterns, and recent correlations.
+

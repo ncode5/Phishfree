@@ -7,10 +7,14 @@ from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.database import schemas
 from app.services.analysis_service import AnalysisService
+from app.services.message_analyzer import MessageAnalyzer
+from app.services.threat_correlation import ThreatCorrelationService
 from app.web3.sepolia import SepoliaRegistryService
 
 router = APIRouter(tags=["Security Analysis"])
 analysis_service = AnalysisService()
+message_analyzer = MessageAnalyzer(analysis_service)
+correlation_service = ThreatCorrelationService()
 sepolia_service = SepoliaRegistryService()
 
 
@@ -56,6 +60,66 @@ async def analyze_tls(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"TLS analysis error: {str(e)}"
         )
+
+
+@router.post(
+    "/analyze/message",
+    response_model=schemas.MessageAnalysisResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Submit message for scam and social engineering analysis",
+    description="Inspects suspicious messages, emails, SMS, or chats for fraud patterns, urgency lures, impersonation, prompt injection, and embedded URLs."
+)
+async def analyze_message(
+    payload: schemas.MessageAnalyzeRequest,
+    db: Session = Depends(get_db)
+):
+    try:
+        report = await message_analyzer.analyze(
+            message=payload.message,
+            db=db,
+            analyze_urls=payload.analyze_urls
+        )
+        return report
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Message analysis error: {str(e)}"
+        )
+
+
+@router.get(
+    "/analyze/message/{report_id}",
+    response_model=schemas.MessageAnalysisResponse,
+    summary="Retrieve message analysis report by ID",
+    description="Returns detailed scam findings, extracted entities, suspicious indicators, embedded URL checks, and AI explanations."
+)
+async def get_message_report(
+    report_id: str,
+    db: Session = Depends(get_db)
+):
+    report = message_analyzer.get_report_by_id(report_id, db)
+    if not report:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Message analysis report '{report_id}' was not found."
+        )
+    return report
+
+
+@router.get(
+    "/messages",
+    response_model=List[schemas.MessageAnalysisListItem],
+    summary="Retrieve message analysis history",
+    description="Returns a paginated list of previous message analysis sessions."
+)
+async def list_messages(
+    limit: int = Query(50, ge=1, le=200),
+    skip: int = Query(0, ge=0),
+    db: Session = Depends(get_db)
+):
+    return message_analyzer.list_reports(db, limit=limit, skip=skip)
 
 
 @router.get(
@@ -123,8 +187,101 @@ async def health_check(
         database=db_status,
         timestamp=datetime.now(timezone.utc),
         version="1.0.0",
-        active_module="Module 1 (URL Analysis) + Module 2 (TLS & Digital Trust Analysis)"
+        active_module="Module 1 (URL Analysis) + Module 2 (TLS & Digital Trust Analysis) + Module 3 (AI Scam & Message Analysis) + Module 4 (Intelligent Threat Correlation)"
     )
+
+
+# ====================================================
+# MODULE 4: Intelligent Threat Correlation Endpoints
+# ====================================================
+
+@router.post(
+    "/correlate",
+    response_model=schemas.CorrelationReportResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Correlate findings and generate threat relationship network",
+    description="Cross-references findings from Modules 1, 2, and 3 across historical reports, maps infrastructure relationships, and detects campaign patterns."
+)
+async def correlate_report(
+    payload: schemas.CorrelateRequest,
+    db: Session = Depends(get_db)
+):
+    try:
+        return correlation_service.correlate_report(
+            db=db,
+            report_id=payload.report_id,
+            report_type=payload.report_type or "AUTO"
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Threat correlation error: {str(e)}"
+        )
+
+
+@router.get(
+    "/correlations/{report_id}",
+    response_model=schemas.CorrelationReportResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve cross-module correlation report",
+    description="Returns persistent or on-demand correlation intelligence, threat graph, and detected campaign patterns for a report."
+)
+async def get_correlation(
+    report_id: str,
+    db: Session = Depends(get_db)
+):
+    try:
+        return correlation_service.get_correlation_by_report_id(db=db, report_id=report_id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error retrieving correlation: {str(e)}"
+        )
+
+
+@router.get(
+    "/threats/{indicator_id}/related",
+    response_model=schemas.RelatedThreatsResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Query connected threat indicator neighborhood",
+    description="Returns 1-hop and 2-hop connected graph nodes and edges for a specific threat indicator."
+)
+async def get_related_threats(
+    indicator_id: str,
+    db: Session = Depends(get_db)
+):
+    try:
+        return correlation_service.get_related_threats(db=db, indicator_id=indicator_id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error retrieving related threats: {str(e)}"
+        )
+
+
+@router.get(
+    "/threat-intelligence/overview",
+    response_model=schemas.ThreatIntelOverviewResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Platform-wide threat intelligence overview",
+    description="Returns system-wide indicator metrics, relationship densities, top detected attack patterns, and recent correlations."
+)
+async def get_threat_intelligence_overview(
+    db: Session = Depends(get_db)
+):
+    try:
+        return correlation_service.get_threat_intel_overview(db=db)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error retrieving threat intelligence overview: {str(e)}"
+        )
 
 
 @router.get(

@@ -11,7 +11,8 @@ import {
   ArrowRight,
   RefreshCw,
   Clock,
-  Layers
+  Layers,
+  MessageSquare
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { api } from '../services/api';
@@ -55,7 +56,7 @@ export const DashboardPage: React.FC = () => {
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-mono text-blue-400 mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping" />
-            Module 1 Active · Multi-Layer URL & Domain Analysis
+            Modules 1, 2 & 3 Active · Web, TLS & AI Scam Intelligence
           </div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-2">
             AI-Powered Web Threat Detection & Digital Trust Intelligence
@@ -111,6 +112,33 @@ export const DashboardPage: React.FC = () => {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Module 3 Feature Callout Card */}
+      <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-indigo-950/40 via-blue-950/30 to-cyber-900 border border-indigo-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-lg bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center shrink-0">
+            <MessageSquare className="w-5 h-5 text-indigo-400" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+              <span>New: Module 3 AI Scam & Message Analyzer</span>
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                LIVE
+              </span>
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Paste suspicious SMS, KYC suspension notices, parcel texts, or job offers to detect social engineering lures & scam entities.
+            </p>
+          </div>
+        </div>
+        <Link
+          to="/scam-analyzer"
+          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium shadow-md shadow-indigo-900/40 transition-colors shrink-0"
+        >
+          <span>Analyze a Message</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
 
       {/* Metrics Row */}

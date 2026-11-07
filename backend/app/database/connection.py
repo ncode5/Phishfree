@@ -54,10 +54,35 @@ def get_db():
 
 
 def init_db():
-    """Initializes database tables defined in models."""
+    """Initializes database tables defined in models and applies non-destructive column migrations."""
     try:
         from app.database import models  # noqa: F401
+        from sqlalchemy import text
         Base.metadata.create_all(bind=engine)
+
+        with engine.connect() as conn:
+            # SQLite migration check
+            if engine.dialect.name == "sqlite":
+                res = conn.execute(text("PRAGMA table_info(threat_indicators)")).fetchall()
+                existing_cols = {row[1] for row in res}
+                if existing_cols and "normalized_value" not in existing_cols:
+                    conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN normalized_value TEXT"))
+                    conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN raw_value TEXT"))
+                    conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN occurrence_count INTEGER DEFAULT 1"))
+                    conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN risk_score REAL DEFAULT 0.0"))
+                    conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN details JSON"))
+                    conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN created_at TIMESTAMP"))
+                    conn.commit()
+            elif engine.dialect.name == "postgresql":
+                # Ensure columns exist on PostgreSQL
+                conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS normalized_value TEXT;"))
+                conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS raw_value TEXT;"))
+                conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS occurrence_count INTEGER DEFAULT 1;"))
+                conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS risk_score REAL DEFAULT 0.0;"))
+                conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS details JSONB;"))
+                conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP;"))
+                conn.commit()
+
         print("Database schema successfully verified/initialized.")
     except Exception as e:
         print(f"Warning: Database initialization encountered an error: {str(e)}", file=sys.stderr)
