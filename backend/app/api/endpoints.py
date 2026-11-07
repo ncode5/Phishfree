@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import List
+from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -9,12 +9,14 @@ from app.database import schemas
 from app.services.analysis_service import AnalysisService
 from app.services.message_analyzer import MessageAnalyzer
 from app.services.threat_correlation import ThreatCorrelationService
+from app.services.website_security_assessment import WebsiteSecurityAssessmentService
 from app.web3.sepolia import SepoliaRegistryService
 
 router = APIRouter(tags=["Security Analysis"])
 analysis_service = AnalysisService()
 message_analyzer = MessageAnalyzer(analysis_service)
 correlation_service = ThreatCorrelationService()
+security_service = WebsiteSecurityAssessmentService()
 sepolia_service = SepoliaRegistryService()
 
 
@@ -187,7 +189,7 @@ async def health_check(
         database=db_status,
         timestamp=datetime.now(timezone.utc),
         version="1.0.0",
-        active_module="Module 1 (URL Analysis) + Module 2 (TLS & Digital Trust Analysis) + Module 3 (AI Scam & Message Analysis) + Module 4 (Intelligent Threat Correlation)"
+        active_module="Module 1 (URL Analysis) + Module 2 (TLS & Digital Trust Analysis) + Module 3 (AI Scam & Message Analysis) + Module 4 (Intelligent Threat Correlation) + Module 5 (Website Security Assessment)"
     )
 
 
@@ -281,6 +283,93 @@ async def get_threat_intelligence_overview(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error retrieving threat intelligence overview: {str(e)}"
+        )
+
+
+# ====================================================
+# MODULE 5: Website Security Assessment Endpoints
+# ====================================================
+
+@router.post(
+    "/analyze/security",
+    response_model=schemas.SecurityAssessmentResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Run passive website security configuration assessment",
+    description="Evaluates publicly observable HTTPS/TLS transport security, defensive HTTP headers, cookie security flags, mixed content, information exposure, and standard public security files."
+)
+async def assess_website_security(
+    payload: schemas.SecurityAssessRequest,
+    db: Session = Depends(get_db)
+):
+    try:
+        return await security_service.assess_website(
+            url=payload.url,
+            db=db,
+            include_headers=payload.include_headers,
+            include_cookies=payload.include_cookies,
+            include_mixed_content=payload.include_mixed_content,
+            include_public_files=payload.include_public_files,
+            report_id=payload.report_id
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Website security assessment error: {str(e)}"
+        )
+
+
+@router.get(
+    "/security/{report_id}",
+    response_model=schemas.SecurityAssessmentResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve website security assessment report",
+    description="Returns full security assessment score, category breakdown, and findings for a given report ID."
+)
+async def get_security_assessment(
+    report_id: str,
+    db: Session = Depends(get_db)
+):
+    res = security_service.get_assessment_by_id(db=db, report_id=report_id)
+    if not res:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Security assessment report '{report_id}' was not found."
+        )
+    return res
+
+
+@router.get(
+    "/security/{report_id}/findings",
+    response_model=schemas.SecurityFindingsFilterResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Filter findings for a website security assessment",
+    description="Returns paginated security findings filtered optionally by severity (Informational, Low, Medium, High, Critical) and category."
+)
+async def get_security_findings_filtered(
+    report_id: str,
+    severity: Optional[str] = Query(None, description="Filter by severity level (Informational, Low, Medium, High, Critical)"),
+    category: Optional[str] = Query(None, description="Filter by category (HTTPS_TRANSPORT, SECURITY_HEADERS, COOKIE_SECURITY, MIXED_CONTENT, INFORMATION_EXPOSURE, SECURITY_CONFIG)"),
+    limit: int = Query(50, ge=1, le=200),
+    skip: int = Query(0, ge=0),
+    db: Session = Depends(get_db)
+):
+    try:
+        return security_service.get_findings_filtered(
+            db=db,
+            report_id=report_id,
+            severity=severity,
+            category=category,
+            limit=limit,
+            skip=skip
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error filtering security findings: {str(e)}"
         )
 
 

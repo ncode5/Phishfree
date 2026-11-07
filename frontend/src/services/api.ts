@@ -8,7 +8,9 @@ import {
   MessageAnalysisListItem,
   CorrelationReport,
   RelatedThreatsResponse,
-  ThreatIntelOverview
+  ThreatIntelOverview,
+  SecurityAssessmentResponse,
+  SecurityFindingsFilterResponse
 } from '../types';
 
 const getApiBase = (): string => {
@@ -117,6 +119,46 @@ export const api = {
 
   async getThreatIntelOverview(): Promise<ThreatIntelOverview> {
     const response = await apiClient.get<ThreatIntelOverview>('/threat-intelligence/overview');
+    return response.data;
+  },
+
+  // Module 5: Website Security Assessment
+  async assessWebsiteSecurity(
+    url: string,
+    options: {
+      includeHeaders?: boolean;
+      includeCookies?: boolean;
+      includeMixedContent?: boolean;
+      includePublicFiles?: boolean;
+      reportId?: string;
+    } = {}
+  ): Promise<SecurityAssessmentResponse> {
+    const response = await apiClient.post<SecurityAssessmentResponse>('/analyze/security', {
+      url,
+      include_headers: options.includeHeaders ?? true,
+      include_cookies: options.includeCookies ?? true,
+      include_mixed_content: options.includeMixedContent ?? true,
+      include_public_files: options.includePublicFiles ?? true,
+      report_id: options.reportId,
+    });
+    return response.data;
+  },
+
+  async getSecurityAssessment(reportId: string): Promise<SecurityAssessmentResponse> {
+    const response = await apiClient.get<SecurityAssessmentResponse>(`/security/${reportId}`);
+    return response.data;
+  },
+
+  async getSecurityFindingsFiltered(
+    reportId: string,
+    severity?: string,
+    category?: string,
+    limit: number = 50,
+    skip: number = 0
+  ): Promise<SecurityFindingsFilterResponse> {
+    const response = await apiClient.get<SecurityFindingsFilterResponse>(`/security/${reportId}/findings`, {
+      params: { severity, category, limit, skip },
+    });
     return response.data;
   },
 };

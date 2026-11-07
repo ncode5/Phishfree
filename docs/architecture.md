@@ -6,6 +6,45 @@
 The platform is designed around the core principle of **evidence-based, explainable cybersecurity**. Rather than providing an opaque binary classification (`SAFE` vs `MALICIOUS`), the system operates as a transparent forensic pipeline. Each investigation collects raw technical telemetry, evaluates it against rule-based indicators with configurable weights, and explains the findings in plain, actionable language.
 
 ```
+
+### Module 5: Website Security Assessment Schema
+
+```
+┌──────────────────────────────────────────────┐
+│          WebsiteSecurityAssessments          │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ report_id: String (UUID) [FK -> AnalysisRep] │
+│ target_url: Text                             │
+│ security_score: Float (0-100)                │
+│ security_label: String (e.g. Strong / Weak)  │
+│ coverage: JSON (checks attempted / percent)  │
+│ category_scores: JSON (6 weighted dimensions)│
+│ summary: Text                                │
+│ recommendations: JSON (actionable fixes)     │
+│ assessment_status: String                    │
+│ created_at: DateTime [Indexed]               │
+└──────────────────────┬───────────────────────┘
+                       │ 1
+                       │
+                       │ *
+┌──────────────────────┴───────────────────────┐
+│            WebsiteSecurityFindings           │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ assessment_id: String (UUID) [FK]            │
+│ category: String                             │
+│ title: String                                │
+│ description: Text                            │
+│ evidence: JSON                               │
+│ severity: String (CRIT/HIGH/MED/LOW/INFO)    │
+│ confidence: Float (0.0-1.0)                  │
+│ recommendation: Text                         │
+│ source: String                               │
+│ created_at: DateTime                         │
+└──────────────────────────────────────────────┘
+```
+
 USER INTERACTION
        │
        ▼
@@ -50,6 +89,15 @@ FASTAPI SERVERLESS BACKEND (Vercel Python Functions)
        │        ├── 8 explainable campaign rules & shared CDN false-positive guards
        │        └── Non-linear correlation risk engine with evidence transparency
        │
+       ├── 10. Module 5: Passive Website Security Assessment Engine
+       │        ├── Pre-flight SSRF & private IP validation
+       │        ├── HTTPS enforcement & downgrade attack verification
+       │        ├── 9 defensive HTTP security headers audit (HSTS, CSP, COOP...)
+       │        ├── Privacy-preserving cookie security audit (Secure, HttpOnly, SameSite)
+       │        ├── Mixed content detection (active scripts/iframes & passive media)
+       │        ├── Server information exposure audit (Server, X-Powered-By banners)
+       │        └── Safe configuration files check (security.txt, robots.txt)
+       │
        ▼
 EVIDENCE AGGREGATION & GRAPH CORRELATION ENGINE
        │
@@ -69,6 +117,45 @@ WEB3 ANCHORING ENGINE (Sepolia Testnet)
 STRUCTURED REPORT OUTPUT -> REACT DASHBOARD
 ```
 
+### Module 5: Website Security Assessment Schema
+
+```
+┌──────────────────────────────────────────────┐
+│          WebsiteSecurityAssessments          │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ report_id: String (UUID) [FK -> AnalysisRep] │
+│ target_url: Text                             │
+│ security_score: Float (0-100)                │
+│ security_label: String (e.g. Strong / Weak)  │
+│ coverage: JSON (checks attempted / percent)  │
+│ category_scores: JSON (6 weighted dimensions)│
+│ summary: Text                                │
+│ recommendations: JSON (actionable fixes)     │
+│ assessment_status: String                    │
+│ created_at: DateTime [Indexed]               │
+└──────────────────────┬───────────────────────┘
+                       │ 1
+                       │
+                       │ *
+┌──────────────────────┴───────────────────────┐
+│            WebsiteSecurityFindings           │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ assessment_id: String (UUID) [FK]            │
+│ category: String                             │
+│ title: String                                │
+│ description: Text                            │
+│ evidence: JSON                               │
+│ severity: String (CRIT/HIGH/MED/LOW/INFO)    │
+│ confidence: Float (0.0-1.0)                  │
+│ recommendation: Text                         │
+│ source: String                               │
+│ created_at: DateTime                         │
+└──────────────────────────────────────────────┘
+```
+
+
 ---
 
 ### 2. Module Decoupling and Multi-Domain Convergence
@@ -77,9 +164,10 @@ STRUCTURED REPORT OUTPUT -> REACT DASHBOARD
 - **Role**: Translation of complex raw telemetry into human-comprehensible summaries and prescriptive recommendations.
 - **Security Boundary**: The AI layer does not invent data, DNS records, or vendor reputations. It accepts verified findings from the cybersecurity engine and is strictly isolated against prompt injection.
 
-#### Domain 2: Cybersecurity (Modules 1 & 2)
-- **Role**: Deterministic threat detection, SSRF protection, RFC compliance, cryptographic verification, and TLS trust analysis.
+#### Domain 2: Cybersecurity (Modules 1, 2, 4 & 5)
+- **Role**: Deterministic threat detection, SSRF protection, RFC compliance, cryptographic verification, TLS trust analysis, multi-module threat correlation, and non-intrusive passive website security assessment.
 - **Operational Rule**: Absence of evidence is not evidence of absence. A valid HTTPS certificate or 0/70 detections on VirusTotal never automatically classifies a URL as `SAFE`.
+- **Educational Boundary**: A website security configuration score evaluates defensive hardening against client-side exploitation (XSS, clickjacking, cookie hijacking, downgrade attacks). It does NOT equate to absence of malicious intent or phishing fraud. Both dimensions are evaluated independently.
 
 #### Domain 3: Web3 (Ethereum Sepolia Testnet)
 - **Role**: Decentralized, tamper-evident record keeping.
@@ -104,6 +192,45 @@ To ensure scalable, zero-maintenance hosting without container overhead:
 ### 4. Database Schema Design (SQLAlchemy)
 
 ```
+
+### Module 5: Website Security Assessment Schema
+
+```
+┌──────────────────────────────────────────────┐
+│          WebsiteSecurityAssessments          │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ report_id: String (UUID) [FK -> AnalysisRep] │
+│ target_url: Text                             │
+│ security_score: Float (0-100)                │
+│ security_label: String (e.g. Strong / Weak)  │
+│ coverage: JSON (checks attempted / percent)  │
+│ category_scores: JSON (6 weighted dimensions)│
+│ summary: Text                                │
+│ recommendations: JSON (actionable fixes)     │
+│ assessment_status: String                    │
+│ created_at: DateTime [Indexed]               │
+└──────────────────────┬───────────────────────┘
+                       │ 1
+                       │
+                       │ *
+┌──────────────────────┴───────────────────────┐
+│            WebsiteSecurityFindings           │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ assessment_id: String (UUID) [FK]            │
+│ category: String                             │
+│ title: String                                │
+│ description: Text                            │
+│ evidence: JSON                               │
+│ severity: String (CRIT/HIGH/MED/LOW/INFO)    │
+│ confidence: Float (0.0-1.0)                  │
+│ recommendation: Text                         │
+│ source: String                               │
+│ created_at: DateTime                         │
+└──────────────────────────────────────────────┘
+```
+
 ┌─────────────────────────────────┐
 │         AnalysisReports         │
 ├─────────────────────────────────┤
@@ -137,3 +264,80 @@ To ensure scalable, zero-maintenance hosting without container overhead:
 │ observed_at: DateTime           │
 └─────────────────────────────────┘
 ```
+
+### 5. Module 5: Website Security Assessment Schema
+
+```
+┌──────────────────────────────────────────────┐
+│          WebsiteSecurityAssessments          │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ report_id: String (UUID) [FK -> AnalysisRep] │
+│ target_url: Text                             │
+│ security_score: Float (0-100)                │
+│ security_label: String (e.g. Strong / Weak)  │
+│ coverage: JSON (checks attempted / percent)  │
+│ category_scores: JSON (6 weighted dimensions)│
+│ summary: Text                                │
+│ recommendations: JSON (actionable fixes)     │
+│ assessment_status: String                    │
+│ created_at: DateTime [Indexed]               │
+└──────────────────────┬───────────────────────┘
+                       │ 1
+                       │
+                       │ *
+┌──────────────────────┴───────────────────────┐
+│            WebsiteSecurityFindings           │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ assessment_id: String (UUID) [FK]            │
+│ category: String                             │
+│ title: String                                │
+│ description: Text                            │
+│ evidence: JSON                               │
+│ severity: String (CRIT/HIGH/MED/LOW/INFO)    │
+│ confidence: Float (0.0-1.0)                  │
+│ recommendation: Text                         │
+│ source: String                               │
+│ created_at: DateTime                         │
+└──────────────────────────────────────────────┘
+```
+
+### Module 5: Website Security Assessment Schema
+
+```
+┌──────────────────────────────────────────────┐
+│          WebsiteSecurityAssessments          │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ report_id: String (UUID) [FK -> AnalysisRep] │
+│ target_url: Text                             │
+│ security_score: Float (0-100)                │
+│ security_label: String (e.g. Strong / Weak)  │
+│ coverage: JSON (checks attempted / percent)  │
+│ category_scores: JSON (6 weighted dimensions)│
+│ summary: Text                                │
+│ recommendations: JSON (actionable fixes)     │
+│ assessment_status: String                    │
+│ created_at: DateTime [Indexed]               │
+└──────────────────────┬───────────────────────┘
+                       │ 1
+                       │
+                       │ *
+┌──────────────────────┴───────────────────────┐
+│            WebsiteSecurityFindings           │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ assessment_id: String (UUID) [FK]            │
+│ category: String                             │
+│ title: String                                │
+│ description: Text                            │
+│ evidence: JSON                               │
+│ severity: String (CRIT/HIGH/MED/LOW/INFO)    │
+│ confidence: Float (0.0-1.0)                  │
+│ recommendation: Text                         │
+│ source: String                               │
+│ created_at: DateTime                         │
+└──────────────────────────────────────────────┘
+```
+

@@ -234,3 +234,157 @@ Returns risk score, risk level, confidence, extracted entities, suspicious indic
 **Endpoint:** `GET /api/v1/threat-intelligence/overview`  
 **Description:** Returns platform-wide indicator counts, unique domains, IPs, certificates, relationship edge counts, detected patterns, and recent correlations.
 
+---
+
+### 16. Website Security Assessment (Module 5)
+**Endpoint:** `POST /api/v1/analyze/security`  
+**Description:** Performs non-intrusive, passive evaluation of publicly observable website security configurations. Evaluates HTTPS & Transport Security, HTTP Security Headers, Cookie Security Attributes, Mixed Content, Information Exposure, and Public Security Configuration Files. Generates an explainable 0–100 security configuration score, coverage metrics, and actionable remediation steps.
+
+> **SSRF Protection:** Enforces strict pre-flight DNS and private/loopback/cloud metadata IP validation (`127.0.0.0/8`, `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `169.254.169.254`, `::1`).  
+> **Privacy:** Never stores cookie values, session tokens, or sensitive headers; only cookie names and security flags are recorded.  
+> **Conceptual Distinction:** High security configuration (A+) does not imply absence of phishing/scam intent, nor does a low score prove malicious activity.
+
+#### Request Payload
+```json
+{
+  "url": "https://example.com"
+}
+```
+
+#### Successful Response (`200 OK` - `schemas.SecurityAssessmentResponse`)
+```json
+{
+  "id": "e6a1b2c3-4d5e-6f7a-8b9c-0d1e2f3a4b5c",
+  "report_id": "c1f7a28b-9023-4e4b-97e3-0d34f0d61109",
+  "target_url": "https://example.com",
+  "security_score": 88.5,
+  "security_label": "Good Configuration",
+  "coverage": {
+    "checks_attempted": 6,
+    "checks_successful": 6,
+    "coverage_percentage": 100.0,
+    "failed_checks": []
+  },
+  "category_scores": [
+    {
+      "category": "HTTPS and Transport Security",
+      "score": 95.0,
+      "weight": 0.25,
+      "status": "PASS",
+      "summary": "Enforced HTTPS with strong modern TLS configuration."
+    },
+    {
+      "category": "HTTP Security Headers",
+      "score": 80.0,
+      "weight": 0.25,
+      "status": "NEEDS_IMPROVEMENT",
+      "summary": "7 of 9 standard defensive headers implemented."
+    },
+    {
+      "category": "Cookie Security",
+      "score": 90.0,
+      "weight": 0.20,
+      "status": "PASS",
+      "summary": "All cookies set Secure and HttpOnly flags."
+    },
+    {
+      "category": "Mixed Content",
+      "score": 100.0,
+      "weight": 0.15,
+      "status": "PASS",
+      "summary": "No insecure HTTP resources or forms detected on HTTPS page."
+    },
+    {
+      "category": "Information Exposure",
+      "score": 70.0,
+      "weight": 0.05,
+      "status": "NEEDS_IMPROVEMENT",
+      "summary": "Server header exposes technology banner."
+    },
+    {
+      "category": "Security Configuration Files",
+      "score": 90.0,
+      "weight": 0.10,
+      "status": "PASS",
+      "summary": "security.txt and robots.txt properly configured."
+    }
+  ],
+  "headers_evaluation": [
+    {
+      "header_name": "Strict-Transport-Security",
+      "exists": true,
+      "value": "max-age=31536000; includeSubDomains; preload",
+      "security_purpose": "Enforces HTTPS connections and prevents SSL stripping.",
+      "assessment": "GOOD",
+      "recommendation": null
+    }
+  ],
+  "cookie_evaluations": [
+    {
+      "name": "session_id",
+      "has_secure": true,
+      "has_httponly": true,
+      "samesite": "Lax",
+      "is_valid_prefix": true,
+      "prefix": null,
+      "issues": []
+    }
+  ],
+  "summary": "The website demonstrates a good overall security posture with strong transport encryption and strict cookie policies. Minor improvements recommended for Content-Security-Policy and banner information hiding.",
+  "distinction_note": "A strong security configuration score indicates good defensive hygiene (transport encryption, headers, cookie flags), but does NOT guarantee that the site is legitimate or free from phishing intent.",
+  "findings": [],
+  "recommendations": [
+    "Add a robust Content-Security-Policy header to mitigate Cross-Site Scripting (XSS).",
+    "Suppress the Server header banner to prevent reconnaissance of software versions."
+  ],
+  "assessment_status": "COMPLETED",
+  "created_at": "2026-11-08T01:00:00Z"
+}
+```
+
+---
+
+### 17. Retrieve Website Security Assessment Report
+**Endpoint:** `GET /api/v1/security/{report_id}`  
+**Description:** Fetches an existing website security assessment report by analysis report ID or security assessment ID.
+
+#### Response (`200 OK`)
+Returns the complete `schemas.SecurityAssessmentResponse` object including score, 6 category breakdowns, 9-header evaluations, sanitized cookie audit, and remediation recommendations.
+
+---
+
+### 18. Filter Website Security Findings
+**Endpoint:** `GET /api/v1/security/{report_id}/findings?severity=MEDIUM&category=HTTP%20Security%20Headers&limit=50&skip=0`  
+**Description:** Returns paginated security findings for a specific assessment, filterable by minimum severity (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `INFORMATIONAL`) and category.
+
+#### Query Parameters
+- `severity` (optional): Filter by severity string.
+- `category` (optional): Filter by category name string.
+- `limit` (optional, default `50`): Maximum number of findings to return.
+- `skip` (optional, default `0`): Pagination offset.
+
+#### Response (`200 OK` - `schemas.SecurityFindingsFilterResponse`)
+```json
+{
+  "report_id": "c1f7a28b-9023-4e4b-97e3-0d34f0d61109",
+  "total_count": 3,
+  "filtered_count": 1,
+  "findings": [
+    {
+      "id": "7b8c9d0e-1f2a-3b4c-5d6e-7f8a9b0c1d2e",
+      "assessment_id": "e6a1b2c3-4d5e-6f7a-8b9c-0d1e2f3a4b5c",
+      "category": "HTTP Security Headers",
+      "title": "Missing Content-Security-Policy Header",
+      "description": "Content-Security-Policy (CSP) is missing, leaving the application more vulnerable to cross-site scripting (XSS) and code injection attacks.",
+      "evidence": { "header": "Content-Security-Policy", "present": false },
+      "severity": "MEDIUM",
+      "confidence": 1.0,
+      "recommendation": "Configure a Content-Security-Policy header restricting valid source directives.",
+      "source": "SecurityHeadersAnalyzer",
+      "created_at": "2026-11-08T01:00:00Z"
+    }
+  ]
+}
+```
+
+

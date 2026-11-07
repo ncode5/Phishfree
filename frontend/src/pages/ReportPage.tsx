@@ -176,13 +176,22 @@ export const ReportPage: React.FC = () => {
                   <Sparkles className="w-4 h-4" />
                   <span>AI Security Assessment Summary</span>
                 </div>
-                <Link
-                  to={`/threat-intel?reportId=${report.id}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600/30 border border-indigo-500/30 transition shadow-sm"
-                >
-                  <Network className="w-3.5 h-3.5 text-indigo-400" />
-                  View Correlation Graph
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    to={`/security?url=${encodeURIComponent(report.submitted_url)}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30 border border-emerald-500/30 transition shadow-sm"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    Security Posture
+                  </Link>
+                  <Link
+                    to={`/threat-intel?reportId=${report.id}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600/30 border border-indigo-500/30 transition shadow-sm"
+                  >
+                    <Network className="w-3.5 h-3.5 text-indigo-400" />
+                    Correlation Graph
+                  </Link>
+                </div>
               </div>
               <p className="text-sm text-slate-300 leading-relaxed font-sans">{report.summary}</p>
             </div>

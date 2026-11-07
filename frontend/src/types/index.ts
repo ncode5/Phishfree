@@ -419,4 +419,81 @@ export interface ThreatIntelOverview {
   }[];
 }
 
+// ==========================================
+// MODULE 5: Website Security Assessment
+// ==========================================
+
+export interface SecurityFinding {
+  id?: string;
+  category: 'HTTPS_TRANSPORT' | 'SECURITY_HEADERS' | 'COOKIE_SECURITY' | 'MIXED_CONTENT' | 'INFORMATION_EXPOSURE' | 'SECURITY_CONFIG';
+  title: string;
+  description: string;
+  evidence?: Record<string, any>;
+  severity: 'Informational' | 'Low' | 'Medium' | 'High' | 'Critical';
+  confidence: number;
+  recommendation?: string;
+  source: string;
+  created_at?: string;
+}
+
+export interface CategoryScore {
+  category: string;
+  score: number;
+  weight: number;
+  status: 'STRONG' | 'ACCEPTABLE' | 'WEAK' | 'INSECURE' | 'NOT_APPLICABLE';
+  description: string;
+}
+
+export interface SecurityCoverage {
+  completed: number;
+  total: number;
+  percentage: number;
+  unavailable_checks: string[];
+}
+
+export interface SecurityHeaderEvaluation {
+  header_name: string;
+  exists: boolean;
+  observed_value?: string;
+  security_purpose: string;
+  assessment: 'STRONG' | 'ACCEPTABLE' | 'WEAK' | 'MISSING' | 'INSECURE';
+  recommended_improvement?: string;
+}
+
+export interface CookieEvaluation {
+  cookie_name: string;
+  secure: boolean;
+  http_only: boolean;
+  same_site?: string;
+  domain?: string;
+  path?: string;
+  expires?: string;
+  assessment: 'SECURE' | 'POTENTIALLY_VULNERABLE' | 'WEAK';
+}
+
+export interface SecurityAssessmentResponse {
+  report_id: string;
+  target_url: string;
+  security_score: number;
+  security_label: 'Strong Configuration' | 'Good Configuration' | 'Needs Improvement' | 'Weak Configuration' | 'Poor Configuration';
+  coverage: SecurityCoverage;
+  categories: CategoryScore[];
+  headers_evaluation: SecurityHeaderEvaluation[];
+  cookies_evaluation: CookieEvaluation[];
+  findings: SecurityFinding[];
+  recommendations: string[];
+  status: string;
+  summary: string;
+  distinction_note: string;
+  created_at: string;
+}
+
+export interface SecurityFindingsFilterResponse {
+  total: number;
+  findings: SecurityFinding[];
+  limit: number;
+  skip: number;
+}
+
+
 

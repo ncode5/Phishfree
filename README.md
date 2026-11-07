@@ -1,13 +1,13 @@
 # AI-Powered Web Threat Detection & Digital Trust Intelligence
 
-[![Modules 1, 2, 3 & 4: Verified](https://img.shields.io/badge/Modules%201%2C%202%2C%203%20%26%204-Operational%20%26%20Verified-emerald?style=for-the-badge&logo=shield)](https://github.com)
+[![Modules 1, 2, 3, 4 & 5: Verified](https://img.shields.io/badge/Modules%201%2C%202%2C%203%2C%204%20%26%205-Operational%20%26%20Verified-emerald?style=for-the-badge&logo=shield)](https://github.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Vercel Serverless Ready](https://img.shields.io/badge/Vercel-Serverless%20Deployed-black?style=for-the-badge&logo=vercel)](https://vercel.com)
 [![Ethereum Sepolia](https://img.shields.io/badge/Ethereum-Sepolia%20Testnet-627EEA?style=for-the-badge&logo=ethereum&logoColor=white)](https://sepolia.etherscan.io)
-[![Tests: 89 Passing](https://img.shields.io/badge/Pytest-89%20Passed-brightgreen?style=for-the-badge&logo=pytest)](https://docs.pytest.org)
+[![Tests: 119 Passing](https://img.shields.io/badge/Pytest-119%20Passed-brightgreen?style=for-the-badge&logo=pytest)](https://docs.pytest.org)
 
 > **Hackathon Submission**: 48-Hour Build  
 > **Domains**: Artificial Intelligence · Cybersecurity · Web3  
@@ -39,6 +39,7 @@ The modern internet powers global banking, commerce, digital identity, recruitme
 5. **Calculates Explainable Risk**: Uses a weighted, transparent scoring engine with category saturation caps and independent confidence scoring.
 6. **Synthesizes Plain-Language Guidance**: An AI explanation layer converts technical findings into human-readable summaries and practical safety recommendations.
 7. **Web3 Decentralized Registry**: Anchors deterministic SHA-256 report commitments on the Ethereum Sepolia Testnet for immutable, tamper-evident audit trails.
+8. **Module 5: Website Security Assessment**: Evaluates publicly observable website security posture across 6 key dimensions: HTTPS transport enforcement & downgrade prevention, 9 standard HTTP defensive security headers (HSTS, CSP, X-Frame-Options, etc.), cookie security flags (`Secure`, `HttpOnly`, `SameSite`), mixed active/passive content detection, basic server software information exposure, and well-known configuration files (`security.txt`, `robots.txt`). Maintains a clear educational distinction: a site with a high security configuration score can still be a malicious phishing lure, and a poorly configured site is not necessarily fraudulent.
 
 ---
 
@@ -79,6 +80,17 @@ The modern internet powers global banking, commerce, digital identity, recruitme
 - Correlated risk engine with de-duplication, asymptotic bounds, and strict evidence transparency (verified vs technical vs rule-based vs AI).
 - Interactive SVG threat topology network visualization with dynamic 2-hop neighborhood expansion and real-time node inspection.
 
+### Module 5: Website Security Assessment
+- Passive, non-intrusive security configuration evaluation (zero intrusive penetration testing, zero payload injection, zero brute-forcing).
+- Strict SSRF defense-in-depth prohibiting loopback (`127.0.0.0/8`), private (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), link-local/cloud metadata (`169.254.169.254`), and IPv6 (`::1`).
+- HTTPS enforcement and transport security audit: checks HTTP-to-HTTPS redirect upgrades, downgrade vulnerability, modern TLS protocol/cipher compliance, and certificate validity.
+- 9 HTTP defensive security headers inspection: `Strict-Transport-Security`, `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, `Cross-Origin-Embedder-Policy`.
+- Privacy-preserving cookie security audit: strict redaction of raw cookie values/tokens; evaluation of `Secure`, `HttpOnly`, `SameSite` flags and `__Secure-` / `__Host-` prefixes.
+- Safe mixed content analysis: parsing HTML (capped at 1MB) for active mixed resources (scripts, stylesheets, iframes, object/embed, insecure form action targets) and passive media with zero client-side script execution.
+- Information exposure analysis: flags banner leakage in `Server`, `X-Powered-By`, and `X-AspNet-Version` headers.
+- Safe public security files probe: checks `/.well-known/security.txt` compliance (RFC 9116) and `/robots.txt` indexing directives.
+- Weighted scoring model (HTTPS 25%, Headers 25%, Cookies 20%, Mixed Content 15%, Information Exposure 5%, Configuration Files 10%) producing intuitive labels (Strong, Good, Needs Improvement, Weak, Poor), assessment coverage metrics, and copyable remediation recommendations.
+
 ### Web3 Integration (Ethereum Sepolia Testnet)
 - Deterministic SHA-256 report commitment calculation over URL, domain, risk classification, and risk score.
 - Off-chain analysis data with on-chain cryptographic commitment for auditability and tamper resistance.
@@ -102,7 +114,7 @@ The modern internet powers global banking, commerce, digital identity, recruitme
 | **HTTP Client** | HTTPX | Asynchronous HTTP client providing manual hop-by-hop redirect control and timeout bounds. |
 | **Database & ORM** | SQLAlchemy 2.0 + Hosted PostgreSQL | Neon / Supabase compatibility with `NullPool` serverless connection pooling. |
 | **Blockchain** | Web3.py / Sepolia JSON-RPC | Cryptographic anchoring of threat intelligence digests on Ethereum Sepolia Testnet. |
-| **Testing** | Pytest + pytest-asyncio | 45 comprehensive automated tests covering all Module 1 and Module 2 scenarios. |
+| **Testing** | Pytest + pytest-asyncio | 119 comprehensive automated tests covering all Modules 1, 2, 3, 4, and 5 scenarios (100% passing). |
 
 ---
 
@@ -149,8 +161,19 @@ digital-trust-intelligence/
 │   │   │   ├── base.py                # Abstract ThreatIntelProvider
 │   │   │   └── virustotal.py          # VirusTotal API v3 integration
 │   │   ├── services/
-│   │   │   ├── analysis_service.py    # Master pipeline orchestrator (Module 1 + Module 2)
-│   │   │   └── tls_analyzer.py        # Module 2 TLS & digital trust engine
+│   │   │   ├── analysis_service.py              # Master pipeline orchestrator (Module 1 + Module 2)
+│   │   │   ├── tls_analyzer.py                  # Module 2 TLS & digital trust engine
+│   │   │   ├── message_analyzer.py              # Module 3 AI scam & message analysis engine
+│   │   │   ├── threat_correlation.py            # Module 4 Threat correlation engine
+│   │   │   ├── indicator_normalizer.py          # Module 4 Indicator normalization service
+│   │   │   ├── relationship_builder.py          # Module 4 Graph relationship builder
+│   │   │   ├── threat_pattern_detector.py       # Module 4 Campaign pattern detector
+│   │   │   ├── correlation_risk_engine.py       # Module 4 Non-linear correlation risk engine
+│   │   │   ├── website_security_assessment.py   # Module 5 Master security assessment orchestrator
+│   │   │   ├── security_headers_analyzer.py     # Module 5 9-header defensive evaluator
+│   │   │   ├── cookie_security_analyzer.py      # Module 5 Cookie privacy-safe flag auditor
+│   │   │   ├── mixed_content_analyzer.py        # Module 5 Safe HTML mixed content parser
+│   │   │   └── security_configuration_analyzer.py # Module 5 Information exposure & security.txt
 │   │   ├── web3/
 │   │   │   └── sepolia.py             # Ethereum Sepolia Testnet anchoring service
 │   │   ├── ai/
@@ -304,13 +327,15 @@ The dashboard interface will open at `http://localhost:5173`.
 
 ## 11. Testing & Verification
 
-### Run Backend Tests (67 Tests)
+### Run Backend Tests (119 Tests)
 The comprehensive test suite covers all requirements across Module 1, Module 2, and Module 3:
 ```bash
 python -m pytest backend/tests/ -v
 ```
 
-**Test Breakdown (67 Tests, 100% Passing):**
+**Test Breakdown (119 Tests, 100% Passing):**
+- `test_website_security.py` (30 tests): Enforces non-intrusive passive boundaries, pre-flight SSRF and private IP blocks (127.0.0.1, 10.0.0.1, 169.254.169.254, ::1), HTTPS enforcement, HTTP-to-HTTPS redirect upgrades, downgrade vulnerability detection, full 9 HTTP security headers matrix (HSTS, CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP, COEP), privacy-preserving cookie flag inspection (Secure, HttpOnly, SameSite), cookie prefix validation (__Secure-, __Host-), zero cookie value persistence, active mixed content detection (scripts, iframes, CSS, form action targets), passive mixed content detection (images, audio, video), pure HTTPS clean baseline, server banner metadata exposure (Server, X-Powered-By, X-AspNet-Version), security.txt (RFC 9116) valid/missing handling, robots.txt discovery, weighted scoring calculation across all 6 categories, coverage metrics, label grading, POST /api/v1/analyze/security live flow, GET /api/v1/security/{report_id} retrieval, GET /api/v1/security/{report_id}/findings severity and category filtering.
+- `test_threat_correlation.py` (22 tests): Indicator normalization for domains, URLs, IPv4/IPv6, X.509 fingerprints, phone numbers, and emails; cross-module entity extraction; graph relationship modeling; 8 campaign pattern detections (shared hosting campaigns, domain generation algorithms, fast-flux DNS, credential harvesting rings, phishing kit reuse, cross-channel SMS/email lures); CDN false-positive dampening; non-linear correlated risk scoring; POST /api/v1/correlate, GET /api/v1/correlations/{id}, and GET /api/v1/threats/{id}/related endpoints.
 - `test_message_analyzer.py` (22 tests): Empty message validation, normal message baseline, suspicious bank KYC phishing, prize/lottery scams, fraudulent job offers, crypto giveaway scams, single URL extraction, multiple URLs extraction, email extraction, phone number extraction, artificial urgency indicators, credential theft lures, adversarial prompt injection defense, Gemini API timeout fallback, malformed AI response handling, Module 1 URL analysis integration, Module 2 TLS certificate integration, partial URL failure robustness, extremely long message handling (>10k chars), ambiguous/inconclusive text handling, `POST /api/v1/analyze/message` and `GET /api/v1/analyze/message/{report_id}` endpoints, 404 not found validation.
 - `test_tls_analyzer.py` (14 tests): Valid HTTPS, expired certs, SAN wildcard/hostname mismatch, self-signed chains, weak RSA/ECC/ciphers, non-HTTPS targets, crt.sh success, crt.sh rate limits/errors, DNS resolution failures, connection timeouts, SSRF private IP rejections, malformed targets, partial failure robustness, combined Module 1 + 2 report.
 - `test_api.py` (4 tests): Health check, invalid URL rejections, report submission & persistence, dedicated `POST /analyze/tls` endpoint.
