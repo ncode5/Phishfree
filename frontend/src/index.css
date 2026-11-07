@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cyber-950 text-slate-100;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #070b14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Cyber card glow effects */
+.cyber-card {
+  @apply bg-cyber-900/80 backdrop-blur-md border border-slate-800/80 rounded-xl transition-all duration-200;
+}
+.cyber-card:hover {
+  @apply border-slate-700 shadow-lg shadow-blue-950/20;
+}
+
