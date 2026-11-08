@@ -169,10 +169,10 @@ export const BlockchainRegistryPage: React.FC = () => {
               <Layers className="h-7 w-7" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-2xl font-extrabold text-slate-950 dark:text-white tracking-tight">
                 Decentralized Threat Intelligence
               </h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+              <p className="text-sm text-slate-800 dark:text-slate-300 mt-0.5 font-medium">
                 Cryptographic report provenance & independent tamper-verification on Ethereum Sepolia Testnet
               </p>
             </div>
@@ -183,26 +183,26 @@ export const BlockchainRegistryPage: React.FC = () => {
           <button
             onClick={fetchStatus}
             disabled={statusLoading}
-            className="flex items-center space-x-2 px-3.5 py-2 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition"
+            className="flex items-center space-x-2 px-3.5 py-2 bg-white dark:bg-[#0D1629] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-200 text-xs font-bold rounded-xl border border-slate-300 dark:border-[#1A2844] shadow-sm transition"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${statusLoading ? 'animate-spin text-purple-600' : ''}`} />
             <span>Refresh State</span>
           </button>
-          <div className="flex items-center space-x-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse"></span>
+          <div className="flex items-center space-x-2 px-3 py-1.5 bg-emerald-100 dark:bg-[#00D29E]/20 border border-emerald-300 dark:border-[#00D29E]/40 rounded-xl text-emerald-950 dark:text-[#00E5A3] text-xs font-bold">
+            <span className="w-2 h-2 rounded-full bg-emerald-700 dark:bg-[#00D29E] animate-pulse"></span>
             <span>Module 6 Active</span>
           </div>
         </div>
       </div>
 
       {/* Educational Distinction Banner */}
-      <div className="bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800/60 rounded-2xl p-4 sm:p-5 flex items-start space-x-3.5">
-        <ShieldCheck className="h-5 w-5 text-purple-700 dark:text-purple-400 flex-shrink-0 mt-0.5" />
-        <div className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          <span className="font-bold text-purple-950 dark:text-purple-200">Cryptographic Provenance Disclaimer: </span>
+      <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-300 dark:border-purple-800/60 rounded-2xl p-4 sm:p-5 flex items-start space-x-3.5">
+        <ShieldCheck className="h-5 w-5 text-purple-800 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+        <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
+          <span className="font-bold text-purple-950 dark:text-purple-300">Cryptographic Provenance Disclaimer: </span>
           Blockchain registration anchors an immutable Keccak-256 fingerprint representing the exact canonical report findings and timestamps.
           Independent verification confirms whether the current report matches what was registered earlier without alteration.
-          <span className="text-purple-900 dark:text-purple-300 font-semibold"> It does not independently determine whether the analyzed website was malicious.</span>
+          <span className="text-purple-950 dark:text-purple-300 font-bold"> It does not independently determine whether the analyzed website was malicious.</span>
         </div>
       </div>
 
@@ -210,19 +210,19 @@ export const BlockchainRegistryPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Network Card */}
         <div className="phish-card p-4">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
+          <div className="flex items-center justify-between text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider mb-2">
             <span>Blockchain Network</span>
             <Cpu className="h-4 w-4 text-purple-700 dark:text-purple-400" />
           </div>
-          <div className="text-base font-bold text-slate-900 dark:text-white">
+          <div className="text-base font-extrabold text-slate-950 dark:text-white">
             {networkStatus?.network_name || 'Ethereum Sepolia'}
           </div>
-          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center space-x-1.5 font-medium">
+          <div className="text-xs text-slate-700 dark:text-slate-300 mt-1 flex items-center space-x-1.5 font-bold">
             <span>Chain ID:</span>
-            <span className="font-mono text-slate-800 dark:text-slate-200">{networkStatus?.chain_id || 11155111}</span>
+            <span className="font-mono text-slate-950 dark:text-slate-100">{networkStatus?.chain_id || 11155111}</span>
             <span className="text-slate-400">•</span>
             <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold ${
-              networkStatus?.rpc_status === 'CONNECTED' ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+              networkStatus?.rpc_status === 'CONNECTED' ? 'bg-emerald-100 text-emerald-950 dark:bg-[#00D29E]/20 dark:text-[#00E5A3]' : 'bg-amber-100 text-amber-950 dark:bg-amber-950/60 dark:text-amber-300'
             }`}>
               {networkStatus?.rpc_status || 'CHECKING'}
             </span>
@@ -231,31 +231,31 @@ export const BlockchainRegistryPage: React.FC = () => {
 
         {/* Latest Block Card */}
         <div className="phish-card p-4">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
+          <div className="flex items-center justify-between text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider mb-2">
             <span>Block Height</span>
             <Database className="h-4 w-4 text-purple-700 dark:text-purple-400" />
           </div>
-          <div className="text-base font-bold text-slate-900 dark:text-white font-mono">
+          <div className="text-base font-extrabold text-slate-950 dark:text-white font-mono">
             {networkStatus?.latest_block ? `#${networkStatus.latest_block.toLocaleString()}` : 'Synchronizing...'}
           </div>
-          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-semibold">
             EVM JSON-RPC Live Feed
           </div>
         </div>
 
         {/* Contract Address Card */}
         <div className="phish-card p-4">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
+          <div className="flex items-center justify-between text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider mb-2">
             <span>ThreatReportRegistry.sol</span>
-            <Lock className="h-4 w-4 text-emerald-700 dark:text-emerald-400" />
+            <Lock className="h-4 w-4 text-emerald-800 dark:text-emerald-400" />
           </div>
-          <div className="text-xs font-mono text-slate-700 dark:text-slate-300 truncate">
+          <div className="text-xs font-mono text-slate-800 dark:text-slate-300 truncate">
             {networkStatus?.contract_address ? (
               <a
                 href={`https://sepolia.etherscan.io/address/${networkStatus.contract_address}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-emerald-700 dark:text-emerald-400 hover:underline flex items-center space-x-1 truncate font-semibold"
+                className="text-emerald-800 dark:text-[#00E5A3] hover:underline flex items-center space-x-1 truncate font-bold"
               >
                 <span className="truncate">{networkStatus.contract_address}</span>
                 <ExternalLink className="h-3 w-3 flex-shrink-0" />

@@ -101,35 +101,35 @@ export const WebsiteSecurityPage: React.FC = () => {
 
   const getLabelColor = (label: string) => {
     switch (label) {
-      case 'Strong Configuration': return 'text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800';
-      case 'Good Configuration': return 'text-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800';
-      case 'Needs Improvement': return 'text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-800';
-      case 'Weak Configuration': return 'text-orange-800 dark:text-orange-300 bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800';
-      default: return 'text-rose-800 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/60 border-rose-200 dark:border-rose-800';
+      case 'Strong Configuration': return 'text-emerald-950 dark:text-[#00E5A3] bg-emerald-100 dark:bg-[#00D29E]/20 border-emerald-300 dark:border-[#00D29E]/40 font-bold';
+      case 'Good Configuration': return 'text-blue-950 dark:text-blue-300 bg-blue-100 dark:bg-blue-950/60 border-blue-300 dark:border-blue-800 font-bold';
+      case 'Needs Improvement': return 'text-amber-950 dark:text-[#FBBF24] bg-amber-100 dark:bg-[#451A03]/70 border-amber-300 dark:border-amber-500/70 font-bold';
+      case 'Weak Configuration': return 'text-orange-950 dark:text-[#FB923C] bg-orange-100 dark:bg-[#431407]/70 border-orange-300 dark:border-orange-500/70 font-bold';
+      default: return 'text-rose-950 dark:text-[#F87171] bg-rose-100 dark:bg-[#450A0A]/80 border-rose-300 dark:border-red-500/80 font-bold';
     }
   };
 
   const getSeverityBadge = (sev: string) => {
     switch (sev.toLowerCase()) {
-      case 'critical': return 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-800';
-      case 'high': return 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/50 dark:text-orange-300 dark:border-orange-800';
-      case 'medium': return 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800';
-      case 'low': return 'bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800';
-      default: return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700';
+      case 'critical': return 'bg-rose-100 text-rose-950 border-rose-300 dark:bg-[#450A0A]/80 dark:text-[#F87171] dark:border-red-500/80 font-bold';
+      case 'high': return 'bg-orange-100 text-orange-950 border-orange-300 dark:bg-[#431407]/70 dark:text-[#FB923C] dark:border-orange-500/70 font-bold';
+      case 'medium': return 'bg-amber-100 text-amber-950 border-amber-300 dark:bg-[#451A03]/70 dark:text-[#FBBF24] dark:border-amber-500/70 font-bold';
+      case 'low': return 'bg-blue-100 text-blue-950 border-blue-300 dark:bg-blue-950/70 dark:text-blue-300 dark:border-blue-500/70 font-bold';
+      default: return 'bg-slate-200 text-slate-900 border-slate-300 dark:bg-[#131F37] dark:text-[#94A3B8] dark:border-slate-700 font-bold';
     }
   };
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12 font-sans">
       {/* Header */}
-      <div className="border-b border-slate-200 dark:border-slate-800 pb-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 mb-3">
-          <ShieldCheck className="w-3.5 h-3.5" /> Module 5: Website Security Assessment
+      <div className="border-b border-slate-300 dark:border-[#1A2844] pb-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-[#00D29E]/20 text-emerald-950 dark:text-[#00E5A3] border border-emerald-300 dark:border-[#00D29E]/40 mb-3">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-800 dark:text-[#00E5A3]" /> Module 5: Website Security Assessment
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-3">
           Passive Website Security Posture & Configuration Audit
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 mt-2 max-w-3xl text-sm md:text-base leading-relaxed">
+        <p className="text-slate-800 dark:text-slate-300 mt-2 max-w-3xl text-sm md:text-base leading-relaxed font-medium">
           Evaluates observable security configurations including TLS transport integrity, 9 defensive HTTP response headers, cookie flags, mixed HTTP content, banner information leakage, and public security files.
         </p>
       </div>
@@ -137,10 +137,10 @@ export const WebsiteSecurityPage: React.FC = () => {
       <div className="space-y-8">
         {/* Input Console */}
         <div className="phish-card p-6">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-            <Search className="w-5 h-5 text-emerald-700 dark:text-emerald-400" /> Target Website Audit
+          <h2 className="text-lg font-bold text-slate-950 dark:text-white mb-2 flex items-center gap-2">
+            <Search className="w-5 h-5 text-emerald-800 dark:text-[#00E5A3]" /> Target Website Audit
           </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+          <p className="text-sm text-slate-800 dark:text-slate-300 mb-4 font-medium">
             Enter a destination website to perform non-intrusive, passive configuration auditing with strict SSRF defenses.
           </p>
 
@@ -154,12 +154,12 @@ export const WebsiteSecurityPage: React.FC = () => {
                 placeholder="https://example.com or domain.com"
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
-                className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 font-mono focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
+                className="flex-1 bg-white dark:bg-[#070C18] border border-slate-300 dark:border-[#1A2844] rounded-xl px-4 py-2.5 text-sm text-slate-950 dark:text-white placeholder-slate-500 font-mono font-bold focus:outline-none focus:border-emerald-700 dark:focus:border-[#00D29E] focus:ring-1 focus:ring-emerald-700 dark:focus:ring-[#00D29E] transition"
               />
               <button
                 type="submit"
                 disabled={loading || !urlInput.trim()}
-                className="px-6 py-2.5 bg-[#047857] hover:bg-[#065f46] disabled:opacity-50 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition shadow-sm"
+                className="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-700 dark:bg-[#00D29E] dark:hover:bg-[#00b887] disabled:opacity-50 text-white dark:text-slate-950 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition shadow-sm"
               >
                 {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
                 {loading ? 'Auditing...' : 'Start Security Audit'}
@@ -167,54 +167,54 @@ export const WebsiteSecurityPage: React.FC = () => {
             </div>
 
             {/* Scope checkboxes */}
-            <div className="flex flex-wrap items-center gap-6 pt-3 text-xs text-slate-600 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800">
-              <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900 dark:hover:text-slate-200 font-medium">
+            <div className="flex flex-wrap items-center gap-6 pt-3 text-xs text-slate-800 dark:text-slate-300 border-t border-slate-300 dark:border-[#1A2844]">
+              <label className="flex items-center gap-2 cursor-pointer hover:text-slate-950 dark:hover:text-white font-bold">
                 <input
                   type="checkbox"
                   checked={includeHeaders}
                   onChange={(e) => setIncludeHeaders(e.target.checked)}
-                  className="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500"
+                  className="rounded bg-white dark:bg-[#070C18] border-slate-300 dark:border-slate-700 text-emerald-700 focus:ring-emerald-600"
                 />
                 HTTP Security Headers
               </label>
-              <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900 dark:hover:text-slate-200 font-medium">
+              <label className="flex items-center gap-2 cursor-pointer hover:text-slate-950 dark:hover:text-white font-bold">
                 <input
                   type="checkbox"
                   checked={includeCookies}
                   onChange={(e) => setIncludeCookies(e.target.checked)}
-                  className="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500"
+                  className="rounded bg-white dark:bg-[#070C18] border-slate-300 dark:border-slate-700 text-emerald-700 focus:ring-emerald-600"
                 />
                 Cookie Security Attributes
               </label>
-              <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900 dark:hover:text-slate-200 font-medium">
+              <label className="flex items-center gap-2 cursor-pointer hover:text-slate-950 dark:hover:text-white font-bold">
                 <input
                   type="checkbox"
                   checked={includeMixedContent}
                   onChange={(e) => setIncludeMixedContent(e.target.checked)}
-                  className="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500"
+                  className="rounded bg-white dark:bg-[#070C18] border-slate-300 dark:border-slate-700 text-emerald-700 focus:ring-emerald-600"
                 />
                 Mixed Content Inclusions
               </label>
-              <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900 dark:hover:text-slate-200 font-medium">
+              <label className="flex items-center gap-2 cursor-pointer hover:text-slate-950 dark:hover:text-white font-bold">
                 <input
                   type="checkbox"
                   checked={includePublicFiles}
                   onChange={(e) => setIncludePublicFiles(e.target.checked)}
-                  className="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500"
+                  className="rounded bg-white dark:bg-[#070C18] border-slate-300 dark:border-slate-700 text-emerald-700 focus:ring-emerald-600"
                 />
-                Public Files (security.txt, robots.txt)
+                Public Files & Disclosures
               </label>
             </div>
           </form>
 
           {/* Quick example pills */}
-          <div className="mt-4 pt-3 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <span className="font-semibold">Quick Test:</span>
+          <div className="mt-4 pt-3 flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 border-t border-slate-300 dark:border-[#1A2844]">
+            <span className="font-bold">Quick Test:</span>
             {['https://github.com', 'https://cloudflare.com', 'http://insecure-bank-demo.org'].map((demo) => (
               <button
                 key={demo}
                 onClick={() => { setUrlInput(demo); handleRunAssessment(demo); }}
-                className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition font-mono font-medium"
+                className="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-[#070C18] hover:bg-slate-300 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-200 transition font-mono font-bold border border-slate-300 dark:border-[#1A2844]"
               >
                 {demo}
               </button>
@@ -222,8 +222,8 @@ export const WebsiteSecurityPage: React.FC = () => {
           </div>
 
           {error && (
-            <div className="mt-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-sm flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 flex-shrink-0" />
+            <div className="mt-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/70 border border-rose-300 dark:border-rose-800 text-rose-950 dark:text-rose-200 text-sm flex items-center gap-2 font-medium">
+              <AlertTriangle className="w-4 h-4 text-rose-700 dark:text-rose-400 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}

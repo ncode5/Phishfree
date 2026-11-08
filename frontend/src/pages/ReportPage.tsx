@@ -247,27 +247,27 @@ export const ReportPage: React.FC = () => {
       )}
 
       {/* Navigation Tabs */}
-      <div className="border-b border-slate-200 dark:border-slate-800 flex items-center space-x-2 text-sm overflow-x-auto pb-0.5">
+      <div className="border-b border-slate-300 dark:border-[#1A2844] flex items-center space-x-2 text-sm overflow-x-auto pb-0.5">
         <button
           onClick={() => setActiveTab('findings')}
-          className={`py-2.5 px-3.5 font-semibold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
+          className={`py-2.5 px-3.5 font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'findings'
-              ? 'border-emerald-700 dark:border-emerald-400 text-emerald-800 dark:text-emerald-300'
-              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-emerald-800 dark:border-[#00D29E] text-emerald-950 dark:text-[#00E5A3]'
+              : 'border-transparent text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
           }`}
         >
           <span>Evidence Findings</span>
-          <span className="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-mono text-slate-700 dark:text-slate-300">
+          <span className="px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-slate-800 text-[11px] font-mono font-bold text-slate-900 dark:text-slate-200">
             {report.findings.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('domain')}
-          className={`py-2.5 px-3.5 font-semibold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
+          className={`py-2.5 px-3.5 font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'domain'
-              ? 'border-emerald-700 dark:border-emerald-400 text-emerald-800 dark:text-emerald-300'
-              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-emerald-800 dark:border-[#00D29E] text-emerald-950 dark:text-[#00E5A3]'
+              : 'border-transparent text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
           }`}
         >
           <span>Domain & Typosquatting</span>
@@ -278,38 +278,38 @@ export const ReportPage: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('dns')}
-          className={`py-2.5 px-3.5 font-semibold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
+          className={`py-2.5 px-3.5 font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'dns'
-              ? 'border-emerald-700 dark:border-emerald-400 text-emerald-800 dark:text-emerald-300'
-              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-emerald-800 dark:border-[#00D29E] text-emerald-950 dark:text-[#00E5A3]'
+              : 'border-transparent text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
           }`}
         >
           <span>DNS Records</span>
-          <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+          <span className="text-[11px] font-mono font-bold text-slate-700 dark:text-slate-300">
             {report.dns?.status || 'N/A'}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('redirects')}
-          className={`py-2.5 px-3.5 font-semibold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
+          className={`py-2.5 px-3.5 font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'redirects'
-              ? 'border-emerald-700 dark:border-emerald-400 text-emerald-800 dark:text-emerald-300'
-              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-emerald-800 dark:border-[#00D29E] text-emerald-950 dark:text-[#00E5A3]'
+              : 'border-transparent text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
           }`}
         >
           <span>Redirect Chain</span>
-          <span className="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-mono text-slate-700 dark:text-slate-300">
+          <span className="px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-slate-800 text-[11px] font-mono font-bold text-slate-900 dark:text-slate-200">
             {report.redirects?.hops?.length || 0}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('intel')}
-          className={`py-2.5 px-3.5 font-semibold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
+          className={`py-2.5 px-3.5 font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'intel'
-              ? 'border-emerald-700 dark:border-emerald-400 text-emerald-800 dark:text-emerald-300'
-              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-emerald-800 dark:border-[#00D29E] text-emerald-950 dark:text-[#00E5A3]'
+              : 'border-transparent text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
           }`}
         >
           <span>Threat Intelligence</span>
@@ -320,27 +320,27 @@ export const ReportPage: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('tls')}
-          className={`py-2.5 px-3.5 font-semibold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
+          className={`py-2.5 px-3.5 font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'tls'
-              ? 'border-emerald-700 dark:border-emerald-400 text-emerald-800 dark:text-emerald-300'
-              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-emerald-800 dark:border-[#00D29E] text-emerald-950 dark:text-[#00E5A3]'
+              : 'border-transparent text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
           }`}
         >
           <span>TLS & Digital Trust</span>
           {report.tls_analysis ? (
             <span
-              className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-semibold ${
+              className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold ${
                 report.tls_analysis.certificate_status === 'VALID'
-                  ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                  ? 'bg-emerald-100 dark:bg-[#064E3B]/70 text-emerald-950 dark:text-[#34D399] border border-emerald-300 dark:border-emerald-500/70'
                   : report.tls_analysis.certificate_status === 'EXPIRED'
-                  ? 'bg-rose-50 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
-                  : 'bg-amber-50 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800'
+                  ? 'bg-rose-100 dark:bg-[#450A0A]/80 text-rose-950 dark:text-[#F87171] border border-rose-300 dark:border-red-500/80'
+                  : 'bg-amber-100 dark:bg-[#451A03]/70 text-amber-950 dark:text-[#FBBF24] border border-amber-300 dark:border-amber-500/70'
               }`}
             >
               {report.tls_analysis.certificate_status}
             </span>
           ) : (
-            <span className="text-[11px] font-mono text-slate-500">N/A</span>
+            <span className="text-[11px] font-mono text-slate-600 dark:text-slate-400 font-bold">N/A</span>
           )}
         </button>
 

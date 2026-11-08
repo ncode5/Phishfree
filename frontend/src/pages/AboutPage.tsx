@@ -17,14 +17,14 @@ export const AboutPage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-10 pb-16 font-sans">
       {/* Hero Header */}
-      <div className="space-y-3 border-b border-slate-200 dark:border-slate-800 pb-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+      <div className="space-y-3 border-b border-slate-300 dark:border-[#1A2844] pb-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-[#00D29E]/20 border border-emerald-300 dark:border-[#00D29E]/40 text-xs font-bold text-emerald-950 dark:text-[#00E5A3]">
           <span>Project Whitepaper & Architectural Overview</span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-white">
           AI-Powered Web Threat Detection & Digital Trust Intelligence
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed">
+        <p className="text-slate-800 dark:text-slate-300 text-sm md:text-base leading-relaxed font-medium">
           A multi-layered cybersecurity intelligence platform designed for high-consequence threat intelligence to help
           individuals and organisations detect malicious links, brand impersonation campaigns, fraudulent
           payment gates, and digital deception before becoming victims.
@@ -35,11 +35,11 @@ export const AboutPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Domain 1: AI */}
         <div className="phish-card p-6 space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center">
-            <Cpu className="w-5 h-5 text-blue-700 dark:text-blue-400" />
+          <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-800 flex items-center justify-center">
+            <Cpu className="w-5 h-5 text-blue-800 dark:text-blue-400" />
           </div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white">Artificial Intelligence</h3>
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          <h3 className="text-base font-bold text-slate-950 dark:text-white">Artificial Intelligence</h3>
+          <p className="text-xs text-slate-800 dark:text-slate-300 leading-relaxed font-medium">
             Acts as an evidence synthesizer and explainability layer. Translates complex cybersecurity
             telemetry (DNS zone anomalies, redirect hops, brand distance) into human-readable narratives
             and actionable user recommendations, guarded strictly against prompt injection.
@@ -48,11 +48,11 @@ export const AboutPage: React.FC = () => {
 
         {/* Domain 2: Cybersecurity */}
         <div className="phish-card p-6 space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center">
-            <Lock className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+          <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-[#00D29E]/20 border border-emerald-300 dark:border-[#00D29E]/40 flex items-center justify-center">
+            <Lock className="w-5 h-5 text-emerald-800 dark:text-[#00E5A3]" />
           </div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white">Cybersecurity Engineering</h3>
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          <h3 className="text-base font-bold text-slate-950 dark:text-white">Cybersecurity Engineering</h3>
+          <p className="text-xs text-slate-800 dark:text-slate-300 leading-relaxed font-medium">
             Powers the deterministic detection core: RFC-compliant URL normalization, Levenshtein
             brand typosquatting detection, Punycode homograph decoding, asynchronous DNS zone audits,
             and strict Server-Side Request Forgery (SSRF) protection against private IPs.
@@ -61,11 +61,11 @@ export const AboutPage: React.FC = () => {
 
         {/* Domain 3: Web3 */}
         <div className="phish-card p-6 space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 flex items-center justify-center">
-            <Globe className="w-5 h-5 text-purple-700 dark:text-purple-400" />
+          <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/60 border border-purple-300 dark:border-purple-800 flex items-center justify-center">
+            <Globe className="w-5 h-5 text-purple-800 dark:text-purple-400" />
           </div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white">Web3 & Trust Registry</h3>
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          <h3 className="text-base font-bold text-slate-950 dark:text-white">Web3 & Trust Registry</h3>
+          <p className="text-xs text-slate-800 dark:text-slate-300 leading-relaxed font-medium">
             Provides the architectural foundation for tamper-evident, decentralized threat intelligence.
             Cryptographic report hashes committed on-chain establish verifiable provenance and prevent
             silent modification of incident records across distributed organizations.

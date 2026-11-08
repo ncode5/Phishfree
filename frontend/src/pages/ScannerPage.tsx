@@ -90,14 +90,14 @@ export const ScannerPage: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
-          <Shield className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-[#00D29E]/20 border border-emerald-300 dark:border-[#00D29E]/40 text-xs font-bold text-emerald-950 dark:text-[#00E5A3]">
+          <Shield className="w-3.5 h-3.5 text-emerald-800 dark:text-[#00E5A3]" />
           <span>Module 1 · URL Security Scanner</span>
         </div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-950 dark:text-white">
           Investigate Website & URL Threats
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 text-sm max-w-xl mx-auto">
+        <p className="text-slate-800 dark:text-slate-300 text-sm max-w-xl mx-auto font-medium">
           Submit any website address, shortened link, or suspicious domain. Our engine collects evidence,
           measures risk, and provides human-readable recommendations.
         </p>
@@ -107,31 +107,31 @@ export const ScannerPage: React.FC = () => {
       <div className="phish-card p-6 md:p-8">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2">
               Target URL or Domain
             </label>
             <div className="relative">
-              <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400" />
               <input
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 disabled={loading}
                 placeholder="https://example.com/login or bare domain paypal-security.com"
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900/80 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 font-mono disabled:opacity-50 transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-white dark:bg-[#070C18] border border-slate-300 dark:border-[#1A2844] rounded-xl text-sm text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 font-bold focus:outline-none focus:border-emerald-700 dark:focus:border-[#00D29E] focus:ring-1 focus:ring-emerald-700 dark:focus:ring-[#00D29E] font-mono disabled:opacity-50 transition-all"
               />
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">
+            <p className="text-[11px] text-slate-700 dark:text-slate-400 mt-1.5 font-medium">
               Protocol defaults to http:// if omitted. Only HTTP and HTTPS destinations are permitted.
             </p>
           </div>
 
           {error && (
-            <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
+            <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/70 border border-rose-300 dark:border-rose-800 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-rose-700 dark:text-rose-400 shrink-0 mt-0.5" />
               <div className="space-y-1 text-sm">
-                <div className="font-semibold text-rose-900 dark:text-rose-200">Analysis Halted</div>
-                <div className="text-rose-700 dark:text-rose-300 text-xs">{error}</div>
+                <div className="font-bold text-rose-950 dark:text-rose-200">Analysis Halted</div>
+                <div className="text-rose-800 dark:text-rose-300 text-xs font-medium">{error}</div>
               </div>
             </div>
           )}
@@ -139,7 +139,7 @@ export const ScannerPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading || !url.trim()}
-            className="w-full py-3.5 px-6 bg-[#047857] hover:bg-[#065f46] text-white font-semibold rounded-xl text-sm shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3.5 px-6 bg-emerald-800 hover:bg-emerald-700 dark:bg-[#00D29E] dark:hover:bg-[#00b887] text-white dark:text-slate-950 font-bold rounded-xl text-sm shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -157,10 +157,10 @@ export const ScannerPage: React.FC = () => {
 
         {/* Loading Pipeline State Progression */}
         {loading && (
-          <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-6 space-y-4">
-            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-mono">
+          <div className="mt-8 border-t border-slate-200 dark:border-[#1A2844] pt-6 space-y-4">
+            <div className="flex items-center justify-between text-xs text-slate-700 dark:text-slate-400 font-mono font-bold">
               <span>SCAN PIPELINE IN PROGRESS</span>
-              <span className="text-emerald-700 dark:text-emerald-400 font-semibold animate-pulse">
+              <span className="text-emerald-800 dark:text-[#00E5A3] font-bold animate-pulse">
                 STEP {currentStepIndex + 1} OF {PIPELINE_STEPS.length}
               </span>
             </div>
@@ -176,20 +176,20 @@ export const ScannerPage: React.FC = () => {
                     key={step.id}
                     className={`flex items-center gap-3 p-3 rounded-xl border text-xs transition-all ${
                       isCurrent
-                        ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 shadow-sm'
+                        ? 'bg-emerald-100 dark:bg-[#00D29E]/20 border-emerald-300 dark:border-[#00D29E]/40 text-emerald-950 dark:text-[#00E5A3] shadow-sm font-bold'
                         : isDone
-                        ? 'bg-slate-50 dark:bg-slate-900/60 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400'
-                        : 'bg-slate-50/50 dark:bg-slate-900/30 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500'
+                        ? 'bg-slate-100 dark:bg-[#070C18] border-emerald-300 dark:border-emerald-700 text-emerald-950 dark:text-[#34D399] font-semibold'
+                        : 'bg-slate-50 dark:bg-[#070C18]/60 border-slate-200 dark:border-[#1A2844] text-slate-500 dark:text-slate-500'
                     }`}
                   >
                     {isDone ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-[#00E5A3] shrink-0" />
                     ) : isCurrent ? (
-                      <div className="w-4 h-4 border-2 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin shrink-0" />
+                      <div className="w-4 h-4 border-2 border-emerald-700/30 border-t-emerald-700 dark:border-[#00D29E]/30 dark:border-t-[#00D29E] rounded-full animate-spin shrink-0" />
                     ) : (
-                      <Icon className="w-4 h-4 text-slate-400 dark:text-slate-600 shrink-0" />
+                      <Icon className="w-4 h-4 text-slate-500 dark:text-slate-500 shrink-0" />
                     )}
-                    <span className="font-medium font-mono">{step.label}</span>
+                    <span className="font-mono">{step.label}</span>
                   </div>
                 );
               })}
@@ -200,11 +200,11 @@ export const ScannerPage: React.FC = () => {
 
       {/* Preset Test Case Scenarios */}
       <div className="phish-card p-6">
-        <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-1.5 flex items-center gap-2">
-          <FileCode className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+        <h3 className="text-sm font-bold text-slate-950 dark:text-white mb-1.5 flex items-center gap-2">
+          <FileCode className="w-4 h-4 text-emerald-800 dark:text-[#00E5A3]" />
           <span>Curated Demonstration Test Cases</span>
         </h3>
-        <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">
+        <p className="text-xs text-slate-800 dark:text-slate-300 mb-4 font-medium">
           Click on any benchmark target to populate the scanner and explore how the engine detects each threat vector:
         </p>
 
@@ -217,27 +217,27 @@ export const ScannerPage: React.FC = () => {
                 setUrl(item.url);
                 setError(null);
               }}
-              className="text-left p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-100/70 dark:hover:bg-slate-800/50 transition-colors group"
+              className="text-left p-3.5 rounded-xl bg-slate-100 dark:bg-[#070C18] border border-slate-300 dark:border-[#1A2844] hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-200/70 dark:hover:bg-slate-800/50 transition-colors group"
             >
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs font-semibold text-slate-900 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                <span className="text-xs font-bold text-slate-950 dark:text-white group-hover:text-emerald-800 dark:group-hover:text-[#00E5A3] transition-colors">
                   {item.label}
                 </span>
                 <span
-                  className={`text-[10px] px-2 py-0.5 rounded-full font-mono uppercase font-semibold ${
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-mono uppercase font-bold ${
                     item.type === 'safe'
-                      ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                      ? 'bg-emerald-100 dark:bg-[#064E3B]/70 text-emerald-950 dark:text-[#34D399] border border-emerald-300 dark:border-emerald-500/70'
                       : item.type === 'phish'
-                      ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+                      ? 'bg-rose-100 dark:bg-[#450A0A]/80 text-rose-950 dark:text-[#F87171] border border-rose-300 dark:border-red-500/80'
                       : item.type === 'attack'
-                      ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
-                      : 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800'
+                      ? 'bg-purple-100 dark:bg-purple-950/70 text-purple-950 dark:text-purple-300 border border-purple-300 dark:border-purple-800'
+                      : 'bg-amber-100 dark:bg-[#451A03]/70 text-amber-950 dark:text-[#FBBF24] border border-amber-300 dark:border-amber-500/70'
                   }`}
                 >
                   {item.type}
                 </span>
               </div>
-              <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 truncate">{item.url}</div>
+              <div className="text-[11px] font-mono text-slate-700 dark:text-slate-300 font-medium truncate">{item.url}</div>
             </button>
           ))}
         </div>

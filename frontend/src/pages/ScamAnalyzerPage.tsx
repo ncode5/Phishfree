@@ -165,14 +165,14 @@ export const ScamAnalyzerPage: React.FC = () => {
     <div className="max-w-6xl mx-auto space-y-10 pb-16">
       {/* Header Banner */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
-          <MessageSquare className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100 dark:bg-[#00D29E]/20 border border-emerald-300 dark:border-[#00D29E]/40 text-xs font-bold text-emerald-950 dark:text-[#00E5A3]">
+          <MessageSquare className="w-3.5 h-3.5 text-emerald-800 dark:text-[#00E5A3]" />
           <span>Module 3 — AI Scam & Social Engineering Intelligence</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-white">
           Inspect Suspicious Messages & Scams
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl mx-auto">
+        <p className="text-slate-800 dark:text-slate-300 text-sm max-w-2xl mx-auto font-medium">
           Paste any SMS, WhatsApp alert, phishing email, investment offer, or job proposition.
           Our multi-engine pipeline parses social engineering lures, isolates embedded URLs, and explains risks with grounded AI.
         </p>
@@ -180,18 +180,18 @@ export const ScamAnalyzerPage: React.FC = () => {
 
       {/* Main Analysis Form Card */}
       <div className="phish-card p-6 sm:p-8 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-300 dark:border-[#1A2844] pb-4">
           <div className="flex items-center gap-2">
-            <Terminal className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Message Ingestion & Pre-Processing</h2>
+            <Terminal className="w-5 h-5 text-emerald-800 dark:text-[#00E5A3]" />
+            <h2 className="text-lg font-bold text-slate-950 dark:text-white">Message Ingestion & Pre-Processing</h2>
           </div>
-          <div className="flex items-center gap-4 text-xs font-mono text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-4 text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
             <span>Length: {message.length} / 20,000</span>
             {message.length > 0 && (
               <button
                 type="button"
                 onClick={() => setMessage('')}
-                className="text-rose-600 dark:text-rose-400 hover:underline transition-colors font-medium"
+                className="text-rose-700 dark:text-rose-400 hover:underline transition-colors font-bold"
               >
                 Clear
               </button>
@@ -207,18 +207,18 @@ export const ScamAnalyzerPage: React.FC = () => {
             placeholder="Paste suspicious SMS, email body, WhatsApp message, KYC alert, lottery notification, job offer, or crypto pitch here..."
             rows={6}
             maxLength={20000}
-            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all font-sans text-sm resize-y"
+            className="w-full px-4 py-3 bg-white dark:bg-[#070C18] border border-slate-300 dark:border-[#1A2844] rounded-xl text-slate-950 dark:text-white placeholder-slate-500 font-medium focus:outline-none focus:border-emerald-700 dark:focus:border-[#00D29E] focus:ring-1 focus:ring-emerald-700 dark:focus:ring-[#00D29E] transition-all font-sans text-sm resize-y"
           />
         </div>
 
         {/* Options & Action Row */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-          <label className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 cursor-pointer select-none">
+          <label className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-900 dark:text-slate-200 font-bold cursor-pointer select-none">
             <input
               type="checkbox"
               checked={analyzeUrls}
               onChange={(e) => setAnalyzeUrls(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0 cursor-pointer"
+              className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-[#070C18] text-emerald-700 focus:ring-emerald-600 focus:ring-offset-0 cursor-pointer"
             />
             <span>Deep-scan extracted URLs & TLS certificates via Module 1 & 2</span>
           </label>
@@ -227,7 +227,7 @@ export const ScamAnalyzerPage: React.FC = () => {
             type="button"
             onClick={() => handleAnalyze()}
             disabled={loading || !message.trim()}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3 bg-[#047857] hover:bg-[#065f46] text-white rounded-xl font-semibold text-sm shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3 bg-emerald-800 hover:bg-emerald-700 dark:bg-[#00D29E] dark:hover:bg-[#00b887] text-white dark:text-slate-950 rounded-xl font-bold text-sm shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -245,19 +245,19 @@ export const ScamAnalyzerPage: React.FC = () => {
 
         {/* Error message */}
         {error && (
-          <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 flex items-start gap-3 text-rose-800 dark:text-rose-300 text-sm">
-            <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/70 border border-rose-300 dark:border-rose-800 flex items-start gap-3 text-rose-900 dark:text-rose-200 text-sm">
+            <AlertTriangle className="w-5 h-5 text-rose-700 dark:text-rose-400 shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold text-rose-900 dark:text-rose-200">Analysis Failed</p>
-              <p className="text-xs text-rose-700 dark:text-rose-300/90 mt-0.5">{error}</p>
+              <p className="font-bold text-rose-950 dark:text-rose-200">Analysis Failed</p>
+              <p className="text-xs text-rose-800 dark:text-rose-300/90 mt-0.5 font-medium">{error}</p>
             </div>
           </div>
         )}
 
         {/* Preset Sample Quick Pickers */}
-        <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+        <div className="space-y-3 pt-3 border-t border-slate-300 dark:border-[#1A2844]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-800 dark:text-slate-300 uppercase tracking-wider">
               Quick Test Samples (Click to load):
             </span>
           </div>
@@ -267,18 +267,18 @@ export const ScamAnalyzerPage: React.FC = () => {
                 key={idx}
                 type="button"
                 onClick={() => selectPreset(preset.text)}
-                className="text-left p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-100/70 dark:hover:bg-slate-800/50 transition-all group"
+                className="text-left p-3.5 rounded-xl bg-slate-100 dark:bg-[#070C18] border border-slate-300 dark:border-[#1A2844] hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-200/70 dark:hover:bg-slate-800/50 transition-all group"
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-semibold border ${preset.color}`}>
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold border ${preset.color}`}>
                     {preset.category}
                   </span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400">{preset.badge}</span>
+                  <span className="text-[10px] font-bold text-slate-700 dark:text-slate-400">{preset.badge}</span>
                 </div>
-                <div className="text-xs font-semibold text-slate-900 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors line-clamp-1">
+                <div className="text-xs font-bold text-slate-950 dark:text-white group-hover:text-emerald-800 dark:group-hover:text-[#00E5A3] transition-colors line-clamp-1">
                   {preset.title}
                 </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-2 mt-1 font-mono">
+                <p className="text-[11px] text-slate-800 dark:text-slate-300 line-clamp-2 mt-1 font-mono font-medium">
                   {preset.text}
                 </p>
               </button>

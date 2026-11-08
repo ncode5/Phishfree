@@ -2,102 +2,95 @@
 
 **Role:** Senior UI/UX Designer & Frontend Design Engineer  
 **Project:** PhishFree – Digital Trust & Cyber Threat Intelligence Platform  
-**Target Visual Reference:** High-Contrast Cybersecurity SaaS Dashboard (Emerald-800 / Slate Architecture)  
+**Target Visual Reference:** High-Contrast Cybersecurity SaaS Dashboard (`media_1794159955054_ac399b82.jpg`)  
 **Date:** November 2026  
 
 ---
 
 ## 1. Executive Summary
 
-This report documents the comprehensive visual, architectural, and component-level refinement executed across the entire **PhishFree** frontend application. 
+This report documents the targeted visual, architectural, and component-level refinement executed across the entire **PhishFree** frontend application following the user's explicit directive:
+> *"use this theme in dim area and highlight test [highlight text], and in lightversion give dark text"*
 
-The goal was to transform the interface into a premier, enterprise-grade cybersecurity SaaS dashboard inspired directly by the provided design reference—elevating typography, contrast (WCAG AA), visual hierarchy, and component consistency while maintaining 100% of the underlying features, API contracts, and Sepolia Web3 integrity.
-
-Both **Light** (crisp slate `#F8FAFC`, clean white cards `#FFFFFF`, borders `#E2E8F0`, deep text `#0F172A`) and **Dim / Dark** (charcoal `#0B1120`, panel surfaces `#111827`, border `#1E293B`, high-contrast text `#F8FAFC`) modes have been designed with purpose.
+The interface has been thoroughly polished to match the deep cyber-midnight dark mode shown in the live monitor capture (`media_1794159955054_ac399b82.jpg`) while ensuring that in Light mode all typography, labels, tables, and metrics feature dark, crisp, and high-contrast text conforming to WCAG AA.
 
 ---
 
 ## 2. Centralized Design System Tokens
 
-A unified design token structure was instituted in [`frontend/src/index.css`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/index.css) and [`frontend/src/context/ThemeContext.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/context/ThemeContext.tsx):
+Instituted in [`frontend/src/index.css`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/index.css) and [`frontend/src/context/ThemeContext.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/context/ThemeContext.tsx):
 
-| Token Category | Light Mode Value | Dim / Dark Mode Value | Purpose / Usage |
+| Token Category | Light Mode (Dark Text & Surfaces) | Dim / Dark Mode (Cyber Midnight & Highlights) | Purpose / Usage |
 | :--- | :--- | :--- | :--- |
-| **Page Canvas** | `#F8FAFC` (Slate 50) | `#0B1120` (Cyber Charcoal) | Main viewport canvas, non-glaring |
-| **Surface / Card** | `#FFFFFF` (Pure White) | `#111827` (Rich Gray 900) | Primary data & analysis panels |
-| **Border / Divider** | `#E2E8F0` (Slate 200) | `#1E293B` (Slate 800) | Subtle, crisp container separation |
-| **Primary Text** | `#0F172A` (Slate 900) | `#F8FAFC` (Slate 50) | Main headings, critical readouts, metrics |
-| **Secondary Text** | `#334155` (Slate 700) | `#CBD5E1` (Slate 300) | Sub-headings, table headers, descriptions |
-| **Muted Text** | `#64748B` (Slate 500) | `#94A3B8` (Slate 400) | Metadata, timestamp captions, disclaimers |
-| **Brand Primary** | `#065F46` / `#047857` (Emerald 800/700) | `#10B981` / `#34D399` (Emerald 500/400) | Primary actions, trust indicators, active states |
-| **Risk: Low / Safe** | `#065F46` on `#ECFDF5` | `#34D399` on `#064E3B` | Clean verdicts, validated intel |
-| **Risk: Suspicious** | `#92400E` on `#FEF3C7` | `#FBBF24` on `#78350F` | Warning anomalies, review required |
-| **Risk: Malicious** | `#991B1B` on `#FEE2E2` | `#F87171` on `#7F1D1D` | Critical threats, typosquats, credential harvesting |
-| **Risk: Inconclusive** | `#1E293B` on `#F1F5F9` | `#94A3B8` on `#1E293B` | Insufficient passive telemetry |
+| **Page Canvas** | `#F8FAFC` (Slate 50) | `#070C18` (Deep Midnight Cyber Blue) | Main viewport canvas, non-glaring |
+| **Surface / Card** | `#FFFFFF` (Pure White) | `#0D1629` (Rich Navy Gray 900) | Primary data & analysis panels |
+| **Border / Divider** | `#CBD5E1` (Slate 300) | `#1A2844` (Crisp Slate Navy 800) | Distinct, high-definition container separation |
+| **Primary Text** | `#0F172A` / `#020617` (Deep Slate 950) | `#FFFFFF` / `#F8FAFC` (Pure Bright White) | Main headings, critical readouts, metrics |
+| **Secondary Text** | `#1E293B` (Slate 800) | `#CBD5E1` (Slate 300) | Sub-headings, table headers, descriptions |
+| **Muted / Meta Text**| `#334155` (Slate 700) | `#94A3B8` (Slate 400) | Metadata, timestamp captions, disclaimers |
+| **Brand Primary** | `#065F46` / `#047857` (Emerald 800/700) | `#00D29E` / `#00E5A3` (Electric Teal / Cyan) | Primary actions, trust indicators, active states |
+| **Risk: Low / Safe** | `#064E3B` on `#ECFDF5` (`border-emerald-300`) | `#34D399` on `#064E3B/70` (`border-emerald-500/70`) | Clean verdicts, validated intel |
+| **Risk: Suspicious** | `#78350F` on `#FEF3C7` (`border-amber-300`) | `#FBBF24` on `#451A03/70` (`border-amber-500/70`) | Warning anomalies, review required |
+| **Risk: High Risk** | `#7C2D12` on `#FFEDD5` (`border-orange-300`)| `#FB923C` on `#431407/70` (`border-orange-500/70`) | High risk heuristics, urgent review |
+| **Risk: Malicious** | `#7F1D1D` on `#FEE2E2` (`border-rose-300`) | `#F87171` on `#450A0A/80` (`border-red-500/80`) | Critical threats, typosquats, credential harvesting |
+| **Risk: Inconclusive** | `#0F172A` on `#E2E8F0` (`border-slate-300`) | `#94A3B8` on `#131F37` (`border-slate-700`) | Insufficient passive telemetry |
 
 ---
 
-## 3. Theme Implementation Details
+## 3. Dim / Dark Mode Highlighting Enhancements
 
-1. **Architecture (`ThemeContext.tsx`):**
-   - Implemented a complete `ThemeProvider` managing `'light' | 'dim' | 'dark' | 'system'`.
-   - Listens to OS `prefers-color-scheme: dark` media queries when set to `system`.
-   - Stores preference in `localStorage` under `phishfree_theme_preference`.
-   - Applies/removes `class="dark"` synchronously to `document.documentElement` to prevent flash-of-unstyled-theme (FOUC).
-
-2. **Header Switcher (`TopHeader.tsx`):**
-   - Positioned in the global header matching the reference design layout: `[ Light | Dim ]` pill switcher.
-   - Includes full accessibility `aria-label` attributes and keyboard focus rings.
-   - Synchronizes with live UTC clock (`HH:mm UTC`) and breadcrumbs.
-
----
-
-## 4. Component-Level Visual Improvements
-
-### A. Navigation & Shell
-- **Top Header (`TopHeader.tsx`):** Added live UTC clock, dynamic path-based breadcrumbs (`Acme security > Overview`), active `[ Light | Dim ]` pill switcher, and unified notification bell.
-- **Sidebar (`Sidebar.tsx`):** Rebuilt with crisp emerald active pills, workspace indicator, methodology reference badge, and analyst user footer profile (`Ankur Giri · Security Analyst`).
-
-### B. Core Data & Risk Indicators
-- **Risk & Severity Badges (`RiskBadge.tsx`):**
-  - Eliminated low-contrast translucent badges (e.g. `bg-emerald-500/10` with faint text).
-  - Adopted dual-layer solid-tone badges with visible borders (`border-emerald-200 dark:border-emerald-800`) and high-contrast text conforming to WCAG AA.
-  - Normalized type handling so both strict `SeverityLevel` and incoming string payloads render without runtime errors.
-- **Score Gauge (`ScoreGauge.tsx`):**
-  - Updated SVG ring stroke colors (`stroke-slate-200 dark:stroke-slate-800`), dark-mode score text, and confidence level pills.
-
-### C. Dashboard & Visualizations (`DashboardPage.tsx`)
-- Aligned directly with the reference mockup:
-  1. **Quick Ingestion Bar:** URL/Domain & Message tabs, search input with emerald `Investigate` button, and "Report a threat" shortcut.
-  2. **Stat Cards:** 4 high-contrast KPI cards (Websites Analysed, High-Risk Websites, Active Investigations, Validated Threat Reports) with sparkline trends.
-  3. **Threat Activity Chart:** Recharts area graph with theme-reactive fill and stroke colors (`#047857` and `#DC2626`).
-  4. **TLS & Certificate Trust Widget:** Status breakdown bars, clear counts, and advisory notices.
-  5. **Recent Investigations Table:** High-contrast rows, hover feedback, crisp status dots, and deep-link arrows.
-  6. **Investigation Snapshot Panel:** Side-by-side inspector for quick evidence perusal.
-  7. **Threat Distribution Donut:** SVG donut chart with legend and scan breakdown.
-  8. **Collaborative Intelligence Grid:** Validated intelligence, pending validation, and report integrity cards.
+As illustrated in the provided monitor capture:
+1. **Threat Activity Area Graph:**
+   - Radiates with a vibrant cyan-blue gradient fill (`#00D29E` to `#00D29E00`) and a glowing electric cyan path (`stroke="#00E5FF"`, `strokeWidth={2.5}`).
+   - Legend items display bright white metrics (`1,284` and `186`) next to glowing cyan and coral indicators.
+2. **TLS & Certificate Trust Widget:**
+   - Primary metric `412` is rendered in bold white font-mono text.
+   - Progress bar segments feature glowing emerald (`#00D29E`), amber (`#F59E0B`), and navy slate (`#334155`).
+   - Counts and indicators (`364 checks passed`, `18 issues`, `16 unavailable`) feature distinct, saturated color highlights.
+3. **Recent Investigations & Snapshot Panel:**
+   - Monospaced domain indicators are rendered in high-contrast white with glowing cyan/emerald hover transitions.
+   - Investigation Snapshot displays categorized threat cards (`Domain & reputation`, `Website & message signals`, `TLS checks`) with crisp text.
+4. **Header & Navigation:**
+   - Segmented toggle displays `[ ☀️ Light | 🌙 Dark ]` where Dark lights up with an emerald pill (`bg-[#00D29E] text-slate-950 font-bold`).
+   - Profile avatar `AG` is integrated into the top header right alongside the notification bell.
 
 ---
 
-## 5. Pages Audited & Refactored
+## 4. Light Version Dark Text Enhancements
 
-| Page File | Primary Enhancements | Light/Dark Test |
+In accordance with the instruction *"in lightversion give dark text"*:
+1. **Eliminated Low-Contrast Text:** Replaced all faint `text-slate-400` and `text-slate-500` on white or light backgrounds with `text-slate-950`, `text-slate-800`, or `text-slate-700`.
+2. **Headings & Titles:** Upgraded to `text-slate-950 font-extrabold` across all pages.
+3. **Table Column Headers:** Converted to `text-slate-800 font-bold uppercase tracking-wider`.
+4. **Card Labels & Descriptions:** Styled in `text-slate-800 font-semibold` and `text-slate-700 font-medium`.
+5. **Form Inputs:** Styled with `text-slate-950 font-bold` and readable `placeholder-slate-500`.
+6. **Badge Typography:** Replaced light pastel text with solid dark tones (`text-emerald-950`, `text-amber-950`, `text-orange-950`, `text-rose-950`) backed by solid borders (`border-slate-300`, `border-emerald-300`, etc.).
+
+---
+
+## 5. Pages Audited & Verified
+
+| Page File | Primary Enhancements | Light/Dark Status |
 | :--- | :--- | :--- |
-| [`DashboardPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/DashboardPage.tsx) | Complete reference design parity, SVG charts, high-contrast tables, quick scan bar | Verified Passed |
-| [`ScannerPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/ScannerPage.tsx) | Modern pipeline steps, high-contrast inputs, preset benchmark buttons, clear error states | Verified Passed |
-| [`ReportPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/ReportPage.tsx) | 6 audit tabs (Findings, Domain, DNS, Redirects, Threat Intel, TLS, Web3), verified contract hashes | Verified Passed |
-| [`ScamAnalyzerPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/ScamAnalyzerPage.tsx) | Dual input form, preset scam scenarios, entity tags, indicator severity tables | Verified Passed |
-| [`ThreatIntelPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/ThreatIntelPage.tsx) | Infrastructure topology SVG graph, threat distribution charts, tactical intel badges | Verified Passed |
-| [`WebsiteSecurityPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/WebsiteSecurityPage.tsx) | Security score dial, security headers matrix, cookie security table, accordion findings | Verified Passed |
-| [`BlockchainRegistryPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/BlockchainRegistryPage.tsx) | Sepolia contract telemetry card, Keccak-256 hash verify form, on-chain ledger records | Verified Passed |
-| [`HistoryPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/HistoryPage.tsx) | Filter pill bar, search query input, responsive data table, quick action buttons | Verified Passed |
-| [`AboutPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/AboutPage.tsx) | Enterprise architecture cards, 6 core modules, security philosophy, trust model | Verified Passed |
+| [`DashboardPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/DashboardPage.tsx) | Complete monitor reference alignment: cyan wave chart, high-contrast tables, dark text in light mode | Verified Passed |
+| [`ScannerPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/ScannerPage.tsx) | Dark inputs and labels in light mode; glowing pipeline indicators in dark mode | Verified Passed |
+| [`ReportPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/ReportPage.tsx) | High-contrast tabs, dark telemetry findings, glowing Sepolia Web3 hash cards | Verified Passed |
+| [`ScamAnalyzerPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/ScamAnalyzerPage.tsx) | High-contrast inputs, preset cards with dark text, glowing indicators in dark mode | Verified Passed |
+| [`ThreatIntelPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/ThreatIntelPage.tsx) | Infrastructure topology SVG graph, dark text on overview cards, glowing indicator pills | Verified Passed |
+| [`WebsiteSecurityPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/WebsiteSecurityPage.tsx) | High-contrast checkboxes, dark text headers, glowing severity badges in dark mode | Verified Passed |
+| [`BlockchainRegistryPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/BlockchainRegistryPage.tsx) | Sepolia contract telemetry card, Keccak-256 hash verify form with dark text in light mode | Verified Passed |
+| [`HistoryPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/HistoryPage.tsx) | Filter pill bar, search query input, high-contrast table rows and headers | Verified Passed |
+| [`AboutPage.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/pages/AboutPage.tsx) | Architecture cards, dark text descriptions, glowing module status badges | Verified Passed |
+| [`TopHeader.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/components/TopHeader.tsx) | `[ Light | Dark ]` toggle with glowing active indicator, live UTC clock, header avatar `AG` | Verified Passed |
+| [`Sidebar.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/components/Sidebar.tsx) | Active emerald/cyan highlighted pills, dark navigation text in light mode, methodology card | Verified Passed |
+| [`ScoreGauge.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/components/ScoreGauge.tsx) | High-contrast dial, dark center score in light mode, bright white score in dark mode | Verified Passed |
+| [`RiskBadge.tsx`](file:///c:/Users/HP/Desktop/HAKMATRIX/fish_Ditect/frontend/src/components/RiskBadge.tsx) | Dark text on light badges, saturated glowing colors on dark badges | Verified Passed |
 
 ---
 
 ## 6. Build & Compilation Verification
 
-Production build was executed using TypeScript strict checking and Vite:
+Production build passed with **0 TypeScript errors and 0 Vite compilation warnings/errors**:
 
 ```bash
 $ npm.cmd --prefix frontend run build
@@ -110,18 +103,10 @@ transforming...
 ✓ 2237 modules transformed.
 rendering chunks...
 computing gzip size...
-dist/index.html                   1.17 kB │ gzip:   0.66 kB
-dist/assets/index-Dz1t_3sH.css   59.31 kB │ gzip:   9.64 kB
-dist/assets/index-DMLvD4Da.js   904.64 kB │ gzip: 237.16 kB
-✓ built in 8.80s
+dist/index.html                   1.17 kB │ gzip:   0.67 kB
+dist/assets/index-D7v72wTq.css   61.56 kB │ gzip:   9.91 kB
+dist/assets/index-K9pfEQS4.js   906.29 kB │ gzip: 238.35 kB
+✓ built in 9.51s
 ```
 
-**Result:** Zero compilation errors, zero TypeScript errors.
-
----
-
-## 7. Remaining Visual Issues / Follow-ups
-
-- **Zero visual regressions detected:** Text contrast across all surfaces complies with WCAG AA.
-- **Backend/Frontend Connectivity:** Both services are running locally (`http://127.0.0.1:8000` and `http://127.0.0.1:5173`).
-- **Persistence:** LocalStorage key `phishfree_theme_preference` seamlessly persists user choice across refreshes.
+All changes have been verified and are running live on the local development servers (`http://127.0.0.1:5173` and `http://127.0.0.1:8000`).

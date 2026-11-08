@@ -61,22 +61,22 @@ export const TopHeader: React.FC = () => {
   const isLightActive = theme === 'light' || (theme === 'system' && resolvedTheme === 'light');
 
   return (
-    <header className="h-16 bg-white dark:bg-[#0B1120] border-b border-slate-200/80 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 select-none transition-colors duration-200">
+    <header className="h-16 bg-white dark:bg-[#070C18] border-b border-slate-200 dark:border-[#1A2844] px-6 flex items-center justify-between shrink-0 select-none transition-colors duration-200">
       {/* Left Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
-        <Folder className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-        <span className="text-slate-700 dark:text-slate-300">Acme security</span>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-        <span className="font-semibold text-slate-900 dark:text-slate-100">{getPageTitle()}</span>
+      <div className="flex items-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-300">
+        <Folder className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+        <span className="text-slate-800 dark:text-slate-300">Acme security</span>
+        <ChevronRight className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+        <span className="font-bold text-slate-950 dark:text-white">{getPageTitle()}</span>
       </div>
 
       {/* Right Controls */}
       <div className="flex items-center gap-3">
-        {/* Light / Dim Segmented Switcher */}
+        {/* Light / Dark Segmented Switcher */}
         <div 
           role="radiogroup" 
           aria-label="Theme preference selector" 
-          className="flex items-center p-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800"
+          className="flex items-center p-0.5 rounded-full bg-slate-100 dark:bg-[#0D1629] border border-slate-300 dark:border-[#1A2844]"
         >
           <button
             type="button"
@@ -84,10 +84,10 @@ export const TopHeader: React.FC = () => {
             aria-checked={isLightActive}
             aria-label="Switch to Light Theme"
             onClick={() => setTheme('light')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
               isLightActive
                 ? 'bg-emerald-800 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                : 'text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
             }`}
           >
             <Sun className="w-3 h-3" />
@@ -97,30 +97,30 @@ export const TopHeader: React.FC = () => {
             type="button"
             role="radio"
             aria-checked={isDimActive}
-            aria-label="Switch to Dim / Dark Theme"
+            aria-label="Switch to Dark Theme"
             onClick={() => setTheme('dim')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
               isDimActive
-                ? 'bg-slate-800 dark:bg-emerald-700 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-[#00D29E] text-slate-950 shadow-sm shadow-emerald-500/20'
+                : 'text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
             }`}
           >
             <Moon className="w-3 h-3" />
-            <span>Dim</span>
+            <span>Dark</span>
           </button>
         </div>
 
         {/* Dashboard Pill Button */}
         <Link
           to="/"
-          className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200/90 dark:border-emerald-800 hover:bg-emerald-100/70 dark:hover:bg-emerald-900/60 transition-colors"
+          className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-[#00D29E]/15 text-emerald-950 dark:text-[#00E5A3] border border-emerald-300 dark:border-[#00D29E]/30 hover:bg-emerald-100 dark:hover:bg-[#00D29E]/25 transition-colors"
         >
           Dashboard
         </Link>
 
         {/* Live UTC Clock */}
-        <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300 font-medium px-2.5 py-1.5 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60">
-          <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+        <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-800 dark:text-slate-200 font-bold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-[#1A2844] bg-slate-100 dark:bg-[#0D1629]">
+          <Calendar className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
           <span className="font-mono text-[11px]">{currentUtc || '08 Nov 2026 · 17:15 UTC'}</span>
         </div>
 
@@ -129,10 +129,18 @@ export const TopHeader: React.FC = () => {
           tabIndex={0}
           role="button"
           aria-label="Notifications"
-          className="relative p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors cursor-pointer"
+          className="relative p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer"
         >
           <Bell className="w-4 h-4" />
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 absolute top-2 right-2 ring-2 ring-white dark:ring-[#0B1120]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 absolute top-2 right-2 ring-2 ring-white dark:ring-[#070C18]" />
+        </div>
+
+        {/* Top Header User Avatar */}
+        <div 
+          className="w-7 h-7 rounded-full bg-emerald-800 dark:bg-[#00D29E] text-white dark:text-slate-950 font-bold text-xs flex items-center justify-center shrink-0 shadow-sm"
+          title="Ankur Giri (Security Analyst)"
+        >
+          AG
         </div>
       </div>
     </header>

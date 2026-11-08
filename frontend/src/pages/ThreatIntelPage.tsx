@@ -185,23 +185,23 @@ export const ThreatIntelPage: React.FC = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12 font-sans">
       {/* Page Title & Subtitle */}
-      <div className="border-b border-slate-200 dark:border-slate-800 pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="border-b border-slate-300 dark:border-[#1A2844] pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 mb-3">
-            <Network className="w-3.5 h-3.5" /> Module 4: Intelligent Threat Correlation
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-[#00D29E]/20 text-emerald-950 dark:text-[#00E5A3] border border-emerald-300 dark:border-[#00D29E]/40 mb-3">
+            <Network className="w-3.5 h-3.5 text-emerald-800 dark:text-[#00E5A3]" /> Module 4: Intelligent Threat Correlation
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-3">
             Threat Intelligence Graph & Campaign Correlation
           </h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-2 max-w-3xl text-sm md:text-base leading-relaxed">
+          <p className="text-slate-800 dark:text-slate-300 mt-2 max-w-3xl text-sm md:text-base leading-relaxed font-medium">
             Connects indicators across URL structure, DNS networks, TLS certificates, and scam messaging patterns to uncover hidden infrastructure and multi-vector campaigns.
           </p>
         </div>
         <button
           onClick={() => { fetchOverview(); if (correlation) handleCorrelate(correlation.report_id); }}
-          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-800 shadow-sm transition"
+          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0D1629] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-200 rounded-xl text-sm font-bold border border-slate-300 dark:border-[#1A2844] shadow-sm transition"
         >
-          <RefreshCw className="w-4 h-4 text-emerald-700 dark:text-emerald-400" /> Refresh Telemetry
+          <RefreshCw className="w-4 h-4 text-emerald-800 dark:text-[#00E5A3]" /> Refresh Telemetry
         </button>
       </div>
 
@@ -210,34 +210,34 @@ export const ThreatIntelPage: React.FC = () => {
         {overview && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <div className="phish-card p-4">
-              <div className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Database className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" /> Indicators
+              <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <Database className="w-3.5 h-3.5 text-indigo-700 dark:text-indigo-400" /> Indicators
               </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{overview.total_indicators}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Monitored entities</div>
+              <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.total_indicators}</div>
+              <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-medium">Monitored entities</div>
             </div>
 
             <div className="phish-card p-4">
-              <div className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Globe className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> Domains
+              <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <Globe className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" /> Domains
               </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{overview.unique_domains}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Unique root hosts</div>
+              <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.unique_domains}</div>
+              <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-medium">Unique root hosts</div>
             </div>
 
             <div className="phish-card p-4">
-              <div className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Server className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" /> IP Subnets
+              <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <Server className="w-3.5 h-3.5 text-purple-700 dark:text-purple-400" /> IP Subnets
               </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{overview.unique_ips}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Hosting IPs tracked</div>
+              <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.unique_ips}</div>
+              <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-medium">Hosting IPs tracked</div>
             </div>
 
             <div className="phish-card p-4">
-              <div className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Lock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Certificates
+              <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <Lock className="w-3.5 h-3.5 text-emerald-800 dark:text-emerald-400" /> Certificates
               </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{overview.unique_certificates}</div>
+              <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.unique_certificates}</div>
               <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">X.509 fingerprints</div>
             </div>
 
