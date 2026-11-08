@@ -10,6 +10,11 @@ raw_db_url = settings.DATABASE_URL or "sqlite:///./trust_intel.db"
 if raw_db_url.startswith("postgres://"):
     raw_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
 
+# On Vercel serverless, the task working directory (/var/task) is read-only.
+# Fall back to writable /tmp directory if external hosted PostgreSQL is not provided.
+if os.getenv("VERCEL") and raw_db_url.startswith("sqlite"):
+    raw_db_url = "sqlite:////tmp/trust_intel.db"
+
 # Detect serverless environment (Vercel, AWS Lambda, or hosted pooler)
 is_serverless = bool(
     os.getenv("VERCEL") or 
