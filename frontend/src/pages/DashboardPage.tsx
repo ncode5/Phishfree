@@ -1,434 +1,908 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
-  ShieldAlert,
-  ShieldCheck,
-  AlertTriangle,
-  HelpCircle,
-  TrendingUp,
   Search,
-  ExternalLink,
-  ArrowRight,
-  RefreshCw,
-  Clock,
+  Globe,
+  Mail,
+  HelpCircle,
+  FileText,
   Layers,
-  MessageSquare
+  AlertTriangle,
+  ShieldCheck,
+  ArrowUpRight,
+  ChevronDown,
+  Info,
+  Link2,
+  Shield,
+  Lock,
+  Clock,
+  CheckCircle2,
+  ExternalLink,
+  ChevronRight
 } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
 import { api } from '../services/api';
 import { DashboardStats } from '../types';
-import { RiskBadge } from '../components/RiskBadge';
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [quickUrl, setQuickUrl] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<'url' | 'message'>('url');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [timeFilter, setTimeFilter] = useState<'7D' | '30D' | '90D'>('7D');
+  const [showHelper, setShowHelper] = useState<boolean>(false);
 
-  const fetchStats = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await api.getDashboardStats();
-      setStats(data);
-    } catch (err: any) {
-      setError(err?.message || 'Failed to load security metrics from backend.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Selected investigation row for the live snapshot preview
+  const [selectedSnapshot, setSelectedSnapshot] = useState({
+    indicator: 'account-verify.example',
+    riskLevel: 'High Risk',
+    badgeClass: 'bg-red-50 text-red-700 border-red-200',
+    evidenceCount: '8 / 10',
+    time: 'Today, 14:24 UTC',
+    domainNote: '2-day-old domain · 3 redirects · 7/94 VT engines flag it. DNS links to a reported indicator.',
+    signalNote: 'CSP absent. AI flags urgent credential requests; correlated with an impersonation report.',
+    tlsNote: 'Hostname, expiry, chain & key strength pass. Revocation and CT lookups unavailable.'
+  });
 
   useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await api.getDashboardStats();
+        setStats(data);
+      } catch (err) {
+        console.warn('Dashboard stats fallback to simulated telemetry:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchStats();
   }, []);
 
-  const handleQuickScan = (e: React.FormEvent) => {
+  const handleInvestigate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!quickUrl.trim()) return;
-    navigate(`/scanner?url=${encodeURIComponent(quickUrl.trim())}`);
+    if (!searchQuery.trim()) return;
+
+    if (activeTab === 'url') {
+      navigate(`/scanner?url=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate(`/scam-analyzer?message=${encodeURIComponent(searchQuery.trim())}`);
+    }
   };
 
+  // Mock chart data for 7-day investigation activity curve (matching visual mockup)
+  const activityData = [
+    { day: '01 Nov', investigations: 145, highRisk: 22 },
+    { day: '02 Nov', investigations: 160, highRisk: 28 },
+    { day: '03 Nov', investigations: 152, highRisk: 24 },
+    { day: '04 Nov', investigations: 178, highRisk: 31 },
+    { day: '05 Nov', investigations: 195, highRisk: 36 },
+    { day: '06 Nov', investigations: 215, highRisk: 42 },
+    { day: '07 Nov', investigations: 232, highRisk: 48 },
+  ];
+
+  // Threat Distribution Donut Data
+  const donutData = [
+    { name: 'Safe Websites', value: 20, color: '#10B981' },
+    { name: 'Phishing Websites', value: 18, color: '#3B82F6' },
+    { name: 'Suspicious Websites', value: 14, color: '#F59E0B' },
+    { name: 'Malicious URLs', value: 48, color: '#EF4444' },
+  ];
+
+  // Recent investigation sample rows
+  const recentRows = [
+    {
+      indicator: 'wallet-sync.example',
+      risk: 'Confirmed Malicious',
+      badgeClass: 'bg-red-50 text-red-700 border-red-200',
+      evidence: 'VT / Safe Browsing',
+      status: 'Reviewed',
+      statusDot: 'bg-emerald-500',
+      utc: '14:29',
+      snapshot: {
+        indicator: 'wallet-sync.example',
+        riskLevel: 'Confirmed Malicious',
+        badgeClass: 'bg-red-50 text-red-700 border-red-200',
+        evidenceCount: '10 / 10',
+        time: 'Today, 14:29 UTC',
+        domainNote: 'Known phishing kit target. Matches active Web3 seed phrase drainer campaigns.',
+        signalNote: 'Impersonates MetaMask / TrustWallet. Urgent private key intake form detected.',
+        tlsNote: 'Self-signed certificate with invalid SAN. Cryptographic trust completely absent.'
+      }
+    },
+    {
+      indicator: 'account-verify.example',
+      risk: 'High Risk',
+      badgeClass: 'bg-orange-50 text-orange-700 border-orange-200',
+      evidence: 'AI + DNS + VT',
+      status: 'In review',
+      statusDot: 'bg-amber-500',
+      utc: '14:24',
+      snapshot: {
+        indicator: 'account-verify.example',
+        riskLevel: 'High Risk',
+        badgeClass: 'bg-orange-50 text-orange-700 border-orange-200',
+        evidenceCount: '8 / 10',
+        time: 'Today, 14:24 UTC',
+        domainNote: '2-day-old domain · 3 redirects · 7/94 VT engines flag it. DNS links to a reported indicator.',
+        signalNote: 'CSP absent. AI flags urgent credential requests; correlated with an impersonation report.',
+        tlsNote: 'Hostname, expiry, chain & key strength pass. Revocation and CT lookups unavailable.'
+      }
+    },
+    {
+      indicator: '"Your invoice is overdue"',
+      risk: 'Suspicious',
+      badgeClass: 'bg-amber-50 text-amber-700 border-amber-200',
+      evidence: 'AI + Community',
+      status: 'Pending',
+      statusDot: 'bg-amber-500',
+      utc: '14:18',
+      snapshot: {
+        indicator: '"Your invoice is overdue"',
+        riskLevel: 'Suspicious',
+        badgeClass: 'bg-amber-50 text-amber-700 border-amber-200',
+        evidenceCount: '6 / 10',
+        time: 'Today, 14:18 UTC',
+        domainNote: 'Unverified SMS lure text claiming immediate banking legal action.',
+        signalNote: 'AI detects extreme urgency manipulation and malicious link redirection.',
+        tlsNote: 'Embedded shortlink redirects to unencrypted target endpoint.'
+      }
+    },
+    {
+      indicator: 'docs.acme.example',
+      risk: 'Low Risk',
+      badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      evidence: 'DNS + TLS + GSB',
+      status: 'Reviewed',
+      statusDot: 'bg-emerald-500',
+      utc: '14:12',
+      snapshot: {
+        indicator: 'docs.acme.example',
+        riskLevel: 'Low Risk',
+        badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        evidenceCount: '10 / 10',
+        time: 'Today, 14:12 UTC',
+        domainNote: 'Clean enterprise sub-domain. Valid DNS MX/SPF/DKIM records active.',
+        signalNote: 'Zero credential harvesting traps or deceptive forms detected.',
+        tlsNote: 'Modern TLS 1.3 encryption with 2048-bit RSA key and valid SAN.'
+      }
+    },
+    {
+      indicator: 'cdn-update.example',
+      risk: 'Inconclusive',
+      badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+      evidence: 'TLS / CT',
+      status: 'Partial',
+      statusDot: 'bg-slate-400',
+      utc: '14:06',
+      snapshot: {
+        indicator: 'cdn-update.example',
+        riskLevel: 'Inconclusive',
+        badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+        evidenceCount: '4 / 10',
+        time: 'Today, 14:06 UTC',
+        domainNote: 'Endpoint timed out during zone transfer probe. Insufficient telemetry.',
+        signalNote: 'Public reputation records not yet indexed in external databases.',
+        tlsNote: 'Certificate Transparency logs show issuance 12 hours ago.'
+      }
+    }
+  ];
+
   return (
-    <div className="space-y-8">
-      {/* Hero Quick Scanner Card */}
-      <div className="cyber-card p-6 md:p-8 bg-gradient-to-br from-cyber-900 via-cyber-900/90 to-blue-950/30 border-slate-800">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-mono text-blue-400 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping" />
-            Modules 1, 2 & 3 Active · Web, TLS & AI Scam Intelligence
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-2">
-            AI-Powered Web Threat Detection & Digital Trust Intelligence
-          </h1>
-          <p className="text-slate-400 text-sm md:text-base leading-relaxed mb-6">
-            Investigate suspicious links, discover typosquatting campaigns, inspect DNS records,
-            audit safe redirects, and obtain explainable, evidence-backed security risk assessments.
+    <div className="space-y-6 max-w-7xl mx-auto">
+      {/* 1. Page Title & Date Range */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Security overview</h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            See the signals. Understand the risk. Investigate with confidence.
           </p>
-
-          <form onSubmit={handleQuickScan} className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                value={quickUrl}
-                onChange={(e) => setQuickUrl(e.target.value)}
-                placeholder="Enter URL to investigate (e.g. paypa1-security.com, https://github.com)"
-                className="w-full pl-11 pr-4 py-3 bg-cyber-950/80 border border-slate-700/80 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-mono"
-              />
-            </div>
-            <button
-              type="submit"
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg text-sm shadow-lg shadow-blue-900/30 transition-all flex items-center justify-center gap-2"
-            >
-              <span>Investigate</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </form>
-
-          {/* Quick sample chips */}
-          <div className="flex flex-wrap items-center gap-2 mt-4 text-xs text-slate-400">
-            <span className="font-mono text-slate-500">Quick tests:</span>
-            <button
-              type="button"
-              onClick={() => setQuickUrl('https://github.com')}
-              className="px-2.5 py-1 rounded bg-slate-800/60 hover:bg-slate-700/80 text-slate-300 font-mono transition-colors"
-            >
-              github.com (Safe)
-            </button>
-            <button
-              type="button"
-              onClick={() => setQuickUrl('http://paypa1-security-update.com/login')}
-              className="px-2.5 py-1 rounded bg-rose-950/30 hover:bg-rose-900/40 text-rose-300 border border-rose-800/40 font-mono transition-colors"
-            >
-              paypa1-security.com (Typosquat)
-            </button>
-            <button
-              type="button"
-              onClick={() => setQuickUrl('http://198.51.100.4/verify-wallet')}
-              className="px-2.5 py-1 rounded bg-amber-950/30 hover:bg-amber-900/40 text-amber-300 border border-amber-800/40 font-mono transition-colors"
-            >
-              IP Host (Suspicious)
-            </button>
-          </div>
         </div>
-      </div>
-
-      {/* Module 3 Feature Callout Card */}
-      <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-indigo-950/40 via-blue-950/30 to-cyber-900 border border-indigo-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-lg bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center shrink-0">
-            <MessageSquare className="w-5 h-5 text-indigo-400" />
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <span>New: Module 3 AI Scam & Message Analyzer</span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
-                LIVE
-              </span>
-            </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Paste suspicious SMS, KYC suspension notices, parcel texts, or job offers to detect social engineering lures & scam entities.
-            </p>
-          </div>
-        </div>
-        <Link
-          to="/scam-analyzer"
-          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium shadow-md shadow-indigo-900/40 transition-colors shrink-0"
-        >
-          <span>Analyze a Message</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
-
-      {/* Metrics Row */}
-      {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="cyber-card p-5 animate-pulse h-28 bg-cyber-900/50" />
-          ))}
-        </div>
-      ) : error ? (
-        <div className="p-4 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm flex items-center justify-between">
-          <span>{error}</span>
+        <div className="flex items-center gap-2">
           <button
-            onClick={fetchStats}
-            className="flex items-center gap-1.5 px-3 py-1 bg-rose-500/20 hover:bg-rose-500/30 rounded text-xs"
+            type="button"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors"
           >
-            <RefreshCw className="w-3.5 h-3.5" /> Retry
+            <span>Last 7 days</span>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
           </button>
         </div>
-      ) : stats ? (
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {/* Total */}
-          <div className="cyber-card p-4 sm:p-5">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-medium mb-2">
-              <span>Total URLs Analysed</span>
-              <Layers className="w-4 h-4 text-blue-400" />
-            </div>
-            <div className="text-2xl sm:text-3xl font-bold font-mono text-white">
-              {stats.total_analyzed}
-            </div>
-            <div className="text-[11px] text-slate-500 mt-1">Multi-vector telemetry</div>
+      </div>
+
+      {/* 2. Hero Interactive Investigation Card */}
+      <div className="phish-card p-5">
+        {/* Top Tab Bar & Helper */}
+        <div className="flex items-center justify-between mb-3.5">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab('url')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'url'
+                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/90 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5 text-emerald-700" />
+              <span>URL / Domain</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('message')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'message'
+                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/90 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Mail className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Message / Email</span>
+            </button>
           </div>
 
-          {/* Confirmed Malicious */}
-          <div className="cyber-card p-4 sm:p-5 border-rose-900/30 bg-rose-950/10">
-            <div className="flex items-center justify-between text-rose-400 text-xs font-medium mb-2">
-              <span>Confirmed Malicious</span>
-              <ShieldAlert className="w-4 h-4 text-rose-400" />
+          <button
+            type="button"
+            onClick={() => setShowHelper(!showHelper)}
+            className="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1 transition-colors"
+          >
+            <Info className="w-3.5 h-3.5 text-slate-400" />
+            <span>How to use the scanner?</span>
+          </button>
+        </div>
+
+        {/* Modal / Helper Accordion */}
+        {showHelper && (
+          <div className="mb-4 p-3 rounded-xl bg-emerald-50/70 border border-emerald-200/80 text-xs text-emerald-950 flex items-start gap-2 animate-fadeIn">
+            <Info className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold">Safe, Multi-Vector Inspection Protocol:</p>
+              <p className="text-slate-600 text-[11px] mt-0.5">
+                Paste any suspicious link, domain, or SMS message. PhishFree inspects typosquatting, X.509 TLS certificates, DNS zones, and safe redirect hops without downloading malware or running scripts.
+              </p>
             </div>
-            <div className="text-2xl sm:text-3xl font-bold font-mono text-rose-400">
-              {stats.confirmed_malicious_count}
-            </div>
-            <div className="text-[11px] text-slate-500 mt-1">High-confidence threats</div>
+          </div>
+        )}
+
+        {/* Search Input & Action Buttons */}
+        <form onSubmit={handleInvestigate} className="flex flex-col sm:flex-row items-center gap-2.5">
+          <div className="relative flex-1 w-full">
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={
+                activeTab === 'url'
+                  ? 'Paste a suspicious URL or domain to inspect its trust signals'
+                  : 'Paste suspicious message, SMS text, or email body to evaluate phishing lures'
+              }
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-lg text-xs font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition-all"
+            />
           </div>
 
-          {/* High Risk */}
-          <div className="cyber-card p-4 sm:p-5 border-orange-900/30 bg-orange-950/10">
-            <div className="flex items-center justify-between text-orange-400 text-xs font-medium mb-2">
-              <span>High Risk</span>
-              <AlertTriangle className="w-4 h-4 text-orange-400" />
-            </div>
-            <div className="text-2xl sm:text-3xl font-bold font-mono text-orange-400">
-              {stats.high_risk_count}
-            </div>
-            <div className="text-[11px] text-slate-500 mt-1">Multiple severe anomalies</div>
+          <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+            <button
+              type="submit"
+              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-lg text-xs font-semibold text-white bg-[#047857] hover:bg-[#065f46] shadow-sm transition-all flex items-center justify-center gap-1.5"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span>Investigate</span>
+            </button>
+            <Link
+              to="/blockchain"
+              className="flex-1 sm:flex-initial px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5"
+            >
+              <FileText className="w-3.5 h-3.5 text-slate-500" />
+              <span>Report a threat</span>
+            </Link>
           </div>
+        </form>
 
-          {/* Suspicious */}
-          <div className="cyber-card p-4 sm:p-5 border-amber-900/30 bg-amber-950/10">
-            <div className="flex items-center justify-between text-amber-400 text-xs font-medium mb-2">
-              <span>Suspicious</span>
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
+        {/* Capability Tags */}
+        <div className="flex items-center gap-4 text-[11px] font-medium text-slate-500 pt-3 flex-wrap">
+          <span>Domain & redirects</span>
+          <span className="text-slate-300">·</span>
+          <span>Threat reputation</span>
+          <span className="text-slate-300">·</span>
+          <span>DNS & TLS</span>
+          <span className="text-slate-300">·</span>
+          <span>Website security</span>
+          <span className="text-slate-300">·</span>
+          <span>AI scan analysis</span>
+        </div>
+      </div>
+
+      {/* 3. Top 4 Metric KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Card 1: Websites Analysed */}
+        <div className="phish-card p-4 relative overflow-hidden">
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="text-xs font-semibold text-slate-600">Websites Analysed</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 mt-1">
+                {stats?.total_analyzed ? Number(stats.total_analyzed).toLocaleString() : '1,284'}
+              </div>
+              <div className="text-[11px] font-medium text-emerald-700 mt-1 flex items-center gap-1">
+                <span>↑ 18.6% vs prior week</span>
+              </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-bold font-mono text-amber-400">
-              {stats.suspicious_count}
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center">
+              <Layers className="w-4 h-4" />
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">Anomalous indicators</div>
           </div>
-
-          {/* Low Risk */}
-          <div className="cyber-card p-4 sm:p-5 border-emerald-900/30 bg-emerald-950/10">
-            <div className="flex items-center justify-between text-emerald-400 text-xs font-medium mb-2">
-              <span>Low Risk</span>
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="text-2xl sm:text-3xl font-bold font-mono text-emerald-400">
-              {stats.low_risk_count}
-            </div>
-            <div className="text-[11px] text-slate-500 mt-1">No severe flags observed</div>
+          {/* Sparkline wave */}
+          <div className="mt-2 h-7 w-full">
+            <svg viewBox="0 0 100 25" className="w-full h-full preserve-3d" fill="none">
+              <path
+                d="M0 20 C20 18, 35 12, 50 16 C65 20, 80 8, 100 12"
+                stroke="#10B981"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
           </div>
         </div>
-      ) : null}
 
-      {/* Analytics and Distribution Section */}
+        {/* Card 2: High-Risk Websites */}
+        <div className="phish-card p-4 relative overflow-hidden">
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="text-xs font-semibold text-slate-600">High-Risk Websites</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 mt-1">
+                {stats ? (stats.high_risk_count ?? 0) + (stats.confirmed_malicious_count ?? 0) : '186'}
+              </div>
+              <div className="text-[11px] font-medium text-red-600 mt-1">
+                <span>14.5% of investigations</span>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 border border-red-100 flex items-center justify-center">
+              <AlertTriangle className="w-4 h-4" />
+            </div>
+          </div>
+          {/* Sparkline wave */}
+          <div className="mt-2 h-7 w-full">
+            <svg viewBox="0 0 100 25" className="w-full h-full preserve-3d" fill="none">
+              <path
+                d="M0 18 C25 22, 45 10, 65 14 C80 18, 90 6, 100 10"
+                stroke="#EF4444"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* Card 3: Active Investigations */}
+        <div className="phish-card p-4 relative overflow-hidden">
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="text-xs font-semibold text-slate-600">Active Investigations</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 mt-1">24</div>
+              <div className="text-[11px] font-medium text-blue-600 mt-1">
+                <span>24 today</span>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center">
+              <Search className="w-4 h-4" />
+            </div>
+          </div>
+          {/* Sparkline wave */}
+          <div className="mt-2 h-7 w-full">
+            <svg viewBox="0 0 100 25" className="w-full h-full preserve-3d" fill="none">
+              <path
+                d="M0 16 C20 12, 40 22, 60 14 C75 8, 90 18, 100 12"
+                stroke="#3B82F6"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* Card 4: Validated Threat Reports */}
+        <div className="phish-card p-4 relative overflow-hidden">
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="text-xs font-semibold text-slate-600">Validated Threat Reports</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 mt-1">94</div>
+              <div className="text-[11px] font-medium text-emerald-700 mt-1">
+                <span>8 pending validation</span>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+          </div>
+          {/* Sparkline wave */}
+          <div className="mt-2 h-7 w-full">
+            <svg viewBox="0 0 100 25" className="w-full h-full preserve-3d" fill="none">
+              <path
+                d="M0 22 C30 18, 50 14, 70 8 C85 6, 95 14, 100 10"
+                stroke="#10B981"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Row 2: Threat Activity & TLS Certificate Trust */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Risk Distribution Chart */}
-        <div className="cyber-card p-6">
-          <div className="flex items-center justify-between mb-4">
+        {/* Left (2/3): Threat Activity Area Chart */}
+        <div className="lg:col-span-2 phish-card p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <div>
-              <h2 className="text-base font-semibold text-white">Risk Distribution</h2>
-              <p className="text-xs text-slate-400">Classification breakdown of scanned targets</p>
+              <h2 className="text-base font-bold text-slate-900">Threat activity</h2>
+              <p className="text-xs text-slate-500">Investigation volume and high-risk findings over time</p>
             </div>
-            <TrendingUp className="w-4 h-4 text-blue-400" />
+            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-slate-100 border border-slate-200">
+              {(['7D', '30D', '90D'] as const).map((period) => (
+                <button
+                  key={period}
+                  type="button"
+                  onClick={() => setTimeFilter(period)}
+                  className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${
+                    timeFilter === period
+                      ? 'bg-[#047857] text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  {period}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {stats && stats.risk_distribution && stats.total_analyzed > 0 ? (
-            <div className="flex flex-col items-center">
-              <div className="w-full h-52">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={stats.risk_distribution}
-                      dataKey="count"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={55}
-                      outerRadius={80}
-                      paddingAngle={4}
-                    >
-                      {stats.risk_distribution.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} stroke="#070b14" strokeWidth={2} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#0b1329',
-                        borderColor: '#1e293b',
-                        borderRadius: '0.5rem',
-                        color: '#f8fafc',
-                        fontSize: '0.75rem',
-                      }}
-                      formatter={(value: any, name: any) => [`${value} URLs`, name]}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+          {/* Legend */}
+          <div className="flex items-center gap-6 mb-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
+              <span className="font-medium text-slate-700">Investigations</span>
+              <span className="font-bold text-slate-900">1,284</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+              <span className="font-medium text-slate-700">High-risk findings</span>
+              <span className="font-bold text-slate-900">186</span>
+            </div>
+          </div>
 
-              {/* Custom Legend */}
-              <div className="grid grid-cols-2 gap-2 w-full mt-2 text-xs">
-                {stats.risk_distribution.map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <span className="text-slate-400 truncate">{item.name}:</span>
-                    <span className="font-mono font-semibold text-white ml-auto">{item.count}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="h-56 flex flex-col items-center justify-center text-slate-500 text-xs">
-              <HelpCircle className="w-8 h-8 mb-2 opacity-50" />
-              <span>No scan records available yet.</span>
-              <span className="text-slate-600 mt-1">Submit your first URL above to view metrics.</span>
-            </div>
-          )}
+          {/* Area Chart */}
+          <div className="h-56 w-full pt-2">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorInvestigations" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0.02} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="day" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} ticks={[0, 125, 250]} domain={[0, 250]} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: '8px',
+                    border: '1px solid #E2E8F0',
+                    fontSize: '12px'
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="investigations"
+                  stroke="#059669"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#colorInvestigations)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="highRisk"
+                  stroke="#EF4444"
+                  strokeWidth={2}
+                  fill="none"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        {/* Security Capabilities Architecture Card */}
-        <div className="cyber-card p-6 lg:col-span-2">
+        {/* Right (1/3): TLS & Certificate Trust Card */}
+        <div className="phish-card p-5 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-base font-bold text-slate-900">TLS & certificate trust</h2>
+              <Link
+                to="/security"
+                className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+              >
+                <span>Explore</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="flex items-baseline gap-2 mb-4">
+              <span className="text-3xl font-bold font-mono text-slate-900">412</span>
+              <span className="text-xs text-slate-500 font-medium">TLS assessments</span>
+            </div>
+
+            {/* Stacked Segmented Progress Bar */}
+            <div className="w-full h-2.5 rounded-full bg-slate-100 flex overflow-hidden mb-2">
+              <div style={{ width: '88%' }} className="bg-emerald-500 h-full" title="364 checks passed" />
+              <div style={{ width: '8%' }} className="bg-amber-400 h-full" title="32 issues" />
+              <div style={{ width: '4%' }} className="bg-slate-300 h-full" title="16 unavailable" />
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] font-medium text-slate-500 mb-5">
+              <span className="text-emerald-700 font-semibold">364 checks passed</span>
+              <span className="text-amber-700 font-semibold">32 issues</span>
+              <span className="text-slate-500">16 unavailable</span>
+            </div>
+
+            {/* Bulleted Metric List */}
+            <div className="space-y-2.5 text-xs">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-slate-700">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  <span>Expired / hostname mismatch</span>
+                </div>
+                <span className="font-bold font-mono text-slate-900">18</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-slate-700">
+                  <span className="w-2 h-2 rounded-full bg-red-500" />
+                  <span>Chain / revocation / weak key</span>
+                </div>
+                <span className="font-bold font-mono text-slate-900">14</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-slate-700">
+                  <span className="w-2 h-2 rounded-full bg-slate-400" />
+                  <span>Revocation or CT lookup unavailable</span>
+                </div>
+                <span className="font-bold font-mono text-slate-900">16</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-slate-100 text-[11px] text-slate-500 flex items-center gap-1.5 mt-4">
+            <Info className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <span>A valid certificate does not mean a website is safe.</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Row 3: Recent Investigations & Investigation Snapshot */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left (2/3): Recent Investigations Table */}
+        <div className="lg:col-span-2 phish-card p-5">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-base font-semibold text-white">Active Defense Capabilities</h2>
-              <p className="text-xs text-slate-400">Module 1 Multi-Vector Verification Pillars</p>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-bold text-slate-900">Recent investigations</h2>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                24 today
+              </span>
             </div>
             <Link
-              to="/about"
-              className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 font-medium"
+              to="/history"
+              className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
             >
-              Architecture <ArrowRight className="w-3.5 h-3.5" />
+              <span>View all</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-3.5 rounded-lg bg-cyber-950/60 border border-slate-800/80">
-              <div className="flex items-center gap-2 font-medium text-sm text-slate-200 mb-1">
-                <span className="w-2 h-2 rounded-full bg-blue-400" />
-                Linguistic & Homoglyph Engine
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Profiles Punycode IDN domains, Cyrillic character substitutions, and computes fuzzy
-                Levenshtein similarity to detect typosquatting against high-value target brands.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-lg bg-cyber-950/60 border border-slate-800/80">
-              <div className="flex items-center gap-2 font-medium text-sm text-slate-200 mb-1">
-                <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                Safe Redirect & SSRF Shield
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Pre-resolves destination IPs at every hop to block private IPs, loopback, and cloud
-                metadata addresses (169.254.169.254), guarding backend infrastructure from SSRF.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-lg bg-cyber-950/60 border border-slate-800/80">
-              <div className="flex items-center gap-2 font-medium text-sm text-slate-200 mb-1">
-                <span className="w-2 h-2 rounded-full bg-purple-400" />
-                DNS Hierarchy Audit
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Collects A, AAAA, MX, NS, and TXT records using dnspython. Unreachable resolvers are
-                classified as UNKNOWN/UNAVAILABLE without generating false malicious alerts.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-lg bg-cyber-950/60 border border-slate-800/80">
-              <div className="flex items-center gap-2 font-medium text-sm text-slate-200 mb-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                Grounded AI Explanation
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Synthesizes hard verified technical findings into plain-language summaries and
-                safety recommendations, strictly isolated against prompt injection.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Recent Investigations Table */}
-      <div className="cyber-card p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-base font-semibold text-white">Recent Investigations</h2>
-            <p className="text-xs text-slate-400">Recently submitted URLs and classification results</p>
-          </div>
-          <Link
-            to="/history"
-            className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 font-medium"
-          >
-            View All History <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-
-        {stats && stats.recent_reports && stats.recent_reports.length > 0 ? (
+          {/* Table */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-cyber-950/80 text-slate-400 text-xs font-mono uppercase tracking-wider border-b border-slate-800">
-                <tr>
-                  <th className="py-3 px-4">Target Domain / URL</th>
-                  <th className="py-3 px-4">Risk Classification</th>
-                  <th className="py-3 px-4">Risk Score</th>
-                  <th className="py-3 px-4">Confidence</th>
-                  <th className="py-3 px-4">Findings</th>
-                  <th className="py-3 px-4">Timestamp</th>
-                  <th className="py-3 px-4 text-right">Action</th>
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-200/80 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="pb-2.5 font-semibold">INDICATOR</th>
+                  <th className="pb-2.5 font-semibold">RISK ASSESSMENT</th>
+                  <th className="pb-2.5 font-semibold">EVIDENCE SOURCE</th>
+                  <th className="pb-2.5 font-semibold">STATUS</th>
+                  <th className="pb-2.5 font-semibold text-right">UTC ↓</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
-                {stats.recent_reports.map((report) => (
-                  <tr key={report.id} className="hover:bg-slate-900/40 transition-colors">
-                    <td className="py-3.5 px-4 font-mono">
-                      <div className="font-semibold text-slate-200">{report.domain}</div>
-                      <div className="text-xs text-slate-500 truncate max-w-xs">{report.submitted_url}</div>
+              <tbody className="divide-y divide-slate-100">
+                {recentRows.map((row, idx) => (
+                  <tr
+                    key={idx}
+                    onClick={() => setSelectedSnapshot(row.snapshot)}
+                    className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+                  >
+                    <td className="py-3 font-mono font-medium text-slate-900 group-hover:text-emerald-700 transition-colors">
+                      {row.indicator}
                     </td>
-                    <td className="py-3.5 px-4">
-                      <RiskBadge level={report.risk_level} size="sm" />
+                    <td className="py-3">
+                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${row.badgeClass}`}>
+                        {row.risk}
+                      </span>
                     </td>
-                    <td className="py-3.5 px-4 font-mono font-medium text-slate-200">
-                      {report.risk_score.toFixed(0)}/100
+                    <td className="py-3 text-slate-600 font-medium">
+                      {row.evidence}
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-slate-400 text-xs">
-                      {(report.confidence * 100).toFixed(0)}%
+                    <td className="py-3">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${row.statusDot}`} />
+                        <span className="text-slate-700 font-medium">{row.status}</span>
+                      </div>
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-slate-300 text-xs">
-                      {report.findings_count} items
-                    </td>
-                    <td className="py-3.5 px-4 text-xs text-slate-400">
-                      {new Date(report.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </td>
-                    <td className="py-3.5 px-4 text-right">
-                      <Link
-                        to={`/reports/${report.id}`}
-                        className="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 font-medium px-2.5 py-1 rounded bg-blue-500/10 hover:bg-blue-500/20 transition-colors"
-                      >
-                        <span>Inspect</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </Link>
+                    <td className="py-3 text-right text-slate-500 font-mono">
+                      <div className="flex items-center justify-end gap-1">
+                        <span>{row.utc}</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-slate-600 transition-colors" />
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        ) : (
-          <div className="text-center py-12 text-slate-500 text-sm">
-            <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p>No investigations logged yet.</p>
-            <Link to="/scanner" className="text-blue-400 hover:underline mt-1 inline-block text-xs">
-              Run your first investigation in the URL Scanner →
-            </Link>
+
+          <div className="pt-3.5 text-[11px] text-slate-500 flex items-center gap-1.5 border-t border-slate-100 mt-2">
+            <Info className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <span>Risk reflects available evidence. Low Risk is not a guarantee of safety.</span>
           </div>
-        )}
+        </div>
+
+        {/* Right (1/3): Investigation Snapshot Panel */}
+        <div className="phish-card p-5 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                INVESTIGATION SNAPSHOT
+              </span>
+              <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${selectedSnapshot.badgeClass}`}>
+                {selectedSnapshot.riskLevel}
+              </span>
+            </div>
+
+            <h3 className="text-base font-bold font-mono text-slate-900 break-all mb-1">
+              {selectedSnapshot.indicator}
+            </h3>
+            <p className="text-xs text-slate-500 mb-4">
+              <span>{selectedSnapshot.evidenceCount} evidence checks available</span>
+              <span className="mx-1.5">·</span>
+              <span>{selectedSnapshot.time}</span>
+            </p>
+
+            {/* Structured Insights Cards */}
+            <div className="space-y-3">
+              {/* Insight 1 */}
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-1">
+                  <Link2 className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Domain & reputation</span>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  {selectedSnapshot.domainNote}
+                </p>
+              </div>
+
+              {/* Insight 2 */}
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-1">
+                  <Shield className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Website & message signals</span>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  {selectedSnapshot.signalNote}
+                </p>
+              </div>
+
+              {/* Insight 3 */}
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-1">
+                  <Lock className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>TLS checks</span>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  {selectedSnapshot.tlsNote}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+            <button
+              type="button"
+              onClick={() => navigate(`/scanner?url=${encodeURIComponent(selectedSnapshot.indicator)}`)}
+              className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+            >
+              <span>Inspect full report</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 6. Row 4: Threat Distribution Donut Section */}
+      <div className="phish-card p-5">
+        <div className="flex items-center justify-between mb-2">
+          <div>
+            <h2 className="text-base font-bold text-slate-900">Threat Distribution</h2>
+            <p className="text-xs text-slate-500">Percentage breakdown of scanned websites and URLs</p>
+          </div>
+          <span className="text-[11px] font-mono text-slate-400 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70">
+            Example data
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 pt-2">
+          {/* Donut Chart with Centered Total */}
+          <div className="h-52 relative flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={donutData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={85}
+                  paddingAngle={3}
+                  dataKey="value"
+                >
+                  {donutData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(val: any) => [`${val}%`, 'Share']}
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: '8px',
+                    border: '1px solid #E2E8F0',
+                    fontSize: '12px'
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            {/* Center label */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                Total scans
+              </span>
+              <span className="text-xl font-bold font-mono text-slate-900">
+                10,000
+              </span>
+            </div>
+          </div>
+
+          {/* Legend Table */}
+          <div className="space-y-3 text-xs max-w-sm">
+            {donutData.map((item) => (
+              <div key={item.name} className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3 h-3 rounded" style={{ backgroundColor: item.color }} />
+                  <span className="font-medium text-slate-700">{item.name}</span>
+                </div>
+                <span className="font-bold font-mono text-slate-900">{item.value}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 7. Row 5: Collaborative Intelligence (Module 6 Web3) */}
+      <div className="phish-card p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-bold text-slate-900">Collaborative intelligence</h2>
+            <span className="text-xs text-slate-500 font-medium">
+              94 validated reports · 8 awaiting review
+            </span>
+          </div>
+          <Link
+            to="/blockchain"
+            className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+          >
+            <span>View report registry</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {/* 3 Side-by-Side Intelligence Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Card 1: Validated Intelligence */}
+          <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/90 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                  <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  </div>
+                  <span>Validated intelligence</span>
+                </div>
+                <span className="text-[11px] font-mono text-slate-400">14:28 UTC</span>
+              </div>
+              <div className="font-mono text-xs font-bold text-slate-900 mb-1">
+                wallet-sync.example
+              </div>
+              <p className="text-[11px] text-slate-600">
+                Confirmed Malicious · credential harvesting
+              </p>
+            </div>
+            <div className="text-[10px] text-slate-400 mt-3 pt-2 border-t border-slate-200/60">
+              M. Chen · corroborated by Safe Browsing
+            </div>
+          </div>
+
+          {/* Card 2: Pending Validation */}
+          <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/90 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                  <div className="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center">
+                    <Clock className="w-3.5 h-3.5" />
+                  </div>
+                  <span>Pending validation</span>
+                </div>
+                <span className="text-[11px] font-mono text-slate-400">14:16 UTC</span>
+              </div>
+              <div className="font-mono text-xs font-bold text-slate-900 mb-1">
+                parcel-reschedule.example
+              </div>
+              <p className="text-[11px] text-slate-600">
+                Suspicious · delivery-brand impersonation
+              </p>
+            </div>
+            <div className="text-[10px] text-slate-400 mt-3 pt-2 border-t border-slate-200/60">
+              A. Rivera · not yet validated intelligence
+            </div>
+          </div>
+
+          {/* Card 3: Report Integrity Verified (Sepolia) */}
+          <div className="p-4 rounded-xl bg-emerald-50/40 border border-emerald-200/90 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-950">
+                  <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+                    <Link2 className="w-3.5 h-3.5" />
+                  </div>
+                  <span>Report integrity verified</span>
+                </div>
+                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-emerald-200 text-emerald-900 font-mono">
+                  LIVE
+                </span>
+              </div>
+              <a
+                href="https://sepolia.etherscan.io/address/0x535Dd5072d6c0de42167BaBe61c5cA880517f3F8"
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono text-xs font-bold text-emerald-800 hover:underline flex items-center gap-1 mb-1"
+              >
+                <span>0x535D...f3F8</span>
+                <span className="text-slate-400 font-sans text-[11px]">· Sepolia testnet</span>
+                <ExternalLink className="w-3 h-3 text-emerald-700" />
+              </a>
+              <p className="text-[11px] text-slate-600 leading-snug">
+                On-chain commitments verify integrity and history, not truth. Sensitive report evidence stays off chain.
+              </p>
+            </div>
+            <div className="text-[10px] text-emerald-700 font-medium mt-3 pt-2 border-t border-emerald-200/60">
+              Report ID: synth-audit-1794122121 (Verified on-chain)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 8. Footer Disclaimers */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 pb-6 pt-2">
+        <span>Illustrative demo data only. No live threat results or active website scanning.</span>
+        <span>Passive checks only · Sensitive content stays off chain.</span>
       </div>
     </div>
   );
 };
-
