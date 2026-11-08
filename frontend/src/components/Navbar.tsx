@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Shield, Activity, Search, History, Info, ExternalLink, MessageSquare, Network, ShieldCheck, Layers } from 'lucide-react';
 import { api } from '../services/api';
+import { useTheme } from '../context/ThemeContext';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
   const [backendStatus, setBackendStatus] = useState<'checking' | 'healthy' | 'offline'>('checking');
 
   useEffect(() => {
@@ -40,14 +43,18 @@ export const Navbar: React.FC = () => {
     <nav className="sticky top-0 z-50 bg-white/90 dark:bg-[#0B1120]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo & Brand */}
+          {/* Logo & Brand: Yellow in Dim, Blue in Light */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center group-hover:border-emerald-500/60 transition-colors">
-              <Shield className="w-5 h-5 text-emerald-700 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
+            <div className="w-10 h-10 rounded-xl bg-[#040915] border border-slate-300 dark:border-slate-800 flex items-center justify-center p-1.5 group-hover:scale-105 transition-all shadow-sm">
+              <img
+                src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
+                alt="Phishfree Logo"
+                className="w-full h-full object-contain filter drop-shadow-sm"
+              />
             </div>
             <div>
-              <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
-                Phish<span className="text-emerald-700 dark:text-emerald-400">free</span>
+              <span className="font-extrabold text-lg tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
+                Phish<span className={isDark ? "text-[#FFD000]" : "text-blue-600"}>free</span>
               </span>
               <span className="text-[10px] block text-slate-500 dark:text-slate-400 -mt-1 font-mono uppercase tracking-wider">
                 Digital Trust Intelligence

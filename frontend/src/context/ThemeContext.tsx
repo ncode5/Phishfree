@@ -49,6 +49,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       root.classList.remove('dark');
       root.style.colorScheme = 'light';
     }
+
+    // Dynamic theme icon synchronization in browser tab
+    const favicon = document.querySelector("link[rel*='icon']") as HTMLLinkElement | null;
+    if (favicon) {
+      favicon.href = resolved === 'dark' ? '/icon-yellow.png' : '/icon-blue.png';
+    }
   }, [theme]);
 
   // Listen for OS system theme changes if set to 'system'

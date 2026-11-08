@@ -13,9 +13,12 @@ import {
   ArrowUpRight,
   ChevronRight
 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 export const Sidebar: React.FC = () => {
   const location = useLocation();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
   const workspaceNav = [
     { to: '/', label: 'Overview', icon: Home, badge: null },
@@ -35,14 +38,23 @@ export const Sidebar: React.FC = () => {
     <aside className="w-64 bg-white dark:bg-[#070C18] border-r border-slate-200 dark:border-[#1A2844] flex flex-col justify-between shrink-0 min-h-screen select-none transition-colors duration-200">
       {/* Top Section */}
       <div className="p-5">
-        {/* Brand */}
-        <Link to="/" className="flex items-center gap-2.5 mb-6 group">
-          <div className="w-8 h-8 rounded-lg bg-emerald-700 dark:bg-[#00D29E] flex items-center justify-center text-white dark:text-slate-950 shadow-sm">
-            <Shield className="w-4 h-4 fill-white dark:fill-slate-950" />
+        {/* Brand: Yellow icon in Dim, Blue icon in Light */}
+        <Link to="/" className="flex items-center gap-3 mb-6 group">
+          <div className="w-10 h-10 rounded-xl bg-[#040915] border border-slate-300 dark:border-[#1A2844] flex items-center justify-center p-1 shadow-sm transition-all duration-200 group-hover:scale-105 group-hover:border-blue-500/60 dark:group-hover:border-yellow-400/60">
+            <img
+              src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
+              alt="Phishfree Logo"
+              className="w-full h-full object-contain filter drop-shadow-sm transition-all duration-200"
+            />
           </div>
-          <span className="font-extrabold text-xl tracking-tight text-slate-950 dark:text-white group-hover:text-emerald-800 dark:group-hover:text-[#00E5A3] transition-colors">
-            Phishfree
-          </span>
+          <div className="flex flex-col">
+            <span className="font-extrabold text-xl tracking-tight text-slate-950 dark:text-white flex items-center leading-none">
+              Phish<span className={isDark ? "text-[#FFD000]" : "text-blue-600"}>free</span>
+            </span>
+            <span className="text-[10px] font-mono font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest mt-1">
+              Trust Intel
+            </span>
+          </div>
         </Link>
 
         {/* Workspace Selector Pill */}

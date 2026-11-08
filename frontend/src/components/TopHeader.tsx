@@ -72,7 +72,7 @@ export const TopHeader: React.FC = () => {
 
       {/* Right Controls */}
       <div className="flex items-center gap-3">
-        {/* Light / Dark Segmented Switcher */}
+        {/* Light (Blue) / Dim (Yellow) Segmented Switcher */}
         <div 
           role="radiogroup" 
           aria-label="Theme preference selector" 
@@ -86,27 +86,27 @@ export const TopHeader: React.FC = () => {
             onClick={() => setTheme('light')}
             className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
               isLightActive
-                ? 'bg-emerald-800 text-white shadow-sm'
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25'
                 : 'text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
             }`}
           >
-            <Sun className="w-3 h-3" />
+            <Sun className={`w-3.5 h-3.5 ${isLightActive ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />
             <span>Light</span>
           </button>
           <button
             type="button"
             role="radio"
             aria-checked={isDimActive}
-            aria-label="Switch to Dark Theme"
+            aria-label="Switch to Dim Theme"
             onClick={() => setTheme('dim')}
             className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
               isDimActive
-                ? 'bg-[#00D29E] text-slate-950 shadow-sm shadow-emerald-500/20'
+                ? 'bg-[#FFD000] text-slate-950 shadow-sm shadow-yellow-500/25 font-extrabold'
                 : 'text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
             }`}
           >
-            <Moon className="w-3 h-3" />
-            <span>Dark</span>
+            <Moon className={`w-3.5 h-3.5 ${isDimActive ? 'text-slate-950 fill-slate-950' : 'text-yellow-500 dark:text-yellow-400'}`} />
+            <span>Dim</span>
           </button>
         </div>
 

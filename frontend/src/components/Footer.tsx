@@ -1,16 +1,28 @@
 import React from 'react';
 import { Shield, Lock, Cpu, Globe } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 export const Footer: React.FC = () => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
   return (
     <footer className="bg-white dark:bg-[#0B1120] border-t border-slate-200 dark:border-slate-800 mt-20 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-              <span className="font-bold text-slate-900 dark:text-white text-base">PhishFree Platform</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-[#040915] border border-slate-300 dark:border-slate-800 flex items-center justify-center p-1 shadow-sm">
+                <img
+                  src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
+                  alt="Phishfree Logo"
+                  className="w-full h-full object-contain filter drop-shadow-sm"
+                />
+              </div>
+              <span className="font-extrabold text-slate-900 dark:text-white text-base">
+                Phish<span className={isDark ? "text-[#FFD000]" : "text-blue-600"}>Free</span> Platform
+              </span>
             </div>
             <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md leading-relaxed">
               AI-Powered Web Threat Detection & Digital Trust Intelligence. Investigates suspicious URLs,
