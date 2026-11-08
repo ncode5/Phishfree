@@ -1,0 +1,50 @@
+[35m60594f2:.env.example[m[36m:[m[32m5[m[36m:[mVIRUSTOTAL_[1;31mAPI_KEY[m=
+[35m60594f2:.env.example[m[36m:[m[32m6[m[36m:[mGEMINI_[1;31mAPI_KEY[m=
+[35m60594f2:README.md[m[36m:[m[32m27[m[36m:[m- **Credential Harvesting**: Sophisticated landing pages harvest [1;31mpassword[ms, two-factor authentication [1;31mtoken[ms, and Web3 seed phrases.
+[35m60594f2:README.md[m[36m:[m[32m36[m[36m:[m2. **Detects Deceptive Patterns**: Discovers brand typosquatting, Punycode homographs, excessive subdomains, and credential targeting [1;31mtoken[ms.
+[35m60594f2:README.md[m[36m:[m[32m130[m[36m:[m│   │   │   └── url_pattern_analyzer.py# Obfuscation, IP hosts, phishing [1;31mtoken[ms
+[35m60594f2:README.md[m[36m:[m[32m184[m[36m:[m   - `VIRUSTOTAL_[1;31mAPI_KEY[m`: *(Optional)* Your VirusTotal API v3 key.
+[35m60594f2:README.md[m[36m:[m[32m185[m[36m:[m   - `GEMINI_[1;31mAPI_KEY[m`: *(Optional)* Your Google Gemini API key.
+[35m60594f2:README.md[m[36m:[m[32m197[m[36m:[m  - Add backend environment variables (`DATABASE_URL`, `VIRUSTOTAL_[1;31mAPI_KEY[m`, etc.).
+[35m60594f2:README.md[m[36m:[m[32m217[m[36m:[m   - For Neon, use the **Pooled connection string** (e.g., `[1;31mpostgresql://[muser:pass@ep-xyz-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require`).
+[35m60594f2:README.md[m[36m:[m[32m227[m[36m:[mDATABASE_URL=[1;31mpostgresql://[muser:[1;31mpassword[m@ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require
+[35m60594f2:README.md[m[36m:[m[32m230[m[36m:[mVIRUSTOTAL_[1;31mAPI_KEY[m=your_virustotal_[1;31mapi_key[m_here
+[35m60594f2:README.md[m[36m:[m[32m233[m[36m:[mGEMINI_[1;31mAPI_KEY[m=your_gemini_[1;31mapi_key[m_here
+[35m60594f2:README.md[m[36m:[m[32m250[m[36m:[m> **Security Note**: Never prefix backend private keys, database credentials, or [1;31msecret[m API keys with `VITE_`. Vite strictly exposes variables prefixed with `VITE_` to client-side browser bundles.
+[35m60594f2:README.md[m[36m:[m[32m320[m[36m:[m- **[1;31mSecret[m Isolation**: All sensitive credentials remain server-side. Runtimes communicate with hosted PostgreSQL databases and external APIs without exposing [1;31msecret[ms to the browser.
+[35m60594f2:backend/.env.example[m[36m:[m[32m3[m[36m:[m# Example Neon: [1;31mpostgresql://[muser:[1;31mpassword[m@ep-cool-fog-123456-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require
+[35m60594f2:backend/.env.example[m[36m:[m[32m4[m[36m:[m# Example Supabase: [1;31mpostgresql://[mpostgres:[1;31mpassword[m@db.projectref.supabase.co:6543/postgres
+[35m60594f2:backend/.env.example[m[36m:[m[32m8[m[36m:[mVIRUSTOTAL_[1;31mAPI_KEY[m=
+[35m60594f2:backend/.env.example[m[36m:[m[32m11[m[36m:[mGEMINI_[1;31mAPI_KEY[m=
+[35m60594f2:backend/README.md[m[36m:[m[32m38[m[36m:[m| `VIRUSTOTAL_[1;31mAPI_KEY[m` | Optional VirusTotal API v3 key | `""` |
+[35m60594f2:backend/README.md[m[36m:[m[32m39[m[36m:[m| `GEMINI_[1;31mAPI_KEY[m` | Optional Google Gemini API key | `""` |
+[35m60594f2:backend/app/ai/explanation.py[m[36m:[m[32m21[m[36m:[m        self.gemini_key = settings.GEMINI_[1;31mAPI_KEY[m
+[35m60594f2:backend/app/ai/explanation.py[m[36m:[m[32m22[m[36m:[m        self.openai_key = settings.OPENAI_[1;31mAPI_KEY[m
+[35m60594f2:backend/app/ai/explanation.py[m[36m:[m[32m91[m[36m:[m            recommendations.append("Do NOT enter any [1;31mpassword[ms, credentials, payment information, or personal details on this website.")
+[35m60594f2:backend/app/analyzers/url_pattern_analyzer.py[m[36m:[m[32m24[m[36m:[m    """Detects suspicious structural anomalies, encoding tricks, and phishing [1;31mtoken[ms in URLs."""
+[35m60594f2:backend/app/core/config.py[m[36m:[m[32m23[m[36m:[m    VIRUSTOTAL_[1;31mAPI_KEY[m: str = ""
+[35m60594f2:backend/app/core/config.py[m[36m:[m[32m26[m[36m:[m    GEMINI_[1;31mAPI_KEY[m: str = ""
+[35m60594f2:backend/app/core/config.py[m[36m:[m[32m27[m[36m:[m    OPENAI_[1;31mAPI_KEY[m: str = ""
+[35m60594f2:backend/app/database/connection.py[m[36m:[m[32m8[m[36m:[m# Normalize database URL for SQLAlchemy 2.0 (Supabase and Neon often use [1;31mpostgres://[m)
+[35m60594f2:backend/app/database/connection.py[m[36m:[m[32m10[m[36m:[mif raw_db_url.startswith("[1;31mpostgres://[m"):
+[35m60594f2:backend/app/database/connection.py[m[36m:[m[32m11[m[36m:[m    raw_db_url = raw_db_url.replace("[1;31mpostgres://[m", "[1;31mpostgresql://[m", 1)
+[35m60594f2:backend/app/intelligence/virustotal.py[m[36m:[m[32m11[m[36m:[m    def __init__(self, [1;31mapi_key[m: str = ""):
+[35m60594f2:backend/app/intelligence/virustotal.py[m[36m:[m[32m12[m[36m:[m        self.[1;31mapi_key[m = [1;31mapi_key[m or settings.VIRUSTOTAL_[1;31mAPI_KEY[m
+[35m60594f2:backend/app/intelligence/virustotal.py[m[36m:[m[32m27[m[36m:[m        if not self.[1;31mapi_key[m:
+[35m60594f2:backend/app/intelligence/virustotal.py[m[36m:[m[32m42[m[36m:[m            "x-[1;31mapikey[m": self.[1;31mapi_key[m,
+[35m60594f2:backend/app/services/analysis_service.py[m[36m:[m[32m90[m[36m:[m        # 3. URL Pattern & Phishing [1;31mToken[ms Analysis
+[35m60594f2:backend/app/utils/seed_demo_data.py[m[36m:[m[32m169[m[36m:[m                    "Do NOT enter [1;31mpassword[ms or financial information on this website.",
+[35m60594f2:backend/app/utils/seed_demo_data.py[m[36m:[m[32m257[m[36m:[m                    "Path directly requests Web3 wallet verification [1;31mtoken[ms on a non-standard port."
+[35m60594f2:backend/app/utils/seed_demo_data.py[m[36m:[m[32m343[m[36m:[m                    "Never enter Apple ID or iCloud [1;31mpassword[ms on Punycode lookalike domains."
+[35m60594f2:backend/tests/test_threat_intel.py[m[36m:[m[32m8[m[36m:[m    provider = VirusTotalProvider([1;31mapi_key[m="")
+[35m60594f2:backend/tests/test_threat_intel.py[m[36m:[m[32m17[m[36m:[m    provider = VirusTotalProvider([1;31mapi_key[m="dummy_test_key")
+[35m60594f2:backend/tests/test_url_pattern_analyzer.py[m[36m:[m[32m18[m[36m:[m    findings = URLPatternAnalyzer.analyze("https://secure-gate.org/verify/restore-wallet?[1;31mtoken[m=123")
+[35m60594f2:docs/architecture.md[m[36m:[m[32m24[m[36m:[m       │        └── @ delimiter, IP-in-hostname, hex/double-encoding, credential [1;31mtoken[ms
+[35m60594f2:docs/module-1.md[m[36m:[m[32m24[m[36m:[m### C. URL Pattern & Phishing [1;31mToken[ms
+[35m60594f2:docs/module-1.md[m[36m:[m[32m29[m[36m:[m- Detects credential-harvesting [1;31mtoken[ms in path and query (`login`, `verify`, `wallet`, `seed-phrase`, `restore-key`).
+[35m60594f2:frontend/package-lock.json[m[36m:[m[32m51[m[36m:[m        "js-[1;31mtoken[ms": "^4.0.0",
+[35m60594f2:frontend/package-lock.json[m[36m:[m[32m2352[m[36m:[m    "node_modules/js-[1;31mtoken[ms": {
+[35m60594f2:frontend/package-lock.json[m[36m:[m[32m2354[m[36m:[m      "resolved": "https://registry.npmjs.org/js-[1;31mtoken[ms/-/js-[1;31mtoken[ms-4.0.0.tgz",
+[35m60594f2:frontend/package-lock.json[m[36m:[m[32m2416[m[36m:[m        "js-[1;31mtoken[ms": "^3.0.0 || ^4.0.0"
+[35m60594f2:frontend/src/components/Footer.tsx[m[36m:[m[32m65[m[36m:[m              guarantee zero risk. Never submit private credentials, [1;31mpassword[ms, or seed phrases.
+[35m60594f2:frontend/src/pages/ReportPage.tsx[m[36m:[m[32m644[m[36m:[m                Configure the <code className="text-blue-400">VIRUSTOTAL_[1;31mAPI_KEY[m</code> environment variable
