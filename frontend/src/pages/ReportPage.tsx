@@ -247,7 +247,7 @@ export const ReportPage: React.FC = () => {
       )}
 
       {/* Navigation Tabs */}
-      <div className="border-b border-slate-300 dark:border-[#1A2844] flex items-center space-x-2 text-sm overflow-x-auto pb-0.5">
+      <div className="border-b border-slate-300 dark:border-[#1A2844] flex items-center space-x-2 text-sm overflow-x-auto pb-0.5 -mx-2 px-2 sm:mx-0 sm:px-0">
         <button
           onClick={() => setActiveTab('findings')}
           className={`py-2.5 px-3.5 font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
@@ -1010,8 +1010,8 @@ export const ReportPage: React.FC = () => {
 
                   {report.tls_analysis.certificate_transparency.sample_logged_entries &&
                     report.tls_analysis.certificate_transparency.sample_logged_entries.length > 0 && (
-                      <div className="overflow-x-auto pt-2">
-                        <table className="w-full text-left text-[11px] font-mono border-collapse">
+                      <div className="overflow-x-auto -mx-2 sm:mx-0 pt-2">
+                        <table className="w-full min-w-[500px] text-left text-[11px] font-mono border-collapse">
                           <thead>
                             <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-semibold">
                               <th className="py-1.5 px-2">CT Log ID</th>

@@ -423,12 +423,12 @@ export const ThreatIntelPage: React.FC = () => {
             {/* Interactive Threat Relationship Graph */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 phish-card p-5 flex flex-col">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800 mb-4">
                   <div className="flex items-center gap-2">
                     <Network className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
                     <h3 className="font-bold text-slate-900 dark:text-white text-base">Threat Relationship Topology</h3>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 font-medium">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-400 font-medium">
                     <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 inline-block" /> URL
                     <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block ml-1" /> Domain
                     <span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block ml-1" /> IP
@@ -437,7 +437,7 @@ export const ThreatIntelPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="relative flex-1 min-h-[460px] bg-slate-50/70 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800/80 overflow-hidden flex items-center justify-center p-2">
+                <div className="relative flex-1 min-h-[340px] sm:min-h-[460px] bg-slate-50/70 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800/80 overflow-hidden flex items-center justify-center p-2">
                   <svg
                     viewBox="0 0 800 500"
                     className="w-full h-full max-h-[500px] select-none"

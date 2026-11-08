@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Shield,
@@ -9,16 +9,45 @@ import {
   Users,
   FileText,
   Settings,
-  ChevronRight
+  ChevronRight,
+  X
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen = false, onMobileClose }) => {
   const location = useLocation();
   const { resolvedTheme } = useTheme();
   const { user } = useAuth();
   const isDark = resolvedTheme === 'dark';
+
+  // Close mobile sidebar on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && mobileOpen && onMobileClose) {
+        onMobileClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileOpen, onMobileClose]);
+
+  // Lock body scroll when mobile drawer is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
 
   const getInitials = (name?: string) => {
     if (!name) return 'AG';
@@ -40,28 +69,47 @@ export const Sidebar: React.FC = () => {
     { to: '/history', label: 'Settings', icon: Settings },
   ];
 
-  return (
-    <aside className="w-64 bg-white dark:bg-[#070C18] border-r border-slate-200 dark:border-[#1A2844] flex flex-col justify-between shrink-0 min-h-screen select-none transition-colors duration-200">
+  const renderNavContent = (isMobileDrawer: boolean = false) => (
+    <>
       {/* Top Section */}
       <div className="p-5">
-        {/* Brand: Yellow icon in Dim, Blue icon in Light */}
-        <Link to="/" className="flex items-center gap-3 mb-6 group">
-          <div className="w-10 h-10 rounded-xl bg-[#040915] border border-slate-300 dark:border-[#1A2844] flex items-center justify-center p-1 shadow-sm transition-all duration-200 group-hover:scale-105 group-hover:border-blue-500/60 dark:group-hover:border-yellow-400/60">
-            <img
-              src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
-              alt="Phishfree Logo"
-              className="w-full h-full object-contain filter drop-shadow-sm transition-all duration-200"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold text-xl tracking-tight text-slate-950 dark:text-white flex items-center leading-none">
-              Phish<span className={isDark ? "text-[#FFD000]" : "text-blue-600"}>free</span>
-            </span>
-            <span className="text-[10px] font-mono font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest mt-1">
-              Trust Intel
-            </span>
-          </div>
-        </Link>
+        {/* Brand Lockup + Mobile Close Button */}
+        <div className="flex items-center justify-between mb-6">
+          <Link
+            to="/"
+            onClick={() => {
+              if (isMobileDrawer && onMobileClose) onMobileClose();
+            }}
+            className="flex items-center gap-3 group"
+          >
+            <div className="w-10 h-10 rounded-xl bg-[#040915] border border-slate-300 dark:border-[#1A2844] flex items-center justify-center p-1 shadow-sm transition-all duration-200 group-hover:scale-105 group-hover:border-blue-500/60 dark:group-hover:border-yellow-400/60">
+              <img
+                src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
+                alt="Phishfree Logo"
+                className="w-full h-full object-contain filter drop-shadow-sm transition-all duration-200 -translate-y-0.5"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-extrabold text-xl tracking-tight text-slate-950 dark:text-white flex items-center leading-none">
+                Phish<span className={isDark ? "text-[#FFD000]" : "text-blue-600"}>free</span>
+              </span>
+              <span className="text-[10px] font-mono font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest mt-1">
+                Trust Intel
+              </span>
+            </div>
+          </Link>
+
+          {isMobileDrawer && (
+            <button
+              type="button"
+              onClick={onMobileClose}
+              aria-label="Close navigation menu"
+              className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+        </div>
 
         {/* Workspace Selector Pill */}
         <div className="flex items-center gap-2.5 p-2 rounded-xl border border-slate-300 dark:border-[#1A2844] bg-slate-100/90 dark:bg-[#0D1629] mb-6 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer">
@@ -88,6 +136,9 @@ export const Sidebar: React.FC = () => {
                 <Link
                   key={item.to}
                   to={item.to}
+                  onClick={() => {
+                    if (isMobileDrawer && onMobileClose) onMobileClose();
+                  }}
                   className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
                     isActive
                       ? 'bg-emerald-100 text-emerald-950 dark:bg-[#00D29E]/15 dark:text-[#00E5A3] font-bold border border-emerald-300/80 dark:border-[#00D29E]/30 shadow-sm'
@@ -128,6 +179,9 @@ export const Sidebar: React.FC = () => {
                 <Link
                   key={item.label}
                   to={item.to}
+                  onClick={() => {
+                    if (isMobileDrawer && onMobileClose) onMobileClose();
+                  }}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
                     isActive
                       ? 'bg-emerald-100 text-emerald-950 dark:bg-[#00D29E]/15 dark:text-[#00E5A3] font-bold border border-emerald-300/80 dark:border-[#00D29E]/30'
@@ -143,9 +197,8 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom Section */}
-      <div className="p-4 border-t border-slate-200 dark:border-[#1A2844]">
-        {/* User Profile */}
+      {/* Bottom Section: User Info */}
+      <div className="p-4 border-t border-slate-200 dark:border-[#1A2844] mt-auto">
         <div className="flex items-center gap-2.5 px-1 py-1">
           <div className="w-8 h-8 rounded-full bg-blue-600 dark:bg-yellow-400 text-white dark:text-slate-950 font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
             {getInitials(user?.full_name)}
@@ -160,6 +213,32 @@ export const Sidebar: React.FC = () => {
           </div>
         </div>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* 1. Desktop Persistent Sidebar (lg and above: >= 1024px) */}
+      <aside className="hidden lg:flex w-64 bg-white dark:bg-[#070C18] border-r border-slate-200 dark:border-[#1A2844] flex-col justify-between shrink-0 min-h-screen select-none transition-colors duration-200 sticky top-0 h-screen overflow-y-auto">
+        {renderNavContent(false)}
+      </aside>
+
+      {/* 2. Mobile & Tablet Drawer Modal (< lg: < 1024px) */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Backdrop Blur Overlay */}
+          <div
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300"
+            onClick={onMobileClose}
+            aria-hidden="true"
+          />
+
+          {/* Off-Canvas Slide Drawer */}
+          <aside className="fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white dark:bg-[#070C18] border-r border-slate-200 dark:border-[#1A2844] flex flex-col justify-between z-50 select-none shadow-2xl overflow-y-auto transform transition-transform duration-300 ease-in-out animate-in slide-in-from-left">
+            {renderNavContent(true)}
+          </aside>
+        </div>
+      )}
+    </>
   );
 };

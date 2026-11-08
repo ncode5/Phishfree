@@ -208,7 +208,7 @@ export const WebsiteSecurityPage: React.FC = () => {
           </form>
 
           {/* Quick example pills */}
-          <div className="mt-4 pt-3 flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 border-t border-slate-300 dark:border-[#1A2844]">
+          <div className="mt-4 pt-3 flex flex-wrap items-center gap-2 text-xs text-slate-700 dark:text-slate-300 border-t border-slate-300 dark:border-[#1A2844]">
             <span className="font-bold">Quick Test:</span>
             {['https://github.com', 'https://cloudflare.com', 'http://insecure-bank-demo.org'].map((demo) => (
               <button
@@ -331,8 +331,8 @@ export const WebsiteSecurityPage: React.FC = () => {
                   HTTP Defensive Headers Audit Matrix (9 Headers Evaluated)
                 </h3>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs border-collapse">
+                <div className="overflow-x-auto -mx-2 sm:mx-0">
+                  <table className="w-full min-w-[560px] text-left text-xs border-collapse">
                     <thead>
                       <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">
                         <th className="py-2.5 px-3">Header Name</th>
@@ -382,8 +382,8 @@ export const WebsiteSecurityPage: React.FC = () => {
                   Actual cookie contents and session tokens are never stored or displayed to safeguard user privacy.
                 </p>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs border-collapse">
+                <div className="overflow-x-auto -mx-2 sm:mx-0">
+                  <table className="w-full min-w-[560px] text-left text-xs border-collapse">
                     <thead>
                       <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">
                         <th className="py-2.5 px-3">Cookie Identifier</th>

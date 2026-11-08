@@ -9,13 +9,18 @@ import {
   LogOut,
   User as UserIcon,
   ShieldCheck,
-  ChevronDown
+  ChevronDown,
+  Menu
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { NotificationsMenu } from './NotificationsMenu';
 
-export const TopHeader: React.FC = () => {
+interface TopHeaderProps {
+  onToggleMobileSidebar?: () => void;
+}
+
+export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, resolvedTheme, setTheme } = useTheme();
@@ -75,17 +80,32 @@ export const TopHeader: React.FC = () => {
   const isLightActive = theme === 'light' || (theme === 'system' && resolvedTheme === 'light');
 
   return (
-    <header className="h-16 bg-white dark:bg-[#070C18] border-b border-slate-200 dark:border-[#1A2844] px-6 flex items-center justify-between shrink-0 select-none transition-colors duration-200">
-      {/* Left Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-300">
-        <Folder className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
-        <span className="text-slate-800 dark:text-slate-300">Acme security</span>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-        <span className="font-bold text-slate-950 dark:text-white">{getPageTitle()}</span>
+    <header className="h-16 bg-white dark:bg-[#070C18] border-b border-slate-200 dark:border-[#1A2844] px-3 sm:px-6 flex items-center justify-between shrink-0 select-none transition-colors duration-200 gap-2">
+      {/* Left: Mobile Hamburger & Breadcrumb */}
+      <div className="flex items-center gap-2 min-w-0">
+        {/* Mobile Hamburger Toggle (< lg) */}
+        <button
+          type="button"
+          onClick={onToggleMobileSidebar}
+          aria-label="Open navigation sidebar"
+          className="lg:hidden p-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        {/* Breadcrumb Hierarchy */}
+        <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-800 dark:text-slate-300 min-w-0">
+          <Folder className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400 shrink-0 hidden sm:inline" />
+          <span className="text-slate-800 dark:text-slate-300 hidden sm:inline truncate">Acme security</span>
+          <ChevronRight className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0 hidden sm:inline" />
+          <span className="font-bold text-slate-950 dark:text-white truncate max-w-[140px] sm:max-w-xs md:max-w-md">
+            {getPageTitle()}
+          </span>
+        </div>
       </div>
 
-      {/* Right Controls */}
-      <div className="flex items-center gap-3">
+      {/* Right Controls: Adaptive on Small Displays */}
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
         {/* Light (Blue) / Dim (Yellow) Segmented Switcher */}
         <div 
           role="radiogroup" 
@@ -98,14 +118,14 @@ export const TopHeader: React.FC = () => {
             aria-checked={isLightActive}
             aria-label="Switch to Light Theme"
             onClick={() => setTheme('light')}
-            className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`px-2 sm:px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
               isLightActive
                 ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25'
                 : 'text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
             }`}
           >
             <Sun className={`w-3.5 h-3.5 ${isLightActive ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />
-            <span>Light</span>
+            <span className="hidden sm:inline">Light</span>
           </button>
           <button
             type="button"
@@ -113,21 +133,21 @@ export const TopHeader: React.FC = () => {
             aria-checked={isDimActive}
             aria-label="Switch to Dim Theme"
             onClick={() => setTheme('dim')}
-            className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`px-2 sm:px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
               isDimActive
                 ? 'bg-[#FFD000] text-slate-950 shadow-sm shadow-yellow-500/25 font-extrabold'
                 : 'text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
             }`}
           >
             <Moon className={`w-3.5 h-3.5 ${isDimActive ? 'text-slate-950 fill-slate-950' : 'text-yellow-500 dark:text-yellow-400'}`} />
-            <span>Dim</span>
+            <span className="hidden sm:inline">Dim</span>
           </button>
         </div>
 
-        {/* Dashboard Pill Button */}
+        {/* Dashboard Pill Button (Desktop & Tablet) */}
         <Link
           to="/"
-          className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-[#00D29E]/15 text-emerald-950 dark:text-[#00E5A3] border border-emerald-300 dark:border-[#00D29E]/30 hover:bg-emerald-100 dark:hover:bg-[#00D29E]/25 transition-colors"
+          className="hidden sm:inline-flex px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-[#00D29E]/15 text-emerald-950 dark:text-[#00E5A3] border border-emerald-300 dark:border-[#00D29E]/30 hover:bg-emerald-100 dark:hover:bg-[#00D29E]/25 transition-colors"
         >
           Dashboard
         </Link>
@@ -140,7 +160,7 @@ export const TopHeader: React.FC = () => {
           <button
             type="button"
             onClick={() => setUserMenuOpen(!userMenuOpen)}
-            className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-yellow-400/40"
+            className="flex items-center gap-1.5 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-yellow-400/40"
             aria-label="User Account Menu"
             aria-expanded={userMenuOpen}
           >
@@ -153,9 +173,9 @@ export const TopHeader: React.FC = () => {
             <ChevronDown className="w-3 h-3 text-slate-500 dark:text-slate-400 hidden sm:block" />
           </button>
 
-          {/* User Dropdown Menu */}
+          {/* User Dropdown Menu - Viewport Safe Positioning */}
           {userMenuOpen && (
-            <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-[#0D1629] border border-slate-200 dark:border-[#1A2844] shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white dark:bg-[#0D1629] border border-slate-200 dark:border-[#1A2844] shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
               {/* User Identity Header */}
               <div className="px-4 py-3 border-b border-slate-100 dark:border-[#1A2844]">
                 <div className="text-xs font-bold text-slate-950 dark:text-white truncate">

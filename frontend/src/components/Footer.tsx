@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
                 <img
                   src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
                   alt="Phishfree Logo"
-                  className="w-full h-full object-contain filter drop-shadow-sm"
+                  className="w-full h-full object-contain filter drop-shadow-sm -translate-y-0.5"
                 />
               </div>
               <span className="font-extrabold text-slate-900 dark:text-white text-base">

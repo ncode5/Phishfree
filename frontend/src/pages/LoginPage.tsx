@@ -88,7 +88,7 @@ export const LoginPage: React.FC = () => {
               <img
                 src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
                 alt="Phishfree"
-                className="w-full h-full object-contain filter drop-shadow-md"
+                className="w-full h-full object-contain filter drop-shadow-md -translate-y-0.5"
               />
             </div>
             <div>
@@ -168,7 +168,7 @@ export const LoginPage: React.FC = () => {
       </div>
 
       {/* Right Column: Sign In Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-12 lg:p-16">
+      <div className="w-full lg:w-1/2 flex flex-col justify-between p-4 sm:p-8 lg:p-14">
         {/* Header Controls (Theme Toggle & Mobile Brand) */}
         <div className="flex items-center justify-between">
           <Link to="/" className="lg:hidden flex items-center gap-2.5">
@@ -176,7 +176,7 @@ export const LoginPage: React.FC = () => {
               <img
                 src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
                 alt="Phishfree"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain -translate-y-0.5"
               />
             </div>
             <span className="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">

@@ -158,9 +158,9 @@ export const NotificationsMenu: React.FC = () => {
         )}
       </button>
 
-      {/* Notifications Popover */}
+      {/* Notifications Popover - Fully Responsive and Safe on Mobile */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#0D1629] border border-slate-300 dark:border-[#1A2844] shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="fixed sm:absolute inset-x-3 sm:inset-auto sm:right-0 top-16 sm:top-full mt-0 sm:mt-2 w-auto sm:w-96 max-w-sm mx-auto sm:mx-0 rounded-2xl bg-white dark:bg-[#0D1629] border border-slate-300 dark:border-[#1A2844] shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
           {/* Header */}
           <div className="p-4 border-b border-slate-200 dark:border-[#1A2844] flex items-center justify-between bg-slate-50/70 dark:bg-[#0A1020]">
             <div className="flex items-center gap-2">

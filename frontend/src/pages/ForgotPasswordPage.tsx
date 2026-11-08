@@ -59,7 +59,7 @@ export const ForgotPasswordPage: React.FC = () => {
             <img
               src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
               alt="Phishfree"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain -translate-y-0.5"
             />
           </div>
           <span className="font-extrabold text-xl tracking-tight text-slate-950 dark:text-white">

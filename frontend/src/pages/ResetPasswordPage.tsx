@@ -94,7 +94,7 @@ export const ResetPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#070C18] text-slate-900 dark:text-white transition-colors duration-200 p-6 sm:p-12">
+    <div className="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#070C18] text-slate-900 dark:text-white transition-colors duration-200 p-4 sm:p-12">
       {/* Top Header */}
       <div className="max-w-4xl w-full mx-auto flex items-center justify-between mb-8">
         <Link to="/" className="inline-flex items-center gap-3">
@@ -102,7 +102,7 @@ export const ResetPasswordPage: React.FC = () => {
             <img
               src={isDark ? "/icon-yellow.png" : "/icon-blue.png"}
               alt="Phishfree"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain -translate-y-0.5"
             />
           </div>
           <span className="font-extrabold text-xl tracking-tight text-slate-950 dark:text-white">

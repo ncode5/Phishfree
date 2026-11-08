@@ -658,8 +658,8 @@ export const BlockchainRegistryPage: React.FC = () => {
             <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Live Smart Contract Events</span>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-xs font-mono">
+          <div className="overflow-x-auto -mx-2 sm:mx-0">
+            <table className="min-w-[620px] w-full divide-y divide-slate-200 dark:divide-slate-800 text-xs font-mono">
               <thead>
                 <tr className="text-slate-500 dark:text-slate-400 text-left font-semibold">
                   <th className="py-2.5 px-3">Report Fingerprint (Keccak-256)</th>

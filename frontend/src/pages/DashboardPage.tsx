@@ -829,8 +829,8 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto -mx-2 sm:mx-0">
+            <table className="w-full min-w-[520px] text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-300 dark:border-[#1A2844] text-[11px] font-bold text-slate-800 dark:text-slate-400 uppercase tracking-wider">
                   <th className="pb-2.5 font-bold">INDICATOR</th>
@@ -975,7 +975,7 @@ export const DashboardPage: React.FC = () => {
             <div className="relative flex items-center justify-center">
               <svg
                 viewBox="0 0 240 240"
-                className="w-52 h-52 sm:w-56 sm:h-56 select-none"
+                className="w-44 h-44 sm:w-52 sm:h-52 md:w-56 md:h-56 select-none"
                 style={{ overflow: 'visible' }}
               >
                 <g>

@@ -110,8 +110,8 @@ export const HistoryPage: React.FC = () => {
             <span>{error}</span>
           </div>
         ) : filteredReports.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+          <div className="overflow-x-auto -mx-2 sm:mx-0">
+            <table className="w-full min-w-[650px] text-left text-sm">
               <thead className="bg-slate-100 dark:bg-[#070C18] text-slate-800 dark:text-slate-400 text-xs font-mono uppercase tracking-wider border-b border-slate-300 dark:border-[#1A2844]">
                 <tr>
                   <th className="py-3 px-4 font-bold">Domain / Destination</th>

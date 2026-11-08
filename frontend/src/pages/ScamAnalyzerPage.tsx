@@ -505,8 +505,8 @@ export const ScamAnalyzerPage: React.FC = () => {
                 No high-confidence suspicious indicators were flagged in this message.
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+              <div className="overflow-x-auto -mx-2 sm:mx-0">
+                <table className="w-full min-w-[540px] text-left text-xs">
                   <thead>
                     <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-mono uppercase">
                       <th className="py-2.5 px-3">Severity</th>
