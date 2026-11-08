@@ -23,23 +23,6 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Vercel Serverless Path Normalization Middleware
-# Restores the original requested URL from x-matched-path or x-forwarded-uri when Vercel internal rewrites route to /api/index.py
-@app.middleware("http")
-async def vercel_path_rewrite_middleware(request: Request, call_next):
-    vercel_path = (
-        request.headers.get("x-vercel-matched-path")
-        or request.headers.get("x-matched-path")
-        or request.headers.get("x-forwarded-uri")
-        or request.headers.get("x-original-uri")
-        or request.headers.get("x-rewrite-url")
-    )
-    print(f"DEBUG VERCEL ROUTING: scope_path={request.scope.get('path')} vercel_path={vercel_path} method={request.method}")
-    if vercel_path and request.scope.get("path") in ("/api/index.py", "/api/index", "/api"):
-        request.scope["path"] = vercel_path.split("?")[0]
-    response = await call_next(request)
-    return response
-
 # Configure explicit, secure CORS origins preventing unrestricted origin matching
 app.add_middleware(
     CORSMiddleware,
