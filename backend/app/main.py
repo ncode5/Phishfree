@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.database.connection import init_db
@@ -22,6 +22,18 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
+
+# Vercel Serverless Path Normalization Middleware
+# Restores the original requested URL from x-matched-path or x-forwarded-uri when Vercel internal rewrites route to /api/index.py
+@app.middleware("http")
+async def vercel_path_rewrite_middleware(request: Request, call_next):
+    matched_path = request.headers.get("x-matched-path") or request.headers.get("x-forwarded-uri")
+    if matched_path and request.scope.get("path") in ("/api/index.py", "/api/index", "/api"):
+        request.scope["path"] = matched_path
+    elif request.scope.get("path") in ("/api/index.py", "/api/index"):
+        request.scope["path"] = "/"
+    response = await call_next(request)
+    return response
 
 # Configure explicit, secure CORS origins preventing unrestricted origin matching
 app.add_middleware(
@@ -49,6 +61,11 @@ def root():
         "documentation": "/docs",
         "health": "/api/v1/health"
     }
+
+
+@app.get("/api/index.py", include_in_schema=False)
+def vercel_entry_fallback():
+    return root()
 
 
 if __name__ == "__main__":
