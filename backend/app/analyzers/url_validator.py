@@ -47,6 +47,21 @@ class ValidationResult:
     warnings: List[str] = field(default_factory=list)
 
 
+PRIVATE_HOSTNAMES = {
+    "localhost", "localhost.localdomain", "ip6-localhost", "ip6-loopback"
+}
+
+
+def is_hostname_private(hostname: str) -> bool:
+    """Checks whether a hostname targets internal/private/loopback namespaces."""
+    h = hostname.lower().strip(".")
+    if h in PRIVATE_HOSTNAMES:
+        return True
+    if h.endswith(".localhost") or h.endswith(".local") or h.endswith(".internal") or h.endswith(".lan"):
+        return True
+    return False
+
+
 def is_ip_private(ip_str: str) -> bool:
     """Checks whether an IP address belongs to loopback, private, or link-local ranges."""
     try:
@@ -205,6 +220,17 @@ class URLValidator:
                 is_valid=False,
                 submitted_url=url,
                 error_message=f"Invalid hostname format: '{hostname}'."
+            )
+
+        # Check if hostname targets private/loopback domain namespaces (SSRF Protection)
+        if is_hostname_private(hostname):
+            return ValidationResult(
+                is_valid=False,
+                submitted_url=url,
+                hostname=hostname,
+                is_ip_address=False,
+                is_private_ip=True,
+                error_message=f"Access to localhost or loopback destinations ('{hostname}') is strictly prohibited (SSRF defense)."
             )
 
         # Check if hostname is an IP address

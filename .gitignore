@@ -49,6 +49,13 @@ data/
 .env.*.local
 *.env
 
+# Blockchain
+blockchain/artifacts/
+blockchain/cache/
+blockchain/node_modules/
+blockchain/typechain/
+blockchain/typechain-types/
+
 # IDE / OS
 .vscode/
 .idea/

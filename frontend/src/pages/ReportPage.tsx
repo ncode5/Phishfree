@@ -191,6 +191,13 @@ export const ReportPage: React.FC = () => {
                     <Network className="w-3.5 h-3.5 text-indigo-400" />
                     Correlation Graph
                   </Link>
+                  <Link
+                    to={`/blockchain?reportId=${report.id}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 border border-purple-500/30 transition shadow-sm"
+                  >
+                    <Layers className="w-3.5 h-3.5 text-purple-400" />
+                    Verify on Web3
+                  </Link>
                 </div>
               </div>
               <p className="text-sm text-slate-300 leading-relaxed font-sans">{report.summary}</p>

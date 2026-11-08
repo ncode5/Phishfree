@@ -5,7 +5,7 @@ from typing import List, Dict, Any, Optional
 from urllib.parse import urlparse, urljoin
 import httpx
 import tldextract
-from app.analyzers.url_validator import is_ip_private
+from app.analyzers.url_validator import is_ip_private, is_hostname_private
 
 
 @dataclass
@@ -86,7 +86,33 @@ class RedirectAnalyzer:
                         findings=findings
                     )
 
-                # SSRF Protection: Resolve and verify IP address before connecting
+                # SSRF Protection: Check hostname and resolve IP address before connecting
+                if is_hostname_private(hostname):
+                    finding = {
+                        "category": "NETWORK_REDIRECT",
+                        "indicator": "SSRF_PRIVATE_IP_BLOCKED",
+                        "severity": "CRITICAL",
+                        "description": f"Redirect hop '{current_url}' targets private/internal hostname '{hostname}'. Request blocked to prevent Server-Side Request Forgery (SSRF).",
+                        "source": "RedirectAnalyzer",
+                        "confidence": 1.0,
+                        "evidence": {
+                            "hop_number": hop_count + 1,
+                            "url": current_url,
+                            "hostname": hostname
+                        }
+                    }
+                    findings.append(finding)
+                    return RedirectAnalysisResult(
+                        original_url=initial_url,
+                        final_url=current_url,
+                        hops=hops,
+                        redirect_count=len(hops),
+                        cross_domain_redirects=cross_domain_detected,
+                        status="BLOCKED_SSRF",
+                        error_message=f"SSRF Protection: Redirect destination '{hostname}' is in a private/internal domain namespace.",
+                        findings=findings
+                    )
+
                 resolved_ip = self._resolve_ip(hostname)
                 if resolved_ip and is_ip_private(resolved_ip):
                     finding = {

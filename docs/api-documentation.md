@@ -192,15 +192,88 @@ Returns risk score, risk level, confidence, extracted entities, suspicious indic
 
 ---
 
-### 10. Web3 / Blockchain Network Status (Sepolia Testnet)
+### 10. Blockchain Network & Registry Status (Module 6)
 **Endpoint:** `GET /api/v1/blockchain/status`  
-**Description:** Queries live Ethereum Sepolia Testnet block number, JSON-RPC latency, and registry smart contract deployment.
+**Description:** Queries live Ethereum Sepolia Testnet block number, JSON-RPC connection state, ThreatReportRegistry smart contract address and availability, total registered count, wallet address, and recent on-chain events.
+
+#### Response (`schemas.BlockchainNetworkStatusResponse`)
+```json
+{
+  "network_name": "Ethereum Sepolia Testnet",
+  "chain_id": 11155111,
+  "rpc_url": "https://ethereum-sepolia-rpc.publicnode.com",
+  "rpc_status": "CONNECTED",
+  "latest_block": 6800540,
+  "contract_address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "contract_available": true,
+  "total_reports_registered": 12,
+  "recent_registrations": [],
+  "wallet_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  "wallet_balance_eth": 0.45
+}
+```
 
 ---
 
-### 11. Anchor Cryptographic Commitment on Sepolia
+### 11. Register Threat Report on Blockchain (Module 6)
+**Endpoint:** `POST /api/v1/blockchain/register/{report_id}?report_type=URL_ANALYSIS`  
+**Description:** Generates deterministic canonical representation of an existing report, computes its 32-byte Ethereum Keccak-256 fingerprint, performs gas and balance pre-flight checks, broadcasts the transaction to `registerReport(bytes32)` on Sepolia, awaits block confirmation receipt, and persists the registration record in the database.
+
+#### Response (`schemas.BlockchainRegisterResponse`)
+```json
+{
+  "report_id": "c1f7a28b-9023-4e4b-97e3-0d34f0d61109",
+  "report_type": "URL_ANALYSIS",
+  "report_hash": "0x53875fba03ffe644bb68a9800ec3d443eb95441ec5452e0328d6ef67d8df9dea",
+  "network": "Ethereum Sepolia Testnet",
+  "chain_id": 11155111,
+  "contract_address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "transaction_hash": "0x4a1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+  "block_number": 6800550,
+  "registration_status": "CONFIRMED",
+  "explorer_url": "https://sepolia.etherscan.io/tx/0x4a1234567890abcdef...",
+  "message": "Report fingerprint successfully registered on-chain.",
+  "registered_at": "2026-11-08T10:00:00Z"
+}
+```
+
+---
+
+### 11b. Verify Threat Report Integrity (Module 6)
+**Endpoint:** `GET /api/v1/blockchain/verify/{report_id}`  
+**Description:** Recomputes canonical Keccak-256 fingerprint from the stored database report and independently queries the on-chain smart contract via `verifyReport(bytes32)` to verify whether findings, risk scores, or URLs have been altered. Returns `VERIFIED`, `TAMPERED`, `NOT_REGISTERED`, or `UNAVAILABLE`.
+
+#### Response (`schemas.BlockchainVerifyResponse`)
+```json
+{
+  "report_id": "c1f7a28b-9023-4e4b-97e3-0d34f0d61109",
+  "current_report_hash": "0x53875fba03ffe644bb68a9800ec3d443eb95441ec5452e0328d6ef67d8df9dea",
+  "registered_report_hash": "0x53875fba03ffe644bb68a9800ec3d443eb95441ec5452e0328d6ef67d8df9dea",
+  "registered": true,
+  "integrity_verified": true,
+  "verification_status": "VERIFIED",
+  "network": "Ethereum Sepolia Testnet",
+  "chain_id": 11155111,
+  "contract_address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "transaction_hash": "0x4a1234567890abcdef...",
+  "block_number": 6800550,
+  "timestamp": 1773050000,
+  "submitter": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  "disclaimer": "Blockchain verification confirms whether the current report matches the cryptographic fingerprint registered on-chain. It does not independently determine whether the original threat assessment was accurate."
+}
+```
+
+---
+
+### 11c. Get Blockchain Registration Details (Module 6)
+**Endpoint:** `GET /api/v1/blockchain/report/{report_id}`  
+**Description:** Retrieves full historical blockchain transaction reference, block number, submitter address, and canonical payload from the database.
+
+---
+
+### 11d. Anchor Cryptographic Commitment on Sepolia (Compatibility Alias)
 **Endpoint:** `POST /api/v1/blockchain/anchor/{report_id}`  
-**Description:** Calculates a deterministic SHA-256 cryptographic digest of the report and publishes an immutable threat commitment to the Sepolia Testnet registry.
+**Description:** Backward-compatible alias for `POST /api/v1/blockchain/register/{report_id}`.
 
 ---
 

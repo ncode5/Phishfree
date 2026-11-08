@@ -98,6 +98,13 @@ FASTAPI SERVERLESS BACKEND (Vercel Python Functions)
        │        ├── Server information exposure audit (Server, X-Powered-By banners)
        │        └── Safe configuration files check (security.txt, robots.txt)
        │
+       ├── 11. Module 6: Decentralized Threat Intelligence Registry (Web3)
+       │        ├── Deterministic report canonicalization & float/timestamp normalization
+       │        ├── Ethereum Keccak-256 cryptographic digest calculation (bytes32)
+       │        ├── ThreatReportRegistry.sol smart contract on Ethereum Sepolia Testnet
+       │        ├── Safe Web3 transaction broadcasting, gas checks & receipt confirmation
+       │        └── Independent tamper-verification (VERIFIED, TAMPERED, NOT_REGISTERED)
+       │
        ▼
 EVIDENCE AGGREGATION & GRAPH CORRELATION ENGINE
        │
@@ -169,9 +176,10 @@ STRUCTURED REPORT OUTPUT -> REACT DASHBOARD
 - **Operational Rule**: Absence of evidence is not evidence of absence. A valid HTTPS certificate or 0/70 detections on VirusTotal never automatically classifies a URL as `SAFE`.
 - **Educational Boundary**: A website security configuration score evaluates defensive hardening against client-side exploitation (XSS, clickjacking, cookie hijacking, downgrade attacks). It does NOT equate to absence of malicious intent or phishing fraud. Both dimensions are evaluated independently.
 
-#### Domain 3: Web3 (Ethereum Sepolia Testnet)
-- **Role**: Decentralized, tamper-evident record keeping.
-- **Integration Point**: The `AnalysisReport` records generate a deterministic SHA-256 cryptographic commitment anchoring the URL, domain, risk classification, and score. This hash is published to an EVM testnet registry to establish immutable provenance.
+#### Domain 3: Web3 (Ethereum Sepolia Testnet - Module 6)
+- **Role**: Decentralized, tamper-evident record keeping and independent integrity verification.
+- **Integration Point**: Reports (URL, Message, or Website Security) undergo deterministic canonicalization and Ethereum Keccak-256 fingerprinting. The fingerprint is anchored on-chain via `ThreatReportRegistry.sol` on the Sepolia Testnet.
+- **Verification Engine**: Allows external parties or auditors to independently re-evaluate reports and verify whether any data has been modified post-registration (detecting tampering with zero false passes on outages).
 
 ---
 
@@ -341,3 +349,28 @@ To ensure scalable, zero-maintenance hosting without container overhead:
 └──────────────────────────────────────────────┘
 ```
 
+### Module 6: Decentralized Threat Intelligence Schema
+
+```
+┌────────────────────────────────────────────────────────┐
+│             blockchain_report_registrations            │
+├────────────────────────────────────────────────────────┤
+│ id: String(36) [PK, UUID]                              │
+│ report_id: String(36) [Indexed]                        │
+│ report_type: String(50) [URL / MESSAGE / SECURITY]     │
+│ report_hash: String(66) [Indexed, Keccak-256]          │
+│ canonical_payload: JSON                                │
+│ network: String(50) (e.g. Ethereum Sepolia)           │
+│ chain_id: Integer (11155111)                           │
+│ contract_address: String(42)                           │
+│ transaction_hash: String(66) [Indexed]                 │
+│ block_number: Integer                                  │
+│ submitter_address: String(42)                          │
+│ registration_status: String(50) (CONFIRMED/FAILED)     │
+│ verification_status: String(50) (VERIFIED/TAMPERED...) │
+│ registered_at: DateTime [UTC]                          │
+│ last_verified_at: DateTime [UTC]                       │
+│ error_message: Text                                    │
+│ created_at: DateTime [UTC]                             │
+└────────────────────────────────────────────────────────┘
+```

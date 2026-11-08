@@ -5,19 +5,21 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.database.connection import get_db
-from app.database import schemas
+from app.database import models, schemas
 from app.services.analysis_service import AnalysisService
 from app.services.message_analyzer import MessageAnalyzer
 from app.services.threat_correlation import ThreatCorrelationService
 from app.services.website_security_assessment import WebsiteSecurityAssessmentService
-from app.web3.sepolia import SepoliaRegistryService
+from app.services.blockchain_service import BlockchainService
+from app.services.report_verification_service import ReportVerificationService
 
 router = APIRouter(tags=["Security Analysis"])
 analysis_service = AnalysisService()
 message_analyzer = MessageAnalyzer(analysis_service)
 correlation_service = ThreatCorrelationService()
 security_service = WebsiteSecurityAssessmentService()
-sepolia_service = SepoliaRegistryService()
+blockchain_service = BlockchainService()
+verification_service = ReportVerificationService(blockchain_service)
 
 
 @router.post(
@@ -189,7 +191,7 @@ async def health_check(
         database=db_status,
         timestamp=datetime.now(timezone.utc),
         version="1.0.0",
-        active_module="Module 1 (URL Analysis) + Module 2 (TLS & Digital Trust Analysis) + Module 3 (AI Scam & Message Analysis) + Module 4 (Intelligent Threat Correlation) + Module 5 (Website Security Assessment)"
+        active_module="Module 1 (URL Analysis) + Module 2 (TLS & Digital Trust Analysis) + Module 3 (AI Scam & Message Analysis) + Module 4 (Intelligent Threat Correlation) + Module 5 (Website Security Assessment) + Module 6 (Decentralized Threat Intelligence Blockchain Registry)"
     )
 
 
@@ -373,34 +375,124 @@ async def get_security_findings_filtered(
         )
 
 
+# ====================================================
+# MODULE 6: Decentralized Threat Intelligence Endpoints
+# ====================================================
+
 @router.get(
     "/blockchain/status",
-    summary="Check Sepolia Testnet connectivity",
-    description="Queries current Ethereum Sepolia block height and registry smart contract status."
+    response_model=schemas.BlockchainNetworkStatusResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Check blockchain network and registry status",
+    description="Queries Ethereum Sepolia Testnet connectivity, latest block number, wallet status, and ThreatReportRegistry smart contract availability."
 )
 async def get_blockchain_status():
-    return await sepolia_service.get_network_status()
+    try:
+        return blockchain_service.get_network_status()
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error checking blockchain status: {str(e)}"
+        )
+
+
+@router.post(
+    "/blockchain/register/{report_id}",
+    response_model=schemas.BlockchainRegisterResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Register threat report on Ethereum blockchain",
+    description="Computes deterministic Keccak-256 report fingerprint and broadcasts an immutable on-chain registration to ThreatReportRegistry.sol."
+)
+async def register_threat_report_on_chain(
+    report_id: str,
+    report_type: Optional[str] = Query("URL_ANALYSIS", description="URL_ANALYSIS, MESSAGE_ANALYSIS, or WEBSITE_SECURITY"),
+    db: Session = Depends(get_db)
+):
+    try:
+        result = verification_service.register_report(
+            report_id=report_id,
+            db=db,
+            report_type=report_type
+        )
+        if result.get("registration_status") == "FAILED" and "not found" in str(result.get("message", "")).lower():
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=result["message"]
+            )
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error registering report on blockchain: {str(e)}"
+        )
+
+
+@router.get(
+    "/blockchain/verify/{report_id}",
+    response_model=schemas.BlockchainVerifyResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Verify threat report integrity against blockchain",
+    description="Recomputes canonical Keccak-256 fingerprint from stored database report and independently audits on-chain registry for evidence of tampering or confirmed provenance."
+)
+async def verify_threat_report_integrity(
+    report_id: str,
+    db: Session = Depends(get_db)
+):
+    try:
+        result = verification_service.verify_report(report_id=report_id, db=db)
+        if result.get("verification_status") == "NOT_REGISTERED" and not result.get("current_report_hash"):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Report '{report_id}' not found in database."
+            )
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error verifying report integrity: {str(e)}"
+        )
+
+
+@router.get(
+    "/blockchain/report/{report_id}",
+    response_model=schemas.BlockchainReportDetailsResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get blockchain registration details for a report",
+    description="Retrieves persisted transaction hash, block number, Keccak-256 hash, and on-chain status from database."
+)
+async def get_blockchain_report_details(
+    report_id: str,
+    db: Session = Depends(get_db)
+):
+    reg = db.query(models.BlockchainReportRegistration).filter(
+        models.BlockchainReportRegistration.report_id == report_id
+    ).first()
+    if not reg:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No blockchain registration record found for report '{report_id}'."
+        )
+    return reg
 
 
 @router.post(
     "/blockchain/anchor/{report_id}",
-    summary="Anchor report cryptographic commitment on Sepolia Testnet",
-    description="Generates SHA-256 report commitment and anchors it to the Sepolia threat registry."
+    summary="Anchor report cryptographic commitment on Sepolia Testnet (Compatibility Alias)",
+    description="Maintains backward compatibility with earlier client calls by invoking the Keccak-256 registration pipeline."
 )
-async def anchor_report_on_chain(
+async def anchor_report_on_chain_legacy(
     report_id: str,
     db: Session = Depends(get_db)
 ):
-    report = analysis_service.get_report_by_id(report_id, db)
-    if not report:
+    result = verification_service.register_report(report_id=report_id, db=db)
+    if result.get("registration_status") == "FAILED" and "not found" in str(result.get("message", "")).lower():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Analysis report '{report_id}' was not found."
+            detail=result["message"]
         )
-    return await sepolia_service.anchor_report(
-        report_id=report.id,
-        url=report.submitted_url,
-        domain=report.domain,
-        risk_level=report.risk_level,
-        risk_score=report.risk_score
-    )
+    return result
+

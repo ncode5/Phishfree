@@ -495,5 +495,97 @@ export interface SecurityFindingsFilterResponse {
   skip: number;
 }
 
+// ====================================================
+// MODULE 6: Decentralized Threat Intelligence (Web3)
+// ====================================================
+
+export type BlockchainVerificationStatus =
+  | 'VERIFIED'
+  | 'TAMPERED'
+  | 'NOT_REGISTERED'
+  | 'PENDING'
+  | 'UNAVAILABLE';
+
+export type BlockchainRegistrationStatus =
+  | 'NOT_REGISTERED'
+  | 'PENDING'
+  | 'CONFIRMED'
+  | 'FAILED';
+
+export interface BlockchainRecentRegistration {
+  report_hash: string;
+  timestamp: number;
+  submitter: string;
+  exists: boolean;
+}
+
+export interface BlockchainNetworkStatus {
+  network_name: string;
+  chain_id: number;
+  rpc_url: string;
+  rpc_status: 'CONNECTED' | 'DISCONNECTED' | 'UNAVAILABLE' | 'UNCONFIGURED';
+  latest_block?: number | null;
+  contract_address?: string | null;
+  contract_available: boolean;
+  total_reports_registered?: number | null;
+  recent_registrations: BlockchainRecentRegistration[];
+  wallet_address?: string | null;
+  wallet_balance_eth?: number | null;
+}
+
+export interface BlockchainRegisterResponse {
+  report_id: string;
+  report_type: string;
+  report_hash: string;
+  network: string;
+  chain_id: number;
+  contract_address?: string | null;
+  transaction_hash?: string | null;
+  block_number?: number | null;
+  registration_status: BlockchainRegistrationStatus;
+  explorer_url?: string | null;
+  message: string;
+  registered_at?: string | null;
+}
+
+export interface BlockchainVerifyResponse {
+  report_id: string;
+  current_report_hash: string;
+  registered_report_hash?: string | null;
+  registered: boolean;
+  integrity_verified: boolean;
+  verification_status: BlockchainVerificationStatus;
+  network: string;
+  chain_id: number;
+  contract_address?: string | null;
+  transaction_hash?: string | null;
+  block_number?: number | null;
+  timestamp?: number | null;
+  submitter?: string | null;
+  details?: Record<string, any> | null;
+  disclaimer: string;
+}
+
+export interface BlockchainReportDetails {
+  id: string;
+  report_id: string;
+  report_type: string;
+  report_hash: string;
+  canonical_payload?: Record<string, any> | null;
+  network: string;
+  chain_id: number;
+  contract_address?: string | null;
+  transaction_hash?: string | null;
+  block_number?: number | null;
+  submitter_address?: string | null;
+  registration_status: BlockchainRegistrationStatus;
+  verification_status: BlockchainVerificationStatus;
+  registered_at?: string | null;
+  last_verified_at?: string | null;
+  explorer_url?: string | null;
+  error_message?: string | null;
+}
+
+
 
 

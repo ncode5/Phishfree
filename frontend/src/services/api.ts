@@ -10,7 +10,11 @@ import {
   RelatedThreatsResponse,
   ThreatIntelOverview,
   SecurityAssessmentResponse,
-  SecurityFindingsFilterResponse
+  SecurityFindingsFilterResponse,
+  BlockchainNetworkStatus,
+  BlockchainRegisterResponse,
+  BlockchainVerifyResponse,
+  BlockchainReportDetails
 } from '../types';
 
 const getApiBase = (): string => {
@@ -65,11 +69,6 @@ export const api = {
 
   async getHealth(): Promise<{ status: string; database: string; version: string }> {
     const response = await apiClient.get('/health');
-    return response.data;
-  },
-
-  async getBlockchainStatus(): Promise<any> {
-    const response = await apiClient.get('/blockchain/status');
     return response.data;
   },
 
@@ -159,6 +158,34 @@ export const api = {
     const response = await apiClient.get<SecurityFindingsFilterResponse>(`/security/${reportId}/findings`, {
       params: { severity, category, limit, skip },
     });
+    return response.data;
+  },
+
+  // Module 6: Decentralized Threat Intelligence (Web3)
+  async getBlockchainStatus(): Promise<BlockchainNetworkStatus> {
+    const response = await apiClient.get<BlockchainNetworkStatus>('/blockchain/status');
+    return response.data;
+  },
+
+  async registerReportOnChain(
+    reportId: string,
+    reportType: string = 'URL_ANALYSIS'
+  ): Promise<BlockchainRegisterResponse> {
+    const response = await apiClient.post<BlockchainRegisterResponse>(
+      `/blockchain/register/${reportId}`,
+      null,
+      { params: { report_type: reportType } }
+    );
+    return response.data;
+  },
+
+  async verifyReportOnChain(reportId: string): Promise<BlockchainVerifyResponse> {
+    const response = await apiClient.get<BlockchainVerifyResponse>(`/blockchain/verify/${reportId}`);
+    return response.data;
+  },
+
+  async getBlockchainReportDetails(reportId: string): Promise<BlockchainReportDetails> {
+    const response = await apiClient.get<BlockchainReportDetails>(`/blockchain/report/${reportId}`);
     return response.data;
   },
 };

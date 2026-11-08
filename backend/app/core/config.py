@@ -1,12 +1,13 @@
 import os
-from typing import List
+import re
+from typing import List, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """Application settings loaded from environment or .env file."""
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(".env", "backend/.env"),
         env_file_encoding="utf-8",
         extra="ignore"
     )
@@ -28,8 +29,35 @@ class Settings(BaseSettings):
 
     # Web3 / Blockchain Integration (Sepolia Testnet)
     BLOCKCHAIN_RPC_URL: str = "https://ethereum-sepolia-rpc.publicnode.com"
+    SEPOLIA_RPC_URL: str = ""
+    SEPOLIA_CHAIN_ID: int = 11155111
     PRIVATE_KEY: str = ""
+    BLOCKCHAIN_PRIVATE_KEY: str = ""
     CONTRACT_ADDRESS: str = ""
+    THREAT_REGISTRY_CONTRACT_ADDRESS: str = ""
+
+    @property
+    def effective_rpc_url(self) -> str:
+        return self.BLOCKCHAIN_RPC_URL or self.SEPOLIA_RPC_URL or "https://ethereum-sepolia-rpc.publicnode.com"
+
+    @property
+    def effective_private_key(self) -> str:
+        return self.BLOCKCHAIN_PRIVATE_KEY or self.PRIVATE_KEY or ""
+
+    @property
+    def effective_contract_address(self) -> str:
+        addr = self.THREAT_REGISTRY_CONTRACT_ADDRESS or self.CONTRACT_ADDRESS or ""
+        if not addr:
+            try:
+                import json
+                dep_path = os.path.join(os.path.dirname(__file__), "..", "web3", "contract_deployment.json")
+                if os.path.exists(dep_path):
+                    with open(dep_path, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                        return data.get("contractAddress", "")
+            except Exception:
+                pass
+        return addr
 
     # CORS Allowed Origins
     ALLOWED_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,https://*.vercel.app"
@@ -54,6 +82,29 @@ class Settings(BaseSettings):
     @property
     def cors_origins(self) -> List[str]:
         return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",") if origin.strip()]
+
+    @property
+    def cors_exact_origins(self) -> List[str]:
+        """Returns exact origin strings without wildcard characters."""
+        origins = []
+        for o in self.ALLOWED_ORIGINS.split(","):
+            cleaned = o.strip()
+            if cleaned and "*" not in cleaned:
+                origins.append(cleaned)
+        return origins
+
+    @property
+    def cors_origin_regex(self) -> Optional[str]:
+        """Builds strict, anchored regular expression for wildcard patterns like https://*.vercel.app."""
+        patterns = []
+        for o in self.ALLOWED_ORIGINS.split(","):
+            cleaned = o.strip()
+            if cleaned and "*" in cleaned:
+                escaped = re.escape(cleaned).replace(r"\*", r"[a-zA-Z0-9-]+")
+                patterns.append(f"^{escaped}$")
+        if patterns:
+            return "|".join(patterns)
+        return None
 
     @property
     def is_serverless(self) -> bool:

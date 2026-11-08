@@ -1,13 +1,13 @@
 # AI-Powered Web Threat Detection & Digital Trust Intelligence
 
-[![Modules 1, 2, 3, 4 & 5: Verified](https://img.shields.io/badge/Modules%201%2C%202%2C%203%2C%204%20%26%205-Operational%20%26%20Verified-emerald?style=for-the-badge&logo=shield)](https://github.com)
+[![Modules 1 to 6: Verified](https://img.shields.io/badge/Modules%201%20to%206-Operational%20%26%20Verified-emerald?style=for-the-badge&logo=shield)](https://github.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Vercel Serverless Ready](https://img.shields.io/badge/Vercel-Serverless%20Deployed-black?style=for-the-badge&logo=vercel)](https://vercel.com)
 [![Ethereum Sepolia](https://img.shields.io/badge/Ethereum-Sepolia%20Testnet-627EEA?style=for-the-badge&logo=ethereum&logoColor=white)](https://sepolia.etherscan.io)
-[![Tests: 119 Passing](https://img.shields.io/badge/Pytest-119%20Passed-brightgreen?style=for-the-badge&logo=pytest)](https://docs.pytest.org)
+[![Tests: 137 Passing](https://img.shields.io/badge/Pytest-137%20Passed-brightgreen?style=for-the-badge&logo=pytest)](https://docs.pytest.org)
 
 > **Hackathon Submission**: 48-Hour Build  
 > **Domains**: Artificial Intelligence · Cybersecurity · Web3  
@@ -40,6 +40,7 @@ The modern internet powers global banking, commerce, digital identity, recruitme
 6. **Synthesizes Plain-Language Guidance**: An AI explanation layer converts technical findings into human-readable summaries and practical safety recommendations.
 7. **Web3 Decentralized Registry**: Anchors deterministic SHA-256 report commitments on the Ethereum Sepolia Testnet for immutable, tamper-evident audit trails.
 8. **Module 5: Website Security Assessment**: Evaluates publicly observable website security posture across 6 key dimensions: HTTPS transport enforcement & downgrade prevention, 9 standard HTTP defensive security headers (HSTS, CSP, X-Frame-Options, etc.), cookie security flags (`Secure`, `HttpOnly`, `SameSite`), mixed active/passive content detection, basic server software information exposure, and well-known configuration files (`security.txt`, `robots.txt`). Maintains a clear educational distinction: a site with a high security configuration score can still be a malicious phishing lure, and a poorly configured site is not necessarily fraudulent.
+9. **Module 6: Decentralized Threat Intelligence (Web3 Registry)**: Provides cryptographic report integrity, timestamped proof of existence, and independent tamper verification using Ethereum Sepolia Testnet. Employs deterministic JSON canonicalization, computes 32-byte Ethereum Keccak-256 digests, broadcasts on-chain registrations to the `ThreatReportRegistry.sol` smart contract, and provides an independent verification tool detecting post-registration alterations (`VERIFIED` vs `TAMPERED`). Strictly preserves the educational boundary: blockchain guarantees report integrity and provenance, not that a website was inherently malicious.
 
 ---
 
@@ -91,10 +92,14 @@ The modern internet powers global banking, commerce, digital identity, recruitme
 - Safe public security files probe: checks `/.well-known/security.txt` compliance (RFC 9116) and `/robots.txt` indexing directives.
 - Weighted scoring model (HTTPS 25%, Headers 25%, Cookies 20%, Mixed Content 15%, Information Exposure 5%, Configuration Files 10%) producing intuitive labels (Strong, Good, Needs Improvement, Weak, Poor), assessment coverage metrics, and copyable remediation recommendations.
 
-### Web3 Integration (Ethereum Sepolia Testnet)
-- Deterministic SHA-256 report commitment calculation over URL, domain, risk classification, and risk score.
-- Off-chain analysis data with on-chain cryptographic commitment for auditability and tamper resistance.
-- Live RPC status verification and Sepolia Etherscan transaction exploration links.
+### Module 6: Decentralized Threat Intelligence using Blockchain
+- **Deterministic Canonicalization**: Sorts keys lexicographically, standardizes ISO 8601 UTC timestamps, normalizes floating-point scores to 2 decimal places, and strips transient UI/transaction fields.
+- **Ethereum Keccak-256 Fingerprinting**: Generates 32-byte (66 hex characters) cryptographic digests compatible with EVM `keccak256()` and Solidity `bytes32`.
+- **ThreatReportRegistry Smart Contract**: Written in Solidity `^0.8.20`, deployed on Ethereum Sepolia Testnet (Chain ID `11155111`) / Localhost (Chain ID `31337`). Supports `registerReport(bytes32)` with zero-hash rejection and duplicate registration guards.
+- **Independent Tamper Verification**: Evaluates stored reports against on-chain fingerprints, returning unambiguous states: `VERIFIED`, `TAMPERED`, `NOT_REGISTERED`, `PENDING`, or `UNAVAILABLE`.
+- **Safe Transaction Management**: Enforces pre-flight wallet balance checks (requiring Sepolia testnet ETH from faucets), dynamic gas estimation, nonce tracking, and receipt confirmation.
+- **Database Persistence**: Persists on-chain transaction metadata, block numbers, submitter addresses, and canonical payloads in `blockchain_report_registrations` without storing private keys or credentials.
+- **Interactive Web3 Console**: Dedicated React interface (`/blockchain`) providing real-time JSON-RPC node status, Etherscan explorer links, stepper registration progress, and live smart contract event feeds.
 
 ---
 
@@ -113,8 +118,8 @@ The modern internet powers global banking, commerce, digital identity, recruitme
 | **DNS Resolution** | dnspython | Robust DNS zone queries with granular record-type isolation and timeout management. |
 | **HTTP Client** | HTTPX | Asynchronous HTTP client providing manual hop-by-hop redirect control and timeout bounds. |
 | **Database & ORM** | SQLAlchemy 2.0 + Hosted PostgreSQL | Neon / Supabase compatibility with `NullPool` serverless connection pooling. |
-| **Blockchain** | Web3.py / Sepolia JSON-RPC | Cryptographic anchoring of threat intelligence digests on Ethereum Sepolia Testnet. |
-| **Testing** | Pytest + pytest-asyncio | 119 comprehensive automated tests covering all Modules 1, 2, 3, 4, and 5 scenarios (100% passing). |
+| **Blockchain & Smart Contracts** | Solidity 0.8.20 + Hardhat + Web3.py | `ThreatReportRegistry.sol` deployed on Ethereum Sepolia Testnet with Keccak-256 fingerprinting and tamper verification. |
+| **Testing** | Pytest + pytest-asyncio + Hardhat Chai | 137 backend automated tests + 13 smart contract tests (150 tests total, 100% passing across all 6 modules). |
 
 ---
 
@@ -124,6 +129,16 @@ The modern internet powers global banking, commerce, digital identity, recruitme
 digital-trust-intelligence/
 ├── api/
 │   └── index.py                 # Root Vercel Serverless Function entrypoint
+├── blockchain/
+│   ├── contracts/
+│   │   └── ThreatReportRegistry.sol # Module 6 Solidity smart contract (^0.8.20)
+│   ├── scripts/
+│   │   └── deploy.js            # Deployment script for Localhost / Sepolia
+│   ├── test/
+│   │   └── ThreatReportRegistry.test.js # 13 Hardhat smart contract tests
+│   ├── hardhat.config.js        # Hardhat configuration (Solidity 0.8.20, Sepolia)
+│   ├── package.json             # Hardhat & ethers dependencies
+│   └── README.md                # Smart contract testing & deployment guide
 ├── frontend/
 │   ├── public/
 │   ├── src/
@@ -173,9 +188,15 @@ digital-trust-intelligence/
 │   │   │   ├── security_headers_analyzer.py     # Module 5 9-header defensive evaluator
 │   │   │   ├── cookie_security_analyzer.py      # Module 5 Cookie privacy-safe flag auditor
 │   │   │   ├── mixed_content_analyzer.py        # Module 5 Safe HTML mixed content parser
-│   │   │   └── security_configuration_analyzer.py # Module 5 Information exposure & security.txt
+│   │   │   ├── security_configuration_analyzer.py # Module 5 Information exposure & security.txt
+│   │   │   ├── report_canonicalizer.py          # Module 6 Deterministic report canonicalization
+│   │   │   ├── report_hash_service.py           # Module 6 Ethereum Keccak-256 fingerprint service
+│   │   │   ├── blockchain_service.py            # Module 6 Web3 JSON-RPC & transaction manager
+│   │   │   └── report_verification_service.py   # Module 6 Independent tamper-verification service
 │   │   ├── web3/
-│   │   │   └── sepolia.py             # Ethereum Sepolia Testnet anchoring service
+│   │   │   ├── contract_abi.py                  # Module 6 Compiled contract ABI loader
+│   │   │   ├── ThreatReportRegistry_ABI.json    # Module 6 Smart contract JSON ABI
+│   │   │   └── sepolia.py                       # Ethereum Sepolia Testnet compatibility service
 │   │   ├── ai/
 │   │   │   └── explanation.py         # AI explanation + deterministic fallback
 │   │   ├── risk_engine/
@@ -327,13 +348,24 @@ The dashboard interface will open at `http://localhost:5173`.
 
 ## 11. Testing & Verification
 
-### Run Backend Tests (119 Tests)
+### Run Automated Test Suites (150 Total Tests)
 The comprehensive test suite covers all requirements across Module 1, Module 2, and Module 3:
 ```bash
 python -m pytest backend/tests/ -v
 ```
 
-**Test Breakdown (119 Tests, 100% Passing):**
+**Smart Contract Tests (13 Tests, 100% Passing):**
+```bash
+cd blockchain
+npx hardhat test
+```
+- `ThreatReportRegistry.test.js` (13 tests): Initial 0 count & owner verification, successful report registration, zero hash bytes32(0) rejection, duplicate registration revert, successful on-chain verification getter, unknown hash return values, accurate block timestamp recording, submitter address recording, ReportRegistered event emission, getReportDetails validation, reverse chronological recent report retrieval, count boundary handling.
+
+**Backend Test Breakdown (137 Tests, 100% Passing):**
+```bash
+python -m pytest backend/tests/ -v
+```
+- `test_blockchain_registry.py` (18 tests): Deterministic report canonicalization, idempotency (same report produces identical Keccak-256 hash), modified report produces different hash, key ordering invariance, correct Ethereum Keccak-256 test vectors (NIST SHA3-256 distinction), contract address checksumming, unconfigured/offline RPC handling, successful report registration, duplicate registration prevention, successful on-chain verification (VERIFIED), post-registration modification detection (TAMPERED), unregistered report detection (NOT_REGISTERED), failed transaction handling, RPC outage handling (UNAVAILABLE), 0 ETH wallet balance detection, missing private key handling, cross-module canonicalization (Message Analysis & Website Security), end-to-end FastAPI endpoint integration.
 - `test_website_security.py` (30 tests): Enforces non-intrusive passive boundaries, pre-flight SSRF and private IP blocks (127.0.0.1, 10.0.0.1, 169.254.169.254, ::1), HTTPS enforcement, HTTP-to-HTTPS redirect upgrades, downgrade vulnerability detection, full 9 HTTP security headers matrix (HSTS, CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, CORP, COEP), privacy-preserving cookie flag inspection (Secure, HttpOnly, SameSite), cookie prefix validation (__Secure-, __Host-), zero cookie value persistence, active mixed content detection (scripts, iframes, CSS, form action targets), passive mixed content detection (images, audio, video), pure HTTPS clean baseline, server banner metadata exposure (Server, X-Powered-By, X-AspNet-Version), security.txt (RFC 9116) valid/missing handling, robots.txt discovery, weighted scoring calculation across all 6 categories, coverage metrics, label grading, POST /api/v1/analyze/security live flow, GET /api/v1/security/{report_id} retrieval, GET /api/v1/security/{report_id}/findings severity and category filtering.
 - `test_threat_correlation.py` (22 tests): Indicator normalization for domains, URLs, IPv4/IPv6, X.509 fingerprints, phone numbers, and emails; cross-module entity extraction; graph relationship modeling; 8 campaign pattern detections (shared hosting campaigns, domain generation algorithms, fast-flux DNS, credential harvesting rings, phishing kit reuse, cross-channel SMS/email lures); CDN false-positive dampening; non-linear correlated risk scoring; POST /api/v1/correlate, GET /api/v1/correlations/{id}, and GET /api/v1/threats/{id}/related endpoints.
 - `test_message_analyzer.py` (22 tests): Empty message validation, normal message baseline, suspicious bank KYC phishing, prize/lottery scams, fraudulent job offers, crypto giveaway scams, single URL extraction, multiple URLs extraction, email extraction, phone number extraction, artificial urgency indicators, credential theft lures, adversarial prompt injection defense, Gemini API timeout fallback, malformed AI response handling, Module 1 URL analysis integration, Module 2 TLS certificate integration, partial URL failure robustness, extremely long message handling (>10k chars), ambiguous/inconclusive text handling, `POST /api/v1/analyze/message` and `GET /api/v1/analyze/message/{report_id}` endpoints, 404 not found validation.
@@ -385,4 +417,4 @@ In accordance with hackathon integrity guidelines, we transparently disclose all
 |---|---|
 | **Artificial Intelligence** | - Grounded explanation synthesis translating complex security telemetry into understandable guidance.<br>- Adversarial prompt injection defense detecting and neutralizing instruction hijacking.<br>- Multi-intent social engineering classification (urgency, KYC traps, fake job lures, financial scams). |
 | **Cybersecurity** | - RFC-compliant URL normalization and strict scheme gating (`http`/`https` only).<br>- Levenshtein distance brand typosquatting & Punycode homoglyph analysis.<br>- Pre-flight SSRF protection intercepting private RFC 1918 IPs, loopback, and cloud metadata (169.254.169.254).<br>- Asynchronous DNS zone querying across A, AAAA, MX, NS, and TXT records.<br>- X.509 TLS certificate extraction, UTC expiration window calculation, RFC 6125 SAN wildcard domain matching, and cipher strength auditing.<br>- Sensitive PII redaction protecting user passwords and OTPs. |
-| **Web3** | - Tamper-evident threat intelligence anchoring on Ethereum Sepolia Testnet.<br>- Cryptographic SHA-256 report commitment calculation providing immutable verification.<br>- Native extraction of Bitcoin, Ethereum, and Solana wallet addresses for crypto scam detection. |
+| **Web3** | - `ThreatReportRegistry.sol` smart contract deployed on Ethereum Sepolia Testnet (Chain ID 11155111).<br>- Deterministic JSON canonicalization & Ethereum Keccak-256 cryptographic fingerprinting.<br>- Independent tamper-verification engine identifying post-registration alterations (`VERIFIED` vs `TAMPERED`).<br>- Native extraction of Bitcoin, Ethereum, and Solana wallet addresses in Module 3 scam detection.<br>- Full Hardhat local testing and deployment workflow with Sepolia Etherscan explorer links. |

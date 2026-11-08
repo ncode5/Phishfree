@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Activity, Search, History, Info, ExternalLink, MessageSquare, Network, ShieldCheck } from 'lucide-react';
+import { Shield, Activity, Search, History, Info, ExternalLink, MessageSquare, Network, ShieldCheck, Layers } from 'lucide-react';
 import { api } from '../services/api';
 
 export const Navbar: React.FC = () => {
@@ -31,6 +31,7 @@ export const Navbar: React.FC = () => {
     { to: '/scam-analyzer', label: 'Scam Analyzer', icon: MessageSquare },
     { to: '/security', label: 'Security Audit', icon: ShieldCheck },
     { to: '/threat-intel', label: 'Threat Intel', icon: Network },
+    { to: '/blockchain', label: 'Web3 Registry', icon: Layers },
     { to: '/history', label: 'Scan History', icon: History },
     { to: '/about', label: 'About & Arch', icon: Info },
   ];

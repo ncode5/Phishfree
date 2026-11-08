@@ -193,3 +193,30 @@ class WebsiteSecurityFinding(Base):
     assessment = relationship("WebsiteSecurityAssessment", back_populates="findings")
 
 
+class BlockchainReportRegistration(Base):
+    """
+    Stores on-chain registration references, Keccak-256 fingerprints,
+    and verification history for PhishFree threat reports.
+    """
+    __tablename__ = "blockchain_report_registrations"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid, index=True)
+    report_id = Column(String(36), nullable=False, index=True)
+    report_type = Column(String(50), nullable=False, default="URL_ANALYSIS")
+    report_hash = Column(String(66), nullable=False, index=True)  # 0x + 64 hex characters (Keccak-256)
+    canonical_payload = Column(JSON, nullable=True)
+    network = Column(String(50), nullable=False, default="sepolia")
+    chain_id = Column(Integer, nullable=False, default=11155111)
+    contract_address = Column(String(42), nullable=True, index=True)
+    transaction_hash = Column(String(66), nullable=True, index=True)
+    block_number = Column(Integer, nullable=True)
+    submitter_address = Column(String(42), nullable=True)
+    registration_status = Column(String(50), nullable=False, default="NOT_REGISTERED")  # NOT_REGISTERED, PENDING, CONFIRMED, FAILED
+    verification_status = Column(String(50), nullable=False, default="NOT_REGISTERED")  # VERIFIED, TAMPERED, NOT_REGISTERED, PENDING, UNAVAILABLE
+    registered_at = Column(DateTime(timezone=True), nullable=True)
+    last_verified_at = Column(DateTime(timezone=True), nullable=True)
+    error_message = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utc_now)
+
+
+

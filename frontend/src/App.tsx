@@ -6,6 +6,7 @@ import { ScannerPage } from './pages/ScannerPage';
 import { ScamAnalyzerPage } from './pages/ScamAnalyzerPage';
 import { ThreatIntelPage } from './pages/ThreatIntelPage';
 import { WebsiteSecurityPage } from './pages/WebsiteSecurityPage';
+import { BlockchainRegistryPage } from './pages/BlockchainRegistryPage';
 import { ReportPage } from './pages/ReportPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { AboutPage } from './pages/AboutPage';
@@ -22,6 +23,8 @@ export const App: React.FC = () => {
           <Route path="security-assessment" element={<WebsiteSecurityPage />} />
           <Route path="threat-intel" element={<ThreatIntelPage />} />
           <Route path="correlation" element={<ThreatIntelPage />} />
+          <Route path="blockchain" element={<BlockchainRegistryPage />} />
+          <Route path="web3" element={<BlockchainRegistryPage />} />
           <Route path="reports/:id" element={<ReportPage />} />
           <Route path="history" element={<HistoryPage />} />
           <Route path="about" element={<AboutPage />} />

@@ -23,10 +23,11 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Enable permissive, production-safe CORS for Vercel deployments and local development
+# Configure explicit, secure CORS origins preventing unrestricted origin matching
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"^https?://.*",
+    allow_origins=settings.cors_exact_origins,
+    allow_origin_regex=settings.cors_origin_regex,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

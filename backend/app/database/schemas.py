@@ -579,3 +579,90 @@ class SecurityFindingsFilterResponse(BaseModel):
     limit: int = 50
     skip: int = 0
 
+
+# ====================================================
+# MODULE 6: Decentralized Threat Intelligence Schemas
+# ====================================================
+
+class BlockchainRegisterRequest(BaseModel):
+    """Request payload to register a threat report fingerprint on blockchain."""
+    report_id: str = Field(..., description="UUID of report to anchor")
+    report_type: Optional[str] = Field("URL_ANALYSIS", description="URL_ANALYSIS, MESSAGE_ANALYSIS, or WEBSITE_SECURITY")
+
+
+class BlockchainRegisterResponse(BaseModel):
+    """Response returned upon initiating or confirming blockchain report registration."""
+    report_id: str
+    report_type: str = "URL_ANALYSIS"
+    report_hash: str
+    network: str = "sepolia"
+    chain_id: int = 11155111
+    contract_address: Optional[str] = None
+    transaction_hash: Optional[str] = None
+    block_number: Optional[int] = None
+    registration_status: str  # NOT_REGISTERED, PENDING, CONFIRMED, FAILED
+    explorer_url: Optional[str] = None
+    message: str
+    registered_at: Optional[datetime] = None
+
+
+class BlockchainVerifyResponse(BaseModel):
+    """Response returned when independently auditing report integrity against blockchain."""
+    report_id: str
+    current_report_hash: str
+    registered_report_hash: Optional[str] = None
+    registered: bool
+    integrity_verified: bool
+    verification_status: str  # VERIFIED, TAMPERED, NOT_REGISTERED, PENDING, UNAVAILABLE
+    network: str = "sepolia"
+    chain_id: int = 11155111
+    contract_address: Optional[str] = None
+    transaction_hash: Optional[str] = None
+    block_number: Optional[int] = None
+    timestamp: Optional[int] = None
+    submitter: Optional[str] = None
+    details: Optional[Dict[str, Any]] = None
+    disclaimer: str = (
+        "Blockchain verification confirms whether the current report matches the cryptographic fingerprint "
+        "registered on-chain. It does not independently determine whether the original threat assessment was accurate."
+    )
+
+
+class BlockchainReportDetailsResponse(BaseModel):
+    """Complete metadata record for an on-chain threat report registration."""
+    id: str
+    report_id: str
+    report_type: str
+    report_hash: str
+    canonical_payload: Optional[Dict[str, Any]] = None
+    network: str
+    chain_id: int
+    contract_address: Optional[str] = None
+    transaction_hash: Optional[str] = None
+    block_number: Optional[int] = None
+    submitter_address: Optional[str] = None
+    registration_status: str
+    verification_status: str
+    registered_at: Optional[datetime] = None
+    last_verified_at: Optional[datetime] = None
+    explorer_url: Optional[str] = None
+    error_message: Optional[str] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class BlockchainNetworkStatusResponse(BaseModel):
+    """Real-time operational status of EVM JSON-RPC connection and registry smart contract."""
+    network_name: str
+    chain_id: int
+    rpc_url: str
+    rpc_status: str  # CONNECTED, DISCONNECTED, UNAVAILABLE, UNCONFIGURED
+    latest_block: Optional[int] = None
+    contract_address: Optional[str] = None
+    contract_available: bool = False
+    total_reports_registered: Optional[int] = None
+    recent_registrations: List[Dict[str, Any]] = []
+    wallet_address: Optional[str] = None
+    wallet_balance_eth: Optional[float] = None
+
+
