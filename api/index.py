@@ -1,18 +1,22 @@
-import sys
 import os
+import sys
 
-# Add backend directory to sys.path so app modules import cleanly
+# Dynamic path resolution for Vercel Serverless
 current_dir = os.path.dirname(__file__)
+root_dir = os.path.abspath(os.path.join(current_dir, ".."))
 backend_dir = os.path.abspath(os.path.join(current_dir, "..", "backend"))
 
-if backend_dir not in sys.path:
-    sys.path.insert(0, backend_dir)
+# Add paths to sys.path
+for path in [backend_dir, root_dir]:
+    if os.path.exists(path) and path not in sys.path:
+        sys.path.insert(0, path)
 
+# Robust fallback import
 try:
     from app.main import app
 except ImportError:
-    # Alternative path if root directory was changed
     from backend.app.main import app
 
-# Vercel Serverless Function expects ASGI/WSGI app instance
+# Explicit ASGI app export for Vercel
+app = app
 
