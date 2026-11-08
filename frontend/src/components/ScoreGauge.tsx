@@ -39,7 +39,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, level, confidence
             cx="50"
             cy="50"
             r={radius}
-            className="stroke-slate-800"
+            className="stroke-slate-200 dark:stroke-slate-800 transition-colors"
             strokeWidth="8"
             fill="transparent"
           />
@@ -60,22 +60,21 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, level, confidence
 
         {/* Center Score */}
         <div className="absolute flex flex-col items-center">
-          <span className="text-3xl font-bold font-mono text-white tracking-tight">
+          <span className="text-3xl font-bold font-mono text-slate-900 dark:text-white tracking-tight">
             {score.toFixed(0)}
           </span>
-          <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+          <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider">
             / 100 Risk
           </span>
         </div>
       </div>
 
       {/* Confidence Pill */}
-      <div className="mt-3 flex items-center gap-1.5 px-3 py-1 bg-slate-900 border border-slate-800 rounded-full text-xs text-slate-300">
+      <div className="mt-3 flex items-center gap-1.5 px-3 py-1 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full text-xs text-slate-700 dark:text-slate-300">
         <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
         <span>Confidence:</span>
-        <span className="font-semibold text-white">{(confidence * 100).toFixed(0)}%</span>
+        <span className="font-semibold text-slate-900 dark:text-white">{(confidence * 100).toFixed(0)}%</span>
       </div>
     </div>
   );
 };
-

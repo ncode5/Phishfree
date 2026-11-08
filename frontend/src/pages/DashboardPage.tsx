@@ -33,9 +33,11 @@ import {
 } from 'recharts';
 import { api } from '../services/api';
 import { DashboardStats } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
+  const { resolvedTheme } = useTheme();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<'url' | 'message'>('url');
@@ -47,7 +49,7 @@ export const DashboardPage: React.FC = () => {
   const [selectedSnapshot, setSelectedSnapshot] = useState({
     indicator: 'account-verify.example',
     riskLevel: 'High Risk',
-    badgeClass: 'bg-red-50 text-red-700 border-red-200',
+    badgeClass: 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/50 dark:text-orange-300 dark:border-orange-800',
     evidenceCount: '8 / 10',
     time: 'Today, 14:24 UTC',
     domainNote: '2-day-old domain · 3 redirects · 7/94 VT engines flag it. DNS links to a reported indicator.',
@@ -104,7 +106,7 @@ export const DashboardPage: React.FC = () => {
     {
       indicator: 'wallet-sync.example',
       risk: 'Confirmed Malicious',
-      badgeClass: 'bg-red-50 text-red-700 border-red-200',
+      badgeClass: 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-800',
       evidence: 'VT / Safe Browsing',
       status: 'Reviewed',
       statusDot: 'bg-emerald-500',
@@ -112,7 +114,7 @@ export const DashboardPage: React.FC = () => {
       snapshot: {
         indicator: 'wallet-sync.example',
         riskLevel: 'Confirmed Malicious',
-        badgeClass: 'bg-red-50 text-red-700 border-red-200',
+        badgeClass: 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-800',
         evidenceCount: '10 / 10',
         time: 'Today, 14:29 UTC',
         domainNote: 'Known phishing kit target. Matches active Web3 seed phrase drainer campaigns.',
@@ -123,7 +125,7 @@ export const DashboardPage: React.FC = () => {
     {
       indicator: 'account-verify.example',
       risk: 'High Risk',
-      badgeClass: 'bg-orange-50 text-orange-700 border-orange-200',
+      badgeClass: 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/50 dark:text-orange-300 dark:border-orange-800',
       evidence: 'AI + DNS + VT',
       status: 'In review',
       statusDot: 'bg-amber-500',
@@ -131,7 +133,7 @@ export const DashboardPage: React.FC = () => {
       snapshot: {
         indicator: 'account-verify.example',
         riskLevel: 'High Risk',
-        badgeClass: 'bg-orange-50 text-orange-700 border-orange-200',
+        badgeClass: 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/50 dark:text-orange-300 dark:border-orange-800',
         evidenceCount: '8 / 10',
         time: 'Today, 14:24 UTC',
         domainNote: '2-day-old domain · 3 redirects · 7/94 VT engines flag it. DNS links to a reported indicator.',
@@ -142,7 +144,7 @@ export const DashboardPage: React.FC = () => {
     {
       indicator: '"Your invoice is overdue"',
       risk: 'Suspicious',
-      badgeClass: 'bg-amber-50 text-amber-700 border-amber-200',
+      badgeClass: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800',
       evidence: 'AI + Community',
       status: 'Pending',
       statusDot: 'bg-amber-500',
@@ -150,7 +152,7 @@ export const DashboardPage: React.FC = () => {
       snapshot: {
         indicator: '"Your invoice is overdue"',
         riskLevel: 'Suspicious',
-        badgeClass: 'bg-amber-50 text-amber-700 border-amber-200',
+        badgeClass: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800',
         evidenceCount: '6 / 10',
         time: 'Today, 14:18 UTC',
         domainNote: 'Unverified SMS lure text claiming immediate banking legal action.',
@@ -161,7 +163,7 @@ export const DashboardPage: React.FC = () => {
     {
       indicator: 'docs.acme.example',
       risk: 'Low Risk',
-      badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800',
       evidence: 'DNS + TLS + GSB',
       status: 'Reviewed',
       statusDot: 'bg-emerald-500',
@@ -169,7 +171,7 @@ export const DashboardPage: React.FC = () => {
       snapshot: {
         indicator: 'docs.acme.example',
         riskLevel: 'Low Risk',
-        badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800',
         evidenceCount: '10 / 10',
         time: 'Today, 14:12 UTC',
         domainNote: 'Clean enterprise sub-domain. Valid DNS MX/SPF/DKIM records active.',
@@ -180,7 +182,7 @@ export const DashboardPage: React.FC = () => {
     {
       indicator: 'cdn-update.example',
       risk: 'Inconclusive',
-      badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+      badgeClass: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
       evidence: 'TLS / CT',
       status: 'Partial',
       statusDot: 'bg-slate-400',
@@ -188,7 +190,7 @@ export const DashboardPage: React.FC = () => {
       snapshot: {
         indicator: 'cdn-update.example',
         riskLevel: 'Inconclusive',
-        badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+        badgeClass: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
         evidenceCount: '4 / 10',
         time: 'Today, 14:06 UTC',
         domainNote: 'Endpoint timed out during zone transfer probe. Insufficient telemetry.',
@@ -198,23 +200,25 @@ export const DashboardPage: React.FC = () => {
     }
   ];
 
+  const isDark = resolvedTheme === 'dark';
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* 1. Page Title & Date Range */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Security overview</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Security overview</h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             See the signals. Understand the risk. Investigate with confidence.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
           >
             <span>Last 7 days</span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
           </button>
         </div>
       </div>
@@ -229,11 +233,11 @@ export const DashboardPage: React.FC = () => {
               onClick={() => setActiveTab('url')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'url'
-                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/90 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200/90 dark:border-emerald-800 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <Globe className="w-3.5 h-3.5 text-emerald-700" />
+              <Globe className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
               <span>URL / Domain</span>
             </button>
             <button
@@ -241,11 +245,11 @@ export const DashboardPage: React.FC = () => {
               onClick={() => setActiveTab('message')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'message'
-                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/90 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200/90 dark:border-emerald-800 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <Mail className="w-3.5 h-3.5 text-emerald-700" />
+              <Mail className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
               <span>Message / Email</span>
             </button>
           </div>
@@ -253,20 +257,20 @@ export const DashboardPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowHelper(!showHelper)}
-            className="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1 transition-colors"
+            className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center gap-1 transition-colors"
           >
-            <Info className="w-3.5 h-3.5 text-slate-400" />
+            <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
             <span>How to use the scanner?</span>
           </button>
         </div>
 
         {/* Modal / Helper Accordion */}
         {showHelper && (
-          <div className="mb-4 p-3 rounded-xl bg-emerald-50/70 border border-emerald-200/80 text-xs text-emerald-950 flex items-start gap-2 animate-fadeIn">
-            <Info className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+          <div className="mb-4 p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800 text-xs text-emerald-950 dark:text-emerald-200 flex items-start gap-2 animate-fadeIn">
+            <Info className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0 mt-0.5" />
             <div>
               <p className="font-semibold">Safe, Multi-Vector Inspection Protocol:</p>
-              <p className="text-slate-600 text-[11px] mt-0.5">
+              <p className="text-slate-600 dark:text-slate-400 text-[11px] mt-0.5">
                 Paste any suspicious link, domain, or SMS message. PhishFree inspects typosquatting, X.509 TLS certificates, DNS zones, and safe redirect hops without downloading malware or running scripts.
               </p>
             </div>
@@ -276,7 +280,7 @@ export const DashboardPage: React.FC = () => {
         {/* Search Input & Action Buttons */}
         <form onSubmit={handleInvestigate} className="flex flex-col sm:flex-row items-center gap-2.5">
           <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               value={searchQuery}
@@ -286,7 +290,7 @@ export const DashboardPage: React.FC = () => {
                   ? 'Paste a suspicious URL or domain to inspect its trust signals'
                   : 'Paste suspicious message, SMS text, or email body to evaluate phishing lures'
               }
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-lg text-xs font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition-all"
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-50/70 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-700 rounded-lg text-xs font-mono text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition-all"
             />
           </div>
 
@@ -300,24 +304,24 @@ export const DashboardPage: React.FC = () => {
             </button>
             <Link
               to="/blockchain"
-              className="flex-1 sm:flex-initial px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5"
+              className="flex-1 sm:flex-initial px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-1.5"
             >
-              <FileText className="w-3.5 h-3.5 text-slate-500" />
+              <FileText className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               <span>Report a threat</span>
             </Link>
           </div>
         </form>
 
         {/* Capability Tags */}
-        <div className="flex items-center gap-4 text-[11px] font-medium text-slate-500 pt-3 flex-wrap">
+        <div className="flex items-center gap-4 text-[11px] font-medium text-slate-500 dark:text-slate-400 pt-3 flex-wrap">
           <span>Domain & redirects</span>
-          <span className="text-slate-300">·</span>
+          <span className="text-slate-300 dark:text-slate-600">·</span>
           <span>Threat reputation</span>
-          <span className="text-slate-300">·</span>
+          <span className="text-slate-300 dark:text-slate-600">·</span>
           <span>DNS & TLS</span>
-          <span className="text-slate-300">·</span>
+          <span className="text-slate-300 dark:text-slate-600">·</span>
           <span>Website security</span>
-          <span className="text-slate-300">·</span>
+          <span className="text-slate-300 dark:text-slate-600">·</span>
           <span>AI scan analysis</span>
         </div>
       </div>
@@ -328,15 +332,15 @@ export const DashboardPage: React.FC = () => {
         <div className="phish-card p-4 relative overflow-hidden">
           <div className="flex items-start justify-between">
             <div>
-              <div className="text-xs font-semibold text-slate-600">Websites Analysed</div>
-              <div className="text-2xl font-bold font-mono text-slate-900 mt-1">
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">Websites Analysed</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 dark:text-white mt-1">
                 {stats?.total_analyzed ? Number(stats.total_analyzed).toLocaleString() : '1,284'}
               </div>
-              <div className="text-[11px] font-medium text-emerald-700 mt-1 flex items-center gap-1">
+              <div className="text-[11px] font-medium text-emerald-700 dark:text-emerald-400 mt-1 flex items-center gap-1">
                 <span>↑ 18.6% vs prior week</span>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center">
               <Layers className="w-4 h-4" />
             </div>
           </div>
@@ -357,15 +361,15 @@ export const DashboardPage: React.FC = () => {
         <div className="phish-card p-4 relative overflow-hidden">
           <div className="flex items-start justify-between">
             <div>
-              <div className="text-xs font-semibold text-slate-600">High-Risk Websites</div>
-              <div className="text-2xl font-bold font-mono text-slate-900 mt-1">
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">High-Risk Websites</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 dark:text-white mt-1">
                 {stats ? (stats.high_risk_count ?? 0) + (stats.confirmed_malicious_count ?? 0) : '186'}
               </div>
-              <div className="text-[11px] font-medium text-red-600 mt-1">
+              <div className="text-[11px] font-medium text-red-600 dark:text-red-400 mt-1">
                 <span>14.5% of investigations</span>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 border border-red-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-rose-950/60 text-red-600 dark:text-rose-400 border border-red-100 dark:border-rose-900 flex items-center justify-center">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
@@ -386,13 +390,13 @@ export const DashboardPage: React.FC = () => {
         <div className="phish-card p-4 relative overflow-hidden">
           <div className="flex items-start justify-between">
             <div>
-              <div className="text-xs font-semibold text-slate-600">Active Investigations</div>
-              <div className="text-2xl font-bold font-mono text-slate-900 mt-1">24</div>
-              <div className="text-[11px] font-medium text-blue-600 mt-1">
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">Active Investigations</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 dark:text-white mt-1">24</div>
+              <div className="text-[11px] font-medium text-blue-600 dark:text-blue-400 mt-1">
                 <span>24 today</span>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900 flex items-center justify-center">
               <Search className="w-4 h-4" />
             </div>
           </div>
@@ -413,13 +417,13 @@ export const DashboardPage: React.FC = () => {
         <div className="phish-card p-4 relative overflow-hidden">
           <div className="flex items-start justify-between">
             <div>
-              <div className="text-xs font-semibold text-slate-600">Validated Threat Reports</div>
-              <div className="text-2xl font-bold font-mono text-slate-900 mt-1">94</div>
-              <div className="text-[11px] font-medium text-emerald-700 mt-1">
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">Validated Threat Reports</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 dark:text-white mt-1">94</div>
+              <div className="text-[11px] font-medium text-emerald-700 dark:text-emerald-400 mt-1">
                 <span>8 pending validation</span>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900 flex items-center justify-center">
               <ShieldCheck className="w-4 h-4" />
             </div>
           </div>
@@ -443,10 +447,10 @@ export const DashboardPage: React.FC = () => {
         <div className="lg:col-span-2 phish-card p-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <div>
-              <h2 className="text-base font-bold text-slate-900">Threat activity</h2>
-              <p className="text-xs text-slate-500">Investigation volume and high-risk findings over time</p>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">Threat activity</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Investigation volume and high-risk findings over time</p>
             </div>
-            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-slate-100 border border-slate-200">
+            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
               {(['7D', '30D', '90D'] as const).map((period) => (
                 <button
                   key={period}
@@ -455,7 +459,7 @@ export const DashboardPage: React.FC = () => {
                   className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${
                     timeFilter === period
                       ? 'bg-[#047857] text-white shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   {period}
@@ -468,13 +472,13 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center gap-6 mb-3 text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
-              <span className="font-medium text-slate-700">Investigations</span>
-              <span className="font-bold text-slate-900">1,284</span>
+              <span className="font-medium text-slate-700 dark:text-slate-300">Investigations</span>
+              <span className="font-bold text-slate-900 dark:text-white">1,284</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
-              <span className="font-medium text-slate-700">High-risk findings</span>
-              <span className="font-bold text-slate-900">186</span>
+              <span className="font-medium text-slate-700 dark:text-slate-300">High-risk findings</span>
+              <span className="font-bold text-slate-900 dark:text-white">186</span>
             </div>
           </div>
 
@@ -484,18 +488,20 @@ export const DashboardPage: React.FC = () => {
               <AreaChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorInvestigations" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0.02} />
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={isDark ? 0.4 : 0.25} />
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="day" stroke="#94A3B8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} ticks={[0, 125, 250]} domain={[0, 250]} />
+                <XAxis dataKey="day" stroke={isDark ? '#64748B' : '#94A3B8'} fontSize={11} tickLine={false} />
+                <YAxis stroke={isDark ? '#64748B' : '#94A3B8'} fontSize={11} tickLine={false} ticks={[0, 125, 250]} domain={[0, 250]} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: isDark ? '#111827' : '#FFFFFF',
+                    borderColor: isDark ? '#374151' : '#E2E8F0',
+                    color: isDark ? '#F9FAFB' : '#0F172A',
                     borderRadius: '8px',
-                    border: '1px solid #E2E8F0',
-                    fontSize: '12px'
+                    fontSize: '12px',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                   }}
                 />
                 <Area
@@ -522,10 +528,10 @@ export const DashboardPage: React.FC = () => {
         <div className="phish-card p-5 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-base font-bold text-slate-900">TLS & certificate trust</h2>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">TLS & certificate trust</h2>
               <Link
                 to="/security"
-                className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+                className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 flex items-center gap-1"
               >
                 <span>Explore</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -533,51 +539,51 @@ export const DashboardPage: React.FC = () => {
             </div>
 
             <div className="flex items-baseline gap-2 mb-4">
-              <span className="text-3xl font-bold font-mono text-slate-900">412</span>
-              <span className="text-xs text-slate-500 font-medium">TLS assessments</span>
+              <span className="text-3xl font-bold font-mono text-slate-900 dark:text-white">412</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">TLS assessments</span>
             </div>
 
             {/* Stacked Segmented Progress Bar */}
-            <div className="w-full h-2.5 rounded-full bg-slate-100 flex overflow-hidden mb-2">
+            <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 flex overflow-hidden mb-2">
               <div style={{ width: '88%' }} className="bg-emerald-500 h-full" title="364 checks passed" />
               <div style={{ width: '8%' }} className="bg-amber-400 h-full" title="32 issues" />
-              <div style={{ width: '4%' }} className="bg-slate-300 h-full" title="16 unavailable" />
+              <div style={{ width: '4%' }} className="bg-slate-300 dark:bg-slate-600 h-full" title="16 unavailable" />
             </div>
 
-            <div className="flex items-center justify-between text-[11px] font-medium text-slate-500 mb-5">
-              <span className="text-emerald-700 font-semibold">364 checks passed</span>
-              <span className="text-amber-700 font-semibold">32 issues</span>
-              <span className="text-slate-500">16 unavailable</span>
+            <div className="flex items-center justify-between text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-5">
+              <span className="text-emerald-700 dark:text-emerald-400 font-semibold">364 checks passed</span>
+              <span className="text-amber-700 dark:text-amber-400 font-semibold">32 issues</span>
+              <span className="text-slate-500 dark:text-slate-400">16 unavailable</span>
             </div>
 
             {/* Bulleted Metric List */}
             <div className="space-y-2.5 text-xs">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-slate-700">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                   <span className="w-2 h-2 rounded-full bg-amber-500" />
                   <span>Expired / hostname mismatch</span>
                 </div>
-                <span className="font-bold font-mono text-slate-900">18</span>
+                <span className="font-bold font-mono text-slate-900 dark:text-white">18</span>
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-slate-700">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                   <span className="w-2 h-2 rounded-full bg-red-500" />
                   <span>Chain / revocation / weak key</span>
                 </div>
-                <span className="font-bold font-mono text-slate-900">14</span>
+                <span className="font-bold font-mono text-slate-900 dark:text-white">14</span>
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-slate-700">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                   <span className="w-2 h-2 rounded-full bg-slate-400" />
                   <span>Revocation or CT lookup unavailable</span>
                 </div>
-                <span className="font-bold font-mono text-slate-900">16</span>
+                <span className="font-bold font-mono text-slate-900 dark:text-white">16</span>
               </div>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 text-[11px] text-slate-500 flex items-center gap-1.5 mt-4">
-            <Info className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-4">
+            <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
             <span>A valid certificate does not mean a website is safe.</span>
           </div>
         </div>
@@ -589,14 +595,14 @@ export const DashboardPage: React.FC = () => {
         <div className="lg:col-span-2 phish-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-bold text-slate-900">Recent investigations</h2>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">Recent investigations</h2>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                 24 today
               </span>
             </div>
             <Link
               to="/history"
-              className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+              className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 flex items-center gap-1"
             >
               <span>View all</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -607,7 +613,7 @@ export const DashboardPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-200/80 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <tr className="border-b border-slate-200/80 dark:border-slate-800 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                   <th className="pb-2.5 font-semibold">INDICATOR</th>
                   <th className="pb-2.5 font-semibold">RISK ASSESSMENT</th>
                   <th className="pb-2.5 font-semibold">EVIDENCE SOURCE</th>
@@ -615,14 +621,14 @@ export const DashboardPage: React.FC = () => {
                   <th className="pb-2.5 font-semibold text-right">UTC ↓</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
                 {recentRows.map((row, idx) => (
                   <tr
                     key={idx}
                     onClick={() => setSelectedSnapshot(row.snapshot)}
-                    className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+                    className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors cursor-pointer group"
                   >
-                    <td className="py-3 font-mono font-medium text-slate-900 group-hover:text-emerald-700 transition-colors">
+                    <td className="py-3 font-mono font-medium text-slate-900 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                       {row.indicator}
                     </td>
                     <td className="py-3">
@@ -630,19 +636,19 @@ export const DashboardPage: React.FC = () => {
                         {row.risk}
                       </span>
                     </td>
-                    <td className="py-3 text-slate-600 font-medium">
+                    <td className="py-3 text-slate-600 dark:text-slate-400 font-medium">
                       {row.evidence}
                     </td>
                     <td className="py-3">
                       <div className="flex items-center gap-1.5">
                         <span className={`w-2 h-2 rounded-full ${row.statusDot}`} />
-                        <span className="text-slate-700 font-medium">{row.status}</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-medium">{row.status}</span>
                       </div>
                     </td>
-                    <td className="py-3 text-right text-slate-500 font-mono">
+                    <td className="py-3 text-right text-slate-500 dark:text-slate-400 font-mono">
                       <div className="flex items-center justify-end gap-1">
                         <span>{row.utc}</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-slate-600 transition-colors" />
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors" />
                       </div>
                     </td>
                   </tr>
@@ -651,8 +657,8 @@ export const DashboardPage: React.FC = () => {
             </table>
           </div>
 
-          <div className="pt-3.5 text-[11px] text-slate-500 flex items-center gap-1.5 border-t border-slate-100 mt-2">
-            <Info className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <div className="pt-3.5 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 border-t border-slate-100 dark:border-slate-800 mt-2">
+            <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
             <span>Risk reflects available evidence. Low Risk is not a guarantee of safety.</span>
           </div>
         </div>
@@ -661,7 +667,7 @@ export const DashboardPage: React.FC = () => {
         <div className="phish-card p-5 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 INVESTIGATION SNAPSHOT
               </span>
               <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${selectedSnapshot.badgeClass}`}>
@@ -669,10 +675,10 @@ export const DashboardPage: React.FC = () => {
               </span>
             </div>
 
-            <h3 className="text-base font-bold font-mono text-slate-900 break-all mb-1">
+            <h3 className="text-base font-bold font-mono text-slate-900 dark:text-white break-all mb-1">
               {selectedSnapshot.indicator}
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
               <span>{selectedSnapshot.evidenceCount} evidence checks available</span>
               <span className="mx-1.5">·</span>
               <span>{selectedSnapshot.time}</span>
@@ -681,45 +687,45 @@ export const DashboardPage: React.FC = () => {
             {/* Structured Insights Cards */}
             <div className="space-y-3">
               {/* Insight 1 */}
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-1">
-                  <Link2 className="w-3.5 h-3.5 text-emerald-700" />
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">
+                  <Link2 className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
                   <span>Domain & reputation</span>
                 </div>
-                <p className="text-[11px] text-slate-600 leading-relaxed">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
                   {selectedSnapshot.domainNote}
                 </p>
               </div>
 
               {/* Insight 2 */}
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-1">
-                  <Shield className="w-3.5 h-3.5 text-emerald-700" />
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">
+                  <Shield className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
                   <span>Website & message signals</span>
                 </div>
-                <p className="text-[11px] text-slate-600 leading-relaxed">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
                   {selectedSnapshot.signalNote}
                 </p>
               </div>
 
               {/* Insight 3 */}
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-1">
-                  <Lock className="w-3.5 h-3.5 text-emerald-700" />
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">
+                  <Lock className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
                   <span>TLS checks</span>
                 </div>
-                <p className="text-[11px] text-slate-600 leading-relaxed">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
                   {selectedSnapshot.tlsNote}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between mt-4">
             <button
               type="button"
               onClick={() => navigate(`/scanner?url=${encodeURIComponent(selectedSnapshot.indicator)}`)}
-              className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+              className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 flex items-center gap-1"
             >
               <span>Inspect full report</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -732,10 +738,10 @@ export const DashboardPage: React.FC = () => {
       <div className="phish-card p-5">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h2 className="text-base font-bold text-slate-900">Threat Distribution</h2>
-            <p className="text-xs text-slate-500">Percentage breakdown of scanned websites and URLs</p>
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">Threat Distribution</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Percentage breakdown of scanned websites and URLs</p>
           </div>
-          <span className="text-[11px] font-mono text-slate-400 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70">
+          <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 px-2.5 py-1 rounded-md border border-slate-200/70 dark:border-slate-800">
             Example data
           </span>
         </div>
@@ -761,9 +767,10 @@ export const DashboardPage: React.FC = () => {
                 <Tooltip
                   formatter={(val: any) => [`${val}%`, 'Share']}
                   contentStyle={{
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: isDark ? '#111827' : '#FFFFFF',
+                    borderColor: isDark ? '#374151' : '#E2E8F0',
+                    color: isDark ? '#F9FAFB' : '#0F172A',
                     borderRadius: '8px',
-                    border: '1px solid #E2E8F0',
                     fontSize: '12px'
                   }}
                 />
@@ -771,10 +778,10 @@ export const DashboardPage: React.FC = () => {
             </ResponsiveContainer>
             {/* Center label */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Total scans
               </span>
-              <span className="text-xl font-bold font-mono text-slate-900">
+              <span className="text-xl font-bold font-mono text-slate-900 dark:text-white">
                 10,000
               </span>
             </div>
@@ -786,9 +793,9 @@ export const DashboardPage: React.FC = () => {
               <div key={item.name} className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <span className="w-3 h-3 rounded" style={{ backgroundColor: item.color }} />
-                  <span className="font-medium text-slate-700">{item.name}</span>
+                  <span className="font-medium text-slate-700 dark:text-slate-300">{item.name}</span>
                 </div>
-                <span className="font-bold font-mono text-slate-900">{item.value}%</span>
+                <span className="font-bold font-mono text-slate-900 dark:text-white">{item.value}%</span>
               </div>
             ))}
           </div>
@@ -799,14 +806,14 @@ export const DashboardPage: React.FC = () => {
       <div className="phish-card p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold text-slate-900">Collaborative intelligence</h2>
-            <span className="text-xs text-slate-500 font-medium">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">Collaborative intelligence</h2>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
               94 validated reports · 8 awaiting review
             </span>
           </div>
           <Link
             to="/blockchain"
-            className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+            className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 flex items-center gap-1"
           >
             <span>View report registry</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -816,64 +823,64 @@ export const DashboardPage: React.FC = () => {
         {/* 3 Side-by-Side Intelligence Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Card 1: Validated Intelligence */}
-          <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/90 flex flex-col justify-between">
+          <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-                  <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
+                  <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                   </div>
                   <span>Validated intelligence</span>
                 </div>
-                <span className="text-[11px] font-mono text-slate-400">14:28 UTC</span>
+                <span className="text-[11px] font-mono text-slate-400 dark:text-slate-500">14:28 UTC</span>
               </div>
-              <div className="font-mono text-xs font-bold text-slate-900 mb-1">
+              <div className="font-mono text-xs font-bold text-slate-900 dark:text-slate-200 mb-1">
                 wallet-sync.example
               </div>
-              <p className="text-[11px] text-slate-600">
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">
                 Confirmed Malicious · credential harvesting
               </p>
             </div>
-            <div className="text-[10px] text-slate-400 mt-3 pt-2 border-t border-slate-200/60">
+            <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-3 pt-2 border-t border-slate-200/60 dark:border-slate-800">
               M. Chen · corroborated by Safe Browsing
             </div>
           </div>
 
           {/* Card 2: Pending Validation */}
-          <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/90 flex flex-col justify-between">
+          <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-                  <div className="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
+                  <div className="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center">
                     <Clock className="w-3.5 h-3.5" />
                   </div>
                   <span>Pending validation</span>
                 </div>
-                <span className="text-[11px] font-mono text-slate-400">14:16 UTC</span>
+                <span className="text-[11px] font-mono text-slate-400 dark:text-slate-500">14:16 UTC</span>
               </div>
-              <div className="font-mono text-xs font-bold text-slate-900 mb-1">
+              <div className="font-mono text-xs font-bold text-slate-900 dark:text-slate-200 mb-1">
                 parcel-reschedule.example
               </div>
-              <p className="text-[11px] text-slate-600">
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">
                 Suspicious · delivery-brand impersonation
               </p>
             </div>
-            <div className="text-[10px] text-slate-400 mt-3 pt-2 border-t border-slate-200/60">
+            <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-3 pt-2 border-t border-slate-200/60 dark:border-slate-800">
               A. Rivera · not yet validated intelligence
             </div>
           </div>
 
           {/* Card 3: Report Integrity Verified (Sepolia) */}
-          <div className="p-4 rounded-xl bg-emerald-50/40 border border-emerald-200/90 flex flex-col justify-between">
+          <div className="p-4 rounded-xl bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-200/90 dark:border-emerald-800/60 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-emerald-950">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-950 dark:text-emerald-300">
                   <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
                     <Link2 className="w-3.5 h-3.5" />
                   </div>
                   <span>Report integrity verified</span>
                 </div>
-                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-emerald-200 text-emerald-900 font-mono">
+                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-emerald-200 dark:bg-emerald-900/80 text-emerald-900 dark:text-emerald-200 font-mono">
                   LIVE
                 </span>
               </div>
@@ -881,17 +888,17 @@ export const DashboardPage: React.FC = () => {
                 href="https://sepolia.etherscan.io/address/0x535Dd5072d6c0de42167BaBe61c5cA880517f3F8"
                 target="_blank"
                 rel="noreferrer"
-                className="font-mono text-xs font-bold text-emerald-800 hover:underline flex items-center gap-1 mb-1"
+                className="font-mono text-xs font-bold text-emerald-800 dark:text-emerald-400 hover:underline flex items-center gap-1 mb-1"
               >
                 <span>0x535D...f3F8</span>
-                <span className="text-slate-400 font-sans text-[11px]">· Sepolia testnet</span>
-                <ExternalLink className="w-3 h-3 text-emerald-700" />
+                <span className="text-slate-400 dark:text-slate-500 font-sans text-[11px]">· Sepolia testnet</span>
+                <ExternalLink className="w-3 h-3 text-emerald-700 dark:text-emerald-400" />
               </a>
-              <p className="text-[11px] text-slate-600 leading-snug">
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-snug">
                 On-chain commitments verify integrity and history, not truth. Sensitive report evidence stays off chain.
               </p>
             </div>
-            <div className="text-[10px] text-emerald-700 font-medium mt-3 pt-2 border-t border-emerald-200/60">
+            <div className="text-[10px] text-emerald-700 dark:text-emerald-400 font-medium mt-3 pt-2 border-t border-emerald-200/60 dark:border-emerald-800/40">
               Report ID: synth-audit-1794122121 (Verified on-chain)
             </div>
           </div>
@@ -899,7 +906,7 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* 8. Footer Disclaimers */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 pb-6 pt-2">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 dark:text-slate-500 pb-6 pt-2">
         <span>Illustrative demo data only. No live threat results or active website scanning.</span>
         <span>Passive checks only · Sensitive content stays off chain.</span>
       </div>

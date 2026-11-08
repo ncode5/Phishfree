@@ -6,19 +6,14 @@ import {
   Calendar,
   Bell,
   Sun,
-  Moon
+  Moon,
+  Laptop
 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
-interface TopHeaderProps {
-  themeMode?: 'light' | 'dim';
-  onToggleTheme?: (mode: 'light' | 'dim') => void;
-}
-
-export const TopHeader: React.FC<TopHeaderProps> = ({
-  themeMode = 'light',
-  onToggleTheme
-}) => {
+export const TopHeader: React.FC = () => {
   const location = useLocation();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const [currentUtc, setCurrentUtc] = useState<string>('');
 
   useEffect(() => {
@@ -62,62 +57,82 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
     }
   };
 
+  const isDimActive = theme === 'dim' || (theme === 'system' && resolvedTheme === 'dark');
+  const isLightActive = theme === 'light' || (theme === 'system' && resolvedTheme === 'light');
+
   return (
-    <header className="h-16 bg-white border-b border-slate-200/80 px-6 flex items-center justify-between shrink-0 select-none">
+    <header className="h-16 bg-white dark:bg-[#0B1120] border-b border-slate-200/80 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 select-none transition-colors duration-200">
       {/* Left Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
-        <Folder className="w-3.5 h-3.5 text-slate-400" />
-        <span className="text-slate-700">Acme security</span>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-        <span className="font-semibold text-slate-900">{getPageTitle()}</span>
+      <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+        <Folder className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+        <span className="text-slate-700 dark:text-slate-300">Acme security</span>
+        <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+        <span className="font-semibold text-slate-900 dark:text-slate-100">{getPageTitle()}</span>
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-3.5">
-        {/* Light / Dim Switcher */}
-        <div className="flex items-center p-0.5 rounded-full bg-slate-100 border border-slate-200/80">
+      <div className="flex items-center gap-3">
+        {/* Light / Dim Segmented Switcher */}
+        <div 
+          role="radiogroup" 
+          aria-label="Theme preference selector" 
+          className="flex items-center p-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800"
+        >
           <button
             type="button"
-            onClick={() => onToggleTheme && onToggleTheme('light')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-              themeMode === 'light'
+            role="radio"
+            aria-checked={isLightActive}
+            aria-label="Switch to Light Theme"
+            onClick={() => setTheme('light')}
+            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              isLightActive
                 ? 'bg-emerald-800 text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            Light
+            <Sun className="w-3 h-3" />
+            <span>Light</span>
           </button>
           <button
             type="button"
-            onClick={() => onToggleTheme && onToggleTheme('dim')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-              themeMode === 'dim'
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+            role="radio"
+            aria-checked={isDimActive}
+            aria-label="Switch to Dim / Dark Theme"
+            onClick={() => setTheme('dim')}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+              isDimActive
+                ? 'bg-slate-800 dark:bg-emerald-700 text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            Dim
+            <Moon className="w-3 h-3" />
+            <span>Dim</span>
           </button>
         </div>
 
         {/* Dashboard Pill Button */}
         <Link
           to="/"
-          className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/90 hover:bg-emerald-100/70 transition-colors"
+          className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200/90 dark:border-emerald-800 hover:bg-emerald-100/70 dark:hover:bg-emerald-900/60 transition-colors"
         >
           Dashboard
         </Link>
 
         {/* Live UTC Clock */}
-        <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-600 font-medium px-2.5 py-1.5 rounded-lg border border-slate-200/70 bg-slate-50/50">
-          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+        <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300 font-medium px-2.5 py-1.5 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60">
+          <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
           <span className="font-mono text-[11px]">{currentUtc || '08 Nov 2026 · 17:15 UTC'}</span>
         </div>
 
         {/* Notification Bell */}
-        <div className="relative p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors cursor-pointer">
+        <div 
+          tabIndex={0}
+          role="button"
+          aria-label="Notifications"
+          className="relative p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors cursor-pointer"
+        >
           <Bell className="w-4 h-4" />
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 absolute top-2 right-2 ring-2 ring-white" />
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 absolute top-2 right-2 ring-2 ring-white dark:ring-[#0B1120]" />
         </div>
       </div>
     </header>

@@ -160,69 +160,69 @@ export const BlockchainRegistryPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 pb-12 font-sans">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-800 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 dark:border-slate-800 pb-6 gap-4">
         <div>
           <div className="flex items-center space-x-3">
-            <div className="p-2.5 bg-blue-600/20 border border-blue-500/30 rounded-xl text-blue-400">
+            <div className="p-2.5 bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 rounded-xl text-purple-700 dark:text-purple-300">
               <Layers className="h-7 w-7" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                 Decentralized Threat Intelligence
               </h1>
-              <p className="text-sm text-gray-400 mt-0.5">
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
                 Cryptographic report provenance & independent tamper-verification on Ethereum Sepolia Testnet
               </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-4 md:mt-0 flex items-center space-x-3">
+        <div className="flex items-center space-x-3">
           <button
             onClick={fetchStatus}
             disabled={statusLoading}
-            className="flex items-center space-x-2 px-3.5 py-1.5 bg-gray-800 hover:bg-gray-750 text-gray-300 text-xs font-medium rounded-lg border border-gray-700 transition"
+            className="flex items-center space-x-2 px-3.5 py-2 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${statusLoading ? 'animate-spin text-blue-400' : ''}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${statusLoading ? 'animate-spin text-purple-600' : ''}`} />
             <span>Refresh State</span>
           </button>
-          <div className="flex items-center space-x-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg text-blue-400 text-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="font-semibold">Module 6 Active</span>
+          <div className="flex items-center space-x-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse"></span>
+            <span>Module 6 Active</span>
           </div>
         </div>
       </div>
 
       {/* Educational Distinction Banner */}
-      <div className="bg-gradient-to-r from-blue-950/40 via-purple-950/30 to-gray-900/40 border border-blue-500/25 rounded-xl p-4 sm:p-5 flex items-start space-x-3.5">
-        <ShieldCheck className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
-        <div className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-          <span className="font-semibold text-white">Cryptographic Provenance Disclaimer: </span>
+      <div className="bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800/60 rounded-2xl p-4 sm:p-5 flex items-start space-x-3.5">
+        <ShieldCheck className="h-5 w-5 text-purple-700 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+        <div className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          <span className="font-bold text-purple-950 dark:text-purple-200">Cryptographic Provenance Disclaimer: </span>
           Blockchain registration anchors an immutable Keccak-256 fingerprint representing the exact canonical report findings and timestamps.
           Independent verification confirms whether the current report matches what was registered earlier without alteration.
-          <span className="text-blue-300 font-medium"> It does not independently determine whether the analyzed website was malicious.</span>
+          <span className="text-purple-900 dark:text-purple-300 font-semibold"> It does not independently determine whether the analyzed website was malicious.</span>
         </div>
       </div>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Network Card */}
-        <div className="bg-gray-900/70 border border-gray-800 rounded-xl p-4 shadow-sm">
-          <div className="flex items-center justify-between text-gray-400 text-xs mb-2">
+        <div className="phish-card p-4">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Blockchain Network</span>
-            <Cpu className="h-4 w-4 text-blue-400" />
+            <Cpu className="h-4 w-4 text-purple-700 dark:text-purple-400" />
           </div>
-          <div className="text-base font-semibold text-white">
+          <div className="text-base font-bold text-slate-900 dark:text-white">
             {networkStatus?.network_name || 'Ethereum Sepolia'}
           </div>
-          <div className="text-xs text-gray-400 mt-1 flex items-center space-x-1.5">
-            <span className="text-gray-500">Chain ID:</span>
-            <span className="font-mono text-gray-300">{networkStatus?.chain_id || 11155111}</span>
-            <span className="text-gray-600">•</span>
-            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${
-              networkStatus?.rpc_status === 'CONNECTED' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center space-x-1.5 font-medium">
+            <span>Chain ID:</span>
+            <span className="font-mono text-slate-800 dark:text-slate-200">{networkStatus?.chain_id || 11155111}</span>
+            <span className="text-slate-400">•</span>
+            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold ${
+              networkStatus?.rpc_status === 'CONNECTED' ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
             }`}>
               {networkStatus?.rpc_status || 'CHECKING'}
             </span>
@@ -230,75 +230,75 @@ export const BlockchainRegistryPage: React.FC = () => {
         </div>
 
         {/* Latest Block Card */}
-        <div className="bg-gray-900/70 border border-gray-800 rounded-xl p-4 shadow-sm">
-          <div className="flex items-center justify-between text-gray-400 text-xs mb-2">
+        <div className="phish-card p-4">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Block Height</span>
-            <Database className="h-4 w-4 text-purple-400" />
+            <Database className="h-4 w-4 text-purple-700 dark:text-purple-400" />
           </div>
-          <div className="text-base font-semibold text-white font-mono">
+          <div className="text-base font-bold text-slate-900 dark:text-white font-mono">
             {networkStatus?.latest_block ? `#${networkStatus.latest_block.toLocaleString()}` : 'Synchronizing...'}
           </div>
-          <div className="text-xs text-gray-400 mt-1">
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             EVM JSON-RPC Live Feed
           </div>
         </div>
 
         {/* Contract Address Card */}
-        <div className="bg-gray-900/70 border border-gray-800 rounded-xl p-4 shadow-sm">
-          <div className="flex items-center justify-between text-gray-400 text-xs mb-2">
+        <div className="phish-card p-4">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
             <span>ThreatReportRegistry.sol</span>
-            <Lock className="h-4 w-4 text-emerald-400" />
+            <Lock className="h-4 w-4 text-emerald-700 dark:text-emerald-400" />
           </div>
-          <div className="text-xs font-mono text-gray-300 truncate">
+          <div className="text-xs font-mono text-slate-700 dark:text-slate-300 truncate">
             {networkStatus?.contract_address ? (
               <a
                 href={`https://sepolia.etherscan.io/address/${networkStatus.contract_address}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-400 hover:text-blue-300 flex items-center space-x-1 truncate"
+                className="text-emerald-700 dark:text-emerald-400 hover:underline flex items-center space-x-1 truncate font-semibold"
               >
                 <span className="truncate">{networkStatus.contract_address}</span>
                 <ExternalLink className="h-3 w-3 flex-shrink-0" />
               </a>
             ) : (
-              <span className="text-gray-500 italic">Ready for deployment</span>
+              <span className="text-slate-400 italic">Ready for deployment</span>
             )}
           </div>
-          <div className="text-xs text-gray-400 mt-1 flex items-center justify-between">
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center justify-between">
             <span>Status:</span>
-            <span className={networkStatus?.contract_available ? 'text-emerald-400 font-medium' : 'text-amber-400'}>
+            <span className={networkStatus?.contract_available ? 'text-emerald-700 dark:text-emerald-400 font-bold' : 'text-amber-700 dark:text-amber-400 font-bold'}>
               {networkStatus?.contract_available ? 'Active On-Chain' : 'Pending Deployment'}
             </span>
           </div>
         </div>
 
         {/* Total Reports Card */}
-        <div className="bg-gray-900/70 border border-gray-800 rounded-xl p-4 shadow-sm">
-          <div className="flex items-center justify-between text-gray-400 text-xs mb-2">
+        <div className="phish-card p-4">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
             <span>On-Chain Anchored Reports</span>
-            <Hash className="h-4 w-4 text-amber-400" />
+            <Hash className="h-4 w-4 text-amber-600 dark:text-amber-400" />
           </div>
-          <div className="text-2xl font-bold text-white font-mono">
+          <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">
             {networkStatus?.total_reports_registered !== null && networkStatus?.total_reports_registered !== undefined
               ? networkStatus.total_reports_registered
               : '—'}
           </div>
-          <div className="text-xs text-gray-400 mt-1">
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Immutable Keccak-256 records
           </div>
         </div>
       </div>
 
       {/* Main Action Console */}
-      <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-xl">
+      <div className="phish-card p-6">
         {/* Tab Selector */}
-        <div className="flex items-center space-x-3 border-b border-gray-800 pb-4 mb-6">
+        <div className="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
           <button
             onClick={() => setActiveTab('verify')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
               activeTab === 'verify'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
-                : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/60'
+                ? 'bg-emerald-800 text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             <ShieldCheck className="h-4 w-4" />
@@ -307,10 +307,10 @@ export const BlockchainRegistryPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('register')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
               activeTab === 'register'
-                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
-                : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/60'
+                ? 'bg-purple-700 text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             <Lock className="h-4 w-4" />
@@ -321,7 +321,7 @@ export const BlockchainRegistryPage: React.FC = () => {
         {/* Input Bar */}
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
               Target Report ID
             </label>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
@@ -330,14 +330,14 @@ export const BlockchainRegistryPage: React.FC = () => {
                 value={reportIdInput}
                 onChange={(e) => setReportIdInput(e.target.value)}
                 placeholder="Enter report UUID (e.g. c1f7a28b-9023-4e4b-97e3-0d34f0d61109)"
-                className="flex-1 bg-gray-950 border border-gray-800 focus:border-blue-500 rounded-xl px-4 py-2.5 text-sm font-mono text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-mono text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
               />
 
               {activeTab === 'register' && (
                 <select
                   value={reportType}
                   onChange={(e) => setReportType(e.target.value)}
-                  className="bg-gray-950 border border-gray-800 text-gray-300 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-purple-500"
+                  className="bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-purple-500 font-medium"
                 >
                   <option value="URL_ANALYSIS">URL Analysis (Mod 1/2)</option>
                   <option value="MESSAGE_ANALYSIS">Message Analysis (Mod 3)</option>
@@ -349,7 +349,7 @@ export const BlockchainRegistryPage: React.FC = () => {
                 <button
                   onClick={() => handleVerify()}
                   disabled={verifyLoading || !reportIdInput}
-                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition flex items-center justify-center space-x-2"
+                  className="px-6 py-2.5 bg-[#047857] hover:bg-[#065f46] disabled:opacity-50 text-white text-sm font-semibold rounded-xl transition flex items-center justify-center space-x-2 shadow-sm"
                 >
                   {verifyLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
                   <span>Verify Integrity</span>
@@ -358,7 +358,7 @@ export const BlockchainRegistryPage: React.FC = () => {
                 <button
                   onClick={handleRegister}
                   disabled={registerLoading || !reportIdInput}
-                  className="px-6 py-2.5 bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition flex items-center justify-center space-x-2"
+                  className="px-6 py-2.5 bg-purple-700 hover:bg-purple-800 disabled:opacity-50 text-white text-sm font-semibold rounded-xl transition flex items-center justify-center space-x-2 shadow-sm"
                 >
                   {registerLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Lock className="h-4 w-4" />}
                   <span>Register On-Chain</span>
@@ -369,8 +369,8 @@ export const BlockchainRegistryPage: React.FC = () => {
 
           {/* Quick-Pick Recent Reports */}
           {recentReports.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-gray-400">
-              <span className="text-gray-500">Recent Investigations:</span>
+            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-500 dark:text-slate-400">
+              <span className="font-semibold">Recent Investigations:</span>
               {recentReports.slice(0, 4).map((r) => (
                 <button
                   key={r.id}
@@ -378,10 +378,10 @@ export const BlockchainRegistryPage: React.FC = () => {
                     setReportIdInput(r.id);
                     if (activeTab === 'verify') handleVerify(r.id);
                   }}
-                  className="px-2.5 py-1 bg-gray-800/80 hover:bg-gray-750 text-gray-300 rounded-md font-mono text-[11px] border border-gray-750 transition flex items-center space-x-1"
+                  className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg font-mono text-[11px] border border-slate-200 dark:border-slate-700 transition flex items-center space-x-1 font-medium"
                 >
                   <span>{r.domain || r.submitted_url.slice(0, 20)}</span>
-                  <ArrowRight className="h-3 w-3 text-gray-500" />
+                  <ArrowRight className="h-3 w-3 text-slate-400" />
                 </button>
               ))}
             </div>
@@ -392,11 +392,11 @@ export const BlockchainRegistryPage: React.FC = () => {
         {activeTab === 'verify' && (
           <div className="mt-8">
             {verifyError && (
-              <div className="p-4 bg-red-950/30 border border-red-500/30 rounded-xl text-red-300 text-sm flex items-start space-x-3">
-                <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+              <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-rose-800 dark:text-rose-300 text-sm flex items-start space-x-3">
+                <AlertTriangle className="h-5 w-5 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-semibold text-red-200">Verification Query Failed</div>
-                  <div className="mt-0.5 text-xs text-red-300/80">{verifyError}</div>
+                  <div className="font-bold text-rose-900 dark:text-rose-200">Verification Query Failed</div>
+                  <div className="mt-0.5 text-xs text-rose-700 dark:text-rose-300/90">{verifyError}</div>
                 </div>
               </div>
             )}
@@ -405,16 +405,16 @@ export const BlockchainRegistryPage: React.FC = () => {
               <div className="space-y-6">
                 {/* Result Verdict Banner */}
                 {verifyResult.verification_status === 'VERIFIED' && (
-                  <div className="p-5 bg-emerald-950/30 border border-emerald-500/40 rounded-xl flex items-start space-x-4">
-                    <CheckCircle2 className="h-6 w-6 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <div className="p-5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl flex items-start space-x-4">
+                    <CheckCircle2 className="h-6 w-6 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-lg font-bold text-emerald-300 flex items-center space-x-2">
+                      <div className="text-lg font-bold text-emerald-900 dark:text-emerald-300 flex items-center space-x-2">
                         <span>REPORT INTEGRITY VERIFIED</span>
-                        <span className="text-xs px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded-full font-mono">
+                        <span className="text-xs px-2.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 rounded-full font-mono font-semibold">
                           MATCH 100%
                         </span>
                       </div>
-                      <p className="text-sm text-emerald-200/90 mt-1">
+                      <p className="text-sm text-emerald-800 dark:text-emerald-200/90 mt-1 font-medium">
                         The current report data matches the original Keccak-256 fingerprint registered on the Ethereum blockchain.
                         This report is authentic and has not been altered since on-chain registration.
                       </p>
@@ -423,16 +423,16 @@ export const BlockchainRegistryPage: React.FC = () => {
                 )}
 
                 {verifyResult.verification_status === 'TAMPERED' && (
-                  <div className="p-5 bg-red-950/40 border border-red-500/50 rounded-xl flex items-start space-x-4">
-                    <XCircle className="h-6 w-6 text-red-400 flex-shrink-0 mt-0.5" />
+                  <div className="p-5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl flex items-start space-x-4">
+                    <XCircle className="h-6 w-6 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-lg font-bold text-red-300 flex items-center space-x-2">
+                      <div className="text-lg font-bold text-rose-900 dark:text-rose-300 flex items-center space-x-2">
                         <span>SECURITY ALERT: REPORT TAMPERED</span>
-                        <span className="text-xs px-2 py-0.5 bg-red-500/20 text-red-300 rounded-full font-mono">
+                        <span className="text-xs px-2.5 py-0.5 bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-200 rounded-full font-mono font-semibold">
                           HASH MISMATCH
                         </span>
                       </div>
-                      <p className="text-sm text-red-200/90 mt-1">
+                      <p className="text-sm text-rose-800 dark:text-rose-200/90 mt-1 font-medium">
                         A registered record exists for this report ID, but the recalculated Keccak-256 fingerprint does NOT match the on-chain fingerprint.
                         Findings or risk scores have been modified after registration.
                       </p>
@@ -441,13 +441,13 @@ export const BlockchainRegistryPage: React.FC = () => {
                 )}
 
                 {verifyResult.verification_status === 'NOT_REGISTERED' && (
-                  <div className="p-5 bg-amber-950/30 border border-amber-500/40 rounded-xl flex items-start space-x-4">
-                    <HelpCircle className="h-6 w-6 text-amber-400 flex-shrink-0 mt-0.5" />
+                  <div className="p-5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start space-x-4">
+                    <HelpCircle className="h-6 w-6 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-lg font-bold text-amber-300">
+                      <div className="text-lg font-bold text-amber-900 dark:text-amber-300">
                         NOT REGISTERED ON BLOCKCHAIN
                       </div>
-                      <p className="text-sm text-amber-200/90 mt-1">
+                      <p className="text-sm text-amber-800 dark:text-amber-200/90 mt-1 font-medium">
                         No cryptographic fingerprint for this report was found on the ThreatReportRegistry smart contract.
                         You can anchor it now by clicking the &quot;Register Report on Blockchain&quot; tab.
                       </p>
@@ -456,13 +456,13 @@ export const BlockchainRegistryPage: React.FC = () => {
                 )}
 
                 {verifyResult.verification_status === 'UNAVAILABLE' && (
-                  <div className="p-5 bg-gray-850 border border-gray-700 rounded-xl flex items-start space-x-4">
-                    <AlertTriangle className="h-6 w-6 text-gray-400 flex-shrink-0 mt-0.5" />
+                  <div className="p-5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl flex items-start space-x-4">
+                    <AlertTriangle className="h-6 w-6 text-slate-500 dark:text-slate-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-lg font-bold text-gray-300">
+                      <div className="text-lg font-bold text-slate-800 dark:text-slate-200">
                         BLOCKCHAIN SERVICE TEMPORARILY UNAVAILABLE
                       </div>
-                      <p className="text-sm text-gray-400 mt-1">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                         The Sepolia EVM JSON-RPC endpoint or registry contract could not be queried.
                         Please ensure an active network connection or verify local RPC settings.
                       </p>
@@ -471,42 +471,42 @@ export const BlockchainRegistryPage: React.FC = () => {
                 )}
 
                 {/* Fingerprint & Cryptographic Details Matrix */}
-                <div className="bg-gray-950/70 border border-gray-850 rounded-xl p-5 space-y-4">
-                  <h3 className="text-xs font-semibold text-gray-300 uppercase tracking-wider flex items-center space-x-2">
-                    <Hash className="h-4 w-4 text-blue-400" />
+                <div className="bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 rounded-xl p-5 space-y-4">
+                  <h3 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center space-x-2">
+                    <Hash className="h-4 w-4 text-emerald-700 dark:text-emerald-400" />
                     <span>Cryptographic Fingerprint Comparison</span>
                   </h3>
 
                   <div className="space-y-3 font-mono text-xs">
                     <div>
-                      <div className="text-gray-400 mb-1 flex items-center justify-between">
+                      <div className="text-slate-600 dark:text-slate-400 mb-1 flex items-center justify-between font-medium">
                         <span>Current Calculated Hash (Keccak-256):</span>
                         <button
                           onClick={() => copyToClipboard(verifyResult.current_report_hash, 'curr')}
-                          className="text-gray-500 hover:text-gray-300 flex items-center space-x-1"
+                          className="text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center space-x-1 font-semibold"
                         >
-                          {copiedKey === 'curr' ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                          {copiedKey === 'curr' ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
                           <span>{copiedKey === 'curr' ? 'Copied' : 'Copy'}</span>
                         </button>
                       </div>
-                      <div className="p-2.5 bg-gray-900 border border-gray-800 rounded-lg text-blue-400 break-all select-all">
+                      <div className="p-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-emerald-800 dark:text-emerald-400 break-all select-all font-semibold">
                         {verifyResult.current_report_hash}
                       </div>
                     </div>
 
                     {verifyResult.registered_report_hash && (
                       <div>
-                        <div className="text-gray-400 mb-1 flex items-center justify-between">
+                        <div className="text-slate-600 dark:text-slate-400 mb-1 flex items-center justify-between font-medium">
                           <span>Original On-Chain Hash:</span>
                           <button
                             onClick={() => copyToClipboard(verifyResult.registered_report_hash || '', 'orig')}
-                            className="text-gray-500 hover:text-gray-300 flex items-center space-x-1"
+                            className="text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center space-x-1 font-semibold"
                           >
-                            {copiedKey === 'orig' ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                            {copiedKey === 'orig' ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
                             <span>{copiedKey === 'orig' ? 'Copied' : 'Copy'}</span>
                           </button>
                         </div>
-                        <div className="p-2.5 bg-gray-900 border border-gray-800 rounded-lg text-purple-400 break-all select-all">
+                        <div className="p-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-purple-800 dark:text-purple-400 break-all select-all font-semibold">
                           {verifyResult.registered_report_hash}
                         </div>
                       </div>
@@ -514,15 +514,15 @@ export const BlockchainRegistryPage: React.FC = () => {
                   </div>
 
                   {/* Metadata Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-gray-850 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-200 dark:border-slate-800 text-xs">
                     <div>
-                      <span className="text-gray-500 block">Network:</span>
-                      <span className="text-gray-300 font-medium">{verifyResult.network}</span>
+                      <span className="text-slate-500 dark:text-slate-400 block font-medium">Network:</span>
+                      <span className="text-slate-900 dark:text-slate-200 font-semibold">{verifyResult.network}</span>
                     </div>
 
                     <div>
-                      <span className="text-gray-500 block">Registration Timestamp:</span>
-                      <span className="text-gray-300 font-medium">
+                      <span className="text-slate-500 dark:text-slate-400 block font-medium">Registration Timestamp:</span>
+                      <span className="text-slate-900 dark:text-slate-200 font-semibold">
                         {verifyResult.timestamp
                           ? new Date(verifyResult.timestamp * 1000).toUTCString()
                           : 'Not recorded'}
@@ -530,8 +530,8 @@ export const BlockchainRegistryPage: React.FC = () => {
                     </div>
 
                     <div>
-                      <span className="text-gray-500 block">Submitter Address:</span>
-                      <span className="text-gray-300 font-mono truncate block">
+                      <span className="text-slate-500 dark:text-slate-400 block font-medium">Submitter Address:</span>
+                      <span className="text-slate-900 dark:text-slate-200 font-mono truncate block font-semibold">
                         {verifyResult.submitter || 'N/A'}
                       </span>
                     </div>
@@ -543,7 +543,7 @@ export const BlockchainRegistryPage: React.FC = () => {
                         href={`https://sepolia.etherscan.io/tx/${verifyResult.transaction_hash}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center space-x-1.5 text-xs text-blue-400 hover:text-blue-300 font-medium"
+                        className="inline-flex items-center space-x-1.5 text-xs text-purple-700 dark:text-purple-400 hover:underline font-semibold"
                       >
                         <span>View Transaction on Sepolia Etherscan</span>
                         <ExternalLink className="h-3 w-3" />
@@ -560,23 +560,23 @@ export const BlockchainRegistryPage: React.FC = () => {
         {activeTab === 'register' && (
           <div className="mt-8 space-y-6">
             {registerLoading && (
-              <div className="p-5 bg-gray-950/80 border border-gray-800 rounded-xl space-y-4">
-                <div className="flex items-center justify-between text-sm font-semibold text-gray-300">
+              <div className="p-5 bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl space-y-4">
+                <div className="flex items-center justify-between text-sm font-semibold text-slate-800 dark:text-slate-200">
                   <span>Registering Threat Report on Ethereum Sepolia</span>
-                  <span className="text-purple-400 font-mono">Step {registerStep} of 4</span>
+                  <span className="text-purple-700 dark:text-purple-400 font-mono font-bold">Step {registerStep} of 4</span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
-                  <div className={`p-2.5 rounded-lg border ${registerStep >= 1 ? 'bg-purple-950/40 border-purple-500/40 text-purple-300' : 'bg-gray-900 border-gray-800 text-gray-500'}`}>
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs font-semibold">
+                  <div className={`p-2.5 rounded-lg border ${registerStep >= 1 ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-300 dark:border-purple-500/40 text-purple-800 dark:text-purple-300' : 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400'}`}>
                     1. Canonicalizing
                   </div>
-                  <div className={`p-2.5 rounded-lg border ${registerStep >= 2 ? 'bg-purple-950/40 border-purple-500/40 text-purple-300' : 'bg-gray-900 border-gray-800 text-gray-500'}`}>
+                  <div className={`p-2.5 rounded-lg border ${registerStep >= 2 ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-300 dark:border-purple-500/40 text-purple-800 dark:text-purple-300' : 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400'}`}>
                     2. Keccak-256 Hashing
                   </div>
-                  <div className={`p-2.5 rounded-lg border ${registerStep >= 3 ? 'bg-purple-950/40 border-purple-500/40 text-purple-300' : 'bg-gray-900 border-gray-800 text-gray-500'}`}>
+                  <div className={`p-2.5 rounded-lg border ${registerStep >= 3 ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-300 dark:border-purple-500/40 text-purple-800 dark:text-purple-300' : 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400'}`}>
                     3. Signing & Broadcast
                   </div>
-                  <div className={`p-2.5 rounded-lg border ${registerStep >= 5 ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300' : 'bg-gray-900 border-gray-800 text-gray-500'}`}>
+                  <div className={`p-2.5 rounded-lg border ${registerStep >= 5 ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400'}`}>
                     4. Block Confirmation
                   </div>
                 </div>
@@ -584,45 +584,45 @@ export const BlockchainRegistryPage: React.FC = () => {
             )}
 
             {registerError && (
-              <div className="p-4 bg-red-950/30 border border-red-500/30 rounded-xl text-red-300 text-sm flex items-start space-x-3">
-                <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+              <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-rose-800 dark:text-rose-300 text-sm flex items-start space-x-3">
+                <AlertTriangle className="h-5 w-5 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-semibold text-red-200">Registration Failed</div>
-                  <div className="mt-0.5 text-xs text-red-300/80">{registerError}</div>
+                  <div className="font-bold text-rose-900 dark:text-rose-200">Registration Failed</div>
+                  <div className="mt-0.5 text-xs text-rose-700 dark:text-rose-300/90">{registerError}</div>
                 </div>
               </div>
             )}
 
             {registerResult && (
-              <div className="p-5 bg-emerald-950/30 border border-emerald-500/40 rounded-xl space-y-4">
+              <div className="p-5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl space-y-4">
                 <div className="flex items-start space-x-3.5">
-                  <CheckCircle2 className="h-6 w-6 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="h-6 w-6 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="text-lg font-bold text-emerald-300">
+                    <h3 className="text-lg font-bold text-emerald-900 dark:text-emerald-300">
                       Threat Report Registered On-Chain!
                     </h3>
-                    <p className="text-xs sm:text-sm text-emerald-200/90 mt-0.5">
+                    <p className="text-xs sm:text-sm text-emerald-800 dark:text-emerald-200/90 mt-0.5 font-medium">
                       {registerResult.message}
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-gray-950/70 border border-gray-850 rounded-xl p-4 space-y-3 font-mono text-xs">
+                <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-4 space-y-3 font-mono text-xs">
                   <div>
-                    <span className="text-gray-500 block">Report Keccak-256 Fingerprint:</span>
-                    <span className="text-blue-400 break-all select-all font-mono">
+                    <span className="text-slate-500 dark:text-slate-400 block font-medium">Report Keccak-256 Fingerprint:</span>
+                    <span className="text-emerald-800 dark:text-emerald-400 break-all select-all font-mono font-bold">
                       {registerResult.report_hash}
                     </span>
                   </div>
 
                   {registerResult.transaction_hash && (
                     <div>
-                      <span className="text-gray-500 block">Transaction Hash:</span>
+                      <span className="text-slate-500 dark:text-slate-400 block font-medium">Transaction Hash:</span>
                       <a
                         href={registerResult.explorer_url || `https://sepolia.etherscan.io/tx/${registerResult.transaction_hash}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-purple-400 hover:text-purple-300 break-all select-all flex items-center space-x-1"
+                        className="text-purple-700 dark:text-purple-400 hover:underline break-all select-all flex items-center space-x-1 font-bold"
                       >
                         <span>{registerResult.transaction_hash}</span>
                         <ExternalLink className="h-3 w-3 flex-shrink-0" />
@@ -630,14 +630,14 @@ export const BlockchainRegistryPage: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-gray-850">
+                  <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-slate-200 dark:border-slate-800">
                     <div>
-                      <span className="text-gray-500 block">Block Number:</span>
-                      <span className="text-gray-300">{registerResult.block_number || 'Confirmed'}</span>
+                      <span className="text-slate-500 dark:text-slate-400 block font-medium">Block Number:</span>
+                      <span className="text-slate-900 dark:text-slate-200 font-semibold">{registerResult.block_number || 'Confirmed'}</span>
                     </div>
                     <div>
-                      <span className="text-gray-500 block">Network:</span>
-                      <span className="text-gray-300">{registerResult.network}</span>
+                      <span className="text-slate-500 dark:text-slate-400 block font-medium">Network:</span>
+                      <span className="text-slate-900 dark:text-slate-200 font-semibold">{registerResult.network}</span>
                     </div>
                   </div>
                 </div>
@@ -649,35 +649,35 @@ export const BlockchainRegistryPage: React.FC = () => {
 
       {/* Recent On-Chain Registrations Feed */}
       {networkStatus?.recent_registrations && networkStatus.recent_registrations.length > 0 && (
-        <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <div className="phish-card p-6 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Clock className="h-5 w-5 text-purple-400" />
-              <h2 className="text-base font-bold text-white">Recent On-Chain Registered Fingerprints</h2>
+              <Clock className="h-5 w-5 text-purple-700 dark:text-purple-400" />
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">Recent On-Chain Registered Fingerprints</h2>
             </div>
-            <span className="text-xs text-gray-500">Live Smart Contract Events</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Live Smart Contract Events</span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-800 text-xs font-mono">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-xs font-mono">
               <thead>
-                <tr className="text-gray-400 text-left">
+                <tr className="text-slate-500 dark:text-slate-400 text-left font-semibold">
                   <th className="py-2.5 px-3">Report Fingerprint (Keccak-256)</th>
                   <th className="py-2.5 px-3">Submitter Address</th>
                   <th className="py-2.5 px-3">Registration Time</th>
                   <th className="py-2.5 px-3 text-right">Etherscan</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-850">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {networkStatus.recent_registrations.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-gray-850/50 transition">
-                    <td className="py-3 px-3 text-blue-400 truncate max-w-xs font-medium">
+                  <tr key={idx} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                    <td className="py-3 px-3 text-emerald-800 dark:text-emerald-400 truncate max-w-xs font-semibold">
                       {item.report_hash}
                     </td>
-                    <td className="py-3 px-3 text-gray-300 truncate max-w-[140px]">
+                    <td className="py-3 px-3 text-slate-700 dark:text-slate-300 truncate max-w-[140px]">
                       {item.submitter}
                     </td>
-                    <td className="py-3 px-3 text-gray-400">
+                    <td className="py-3 px-3 text-slate-600 dark:text-slate-400">
                       {new Date(item.timestamp * 1000).toLocaleString()}
                     </td>
                     <td className="py-3 px-3 text-right">
@@ -685,7 +685,7 @@ export const BlockchainRegistryPage: React.FC = () => {
                         href={`https://sepolia.etherscan.io/search?q=${item.report_hash}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-white inline-flex items-center space-x-1"
+                        className="text-purple-700 dark:text-purple-400 hover:underline inline-flex items-center space-x-1 font-semibold"
                       >
                         <span>Inspect</span>
                         <ExternalLink className="h-3 w-3" />
@@ -703,4 +703,3 @@ export const BlockchainRegistryPage: React.FC = () => {
 };
 
 export default BlockchainRegistryPage;
-

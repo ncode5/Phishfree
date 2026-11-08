@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from '../components/Sidebar';
 import { TopHeader } from '../components/TopHeader';
 
 export const MainLayout: React.FC = () => {
-  const [themeMode, setThemeMode] = useState<'light' | 'dim'>('light');
-
   return (
-    <div className={`min-h-screen flex ${themeMode === 'dim' ? 'bg-slate-900 text-slate-100' : 'bg-[#F8FAFC] text-slate-900'} antialiased selection:bg-emerald-100 selection:text-emerald-900 font-sans`}>
+    <div className="min-h-screen flex bg-[#F8FAFC] dark:bg-[#0B1120] text-slate-900 dark:text-slate-100 antialiased selection:bg-emerald-100 dark:selection:bg-emerald-950/80 selection:text-emerald-900 dark:selection:text-emerald-200 font-sans transition-colors duration-200">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Container */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden">
         {/* Top Header */}
-        <TopHeader themeMode={themeMode} onToggleTheme={setThemeMode} />
+        <TopHeader />
 
         {/* Page Content */}
         <main className="flex-1 p-6 md:p-8 max-w-[1600px] w-full mx-auto">

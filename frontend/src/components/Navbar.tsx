@@ -37,19 +37,19 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-cyber-950/80 backdrop-blur-md border-b border-slate-800">
+    <nav className="sticky top-0 z-50 bg-white/90 dark:bg-[#0B1120]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-500/30 flex items-center justify-center group-hover:border-blue-500/60 transition-colors">
-              <Shield className="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform" />
+            <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center group-hover:border-emerald-500/60 transition-colors">
+              <Shield className="w-5 h-5 text-emerald-700 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
             </div>
             <div>
-              <span className="font-bold text-lg tracking-tight text-white flex items-center gap-1.5">
-                Trust<span className="text-blue-500">Intel</span>
+              <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+                Phish<span className="text-emerald-700 dark:text-emerald-400">free</span>
               </span>
-              <span className="text-[10px] block text-slate-400 -mt-1 font-mono uppercase tracking-wider">
+              <span className="text-[10px] block text-slate-500 dark:text-slate-400 -mt-1 font-mono uppercase tracking-wider">
                 Digital Trust Intelligence
               </span>
             </div>
@@ -66,8 +66,8 @@ export const Navbar: React.FC = () => {
                   to={link.to}
                   className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-900/60'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -79,17 +79,17 @@ export const Navbar: React.FC = () => {
 
           {/* Right Action / System Status */}
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-cyber-900 border border-slate-800 rounded-full text-xs">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-full text-xs">
               <span
                 className={`w-2 h-2 rounded-full ${
                   backendStatus === 'healthy'
-                    ? 'bg-emerald-400'
+                    ? 'bg-emerald-500'
                     : backendStatus === 'offline'
                     ? 'bg-rose-500'
                     : 'bg-amber-400 animate-pulse'
                 }`}
               />
-              <span className="text-slate-300 font-mono text-[11px]">
+              <span className="text-slate-700 dark:text-slate-300 font-mono text-[11px]">
                 {backendStatus === 'healthy'
                   ? 'Core Online'
                   : backendStatus === 'offline'
@@ -100,7 +100,7 @@ export const Navbar: React.FC = () => {
 
             <Link
               to="/scanner"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg text-sm font-medium shadow-md shadow-blue-900/30 transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium shadow-sm transition-all"
             >
               <Search className="w-4 h-4" />
               <span>Scan URL</span>

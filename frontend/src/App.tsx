@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
 import { MainLayout } from './layouts/MainLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { ScannerPage } from './pages/ScannerPage';
@@ -13,27 +14,28 @@ import { AboutPage } from './pages/AboutPage';
 
 export const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="scanner" element={<ScannerPage />} />
-          <Route path="scam-analyzer" element={<ScamAnalyzerPage />} />
-          <Route path="security" element={<WebsiteSecurityPage />} />
-          <Route path="security-assessment" element={<WebsiteSecurityPage />} />
-          <Route path="threat-intel" element={<ThreatIntelPage />} />
-          <Route path="correlation" element={<ThreatIntelPage />} />
-          <Route path="blockchain" element={<BlockchainRegistryPage />} />
-          <Route path="web3" element={<BlockchainRegistryPage />} />
-          <Route path="reports/:id" element={<ReportPage />} />
-          <Route path="history" element={<HistoryPage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<DashboardPage />} />
+            <Route path="scanner" element={<ScannerPage />} />
+            <Route path="scam-analyzer" element={<ScamAnalyzerPage />} />
+            <Route path="security" element={<WebsiteSecurityPage />} />
+            <Route path="security-assessment" element={<WebsiteSecurityPage />} />
+            <Route path="threat-intel" element={<ThreatIntelPage />} />
+            <Route path="correlation" element={<ThreatIntelPage />} />
+            <Route path="blockchain" element={<BlockchainRegistryPage />} />
+            <Route path="web3" element={<BlockchainRegistryPage />} />
+            <Route path="reports/:id" element={<ReportPage />} />
+            <Route path="history" element={<HistoryPage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 
 export default App;
-
