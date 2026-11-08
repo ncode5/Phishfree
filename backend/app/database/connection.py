@@ -105,12 +105,12 @@ def init_db():
 
         print("Database schema successfully verified/initialized.")
 
-        # Seed default demonstration security analyst if user repository is empty
+        # Seed default demonstration security analyst and administrator if repository is empty
         try:
             with SessionLocal() as db:
+                from app.services.auth_service import AuthService
                 analyst = db.query(models.User).filter(models.User.email == "analyst@phishfree.io").first()
                 if not analyst:
-                    from app.services.auth_service import AuthService
                     demo_user = models.User(
                         email="analyst@phishfree.io",
                         full_name="Ankur Giri",
@@ -122,6 +122,20 @@ def init_db():
                     db.add(demo_user)
                     db.commit()
                     print("Default demo analyst seeded: analyst@phishfree.io / Password123!")
+
+                admin = db.query(models.User).filter(models.User.email == "admin@phishfree.io").first()
+                if not admin:
+                    demo_admin = models.User(
+                        email="admin@phishfree.io",
+                        full_name="SecOps Platform Administrator",
+                        hashed_password=AuthService.hash_password("AdminPassword123!"),
+                        role="admin",
+                        is_active=1,
+                        is_verified=1
+                    )
+                    db.add(demo_admin)
+                    db.commit()
+                    print("Default demo admin seeded: admin@phishfree.io / AdminPassword123!")
         except Exception as e:
             print(f"Notice: User seeding check bypassed: {e}")
     except Exception as e:

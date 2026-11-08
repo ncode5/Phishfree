@@ -346,3 +346,16 @@ def get_optional_current_user(
     except HTTPException:
         return None
 
+
+def get_current_admin_user(
+    current_user: models.User = Depends(get_current_user)
+) -> models.User:
+    """FastAPI dependency requiring platform administrator authorization."""
+    if current_user.role not in ("admin", "superadmin", "secops_admin"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Administrative privileges required to access this resource."
+        )
+    return current_user
+
+

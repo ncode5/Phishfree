@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.database import models, schemas
 from app.database.connection import get_db
-from app.services.auth_service import AuthService, get_current_user
+from app.services.auth_service import AuthService, get_current_user, get_current_admin_user
 
 router = APIRouter(prefix="/auth", tags=["Authentication & User Management"])
 
@@ -197,4 +197,58 @@ async def reset_password(
         success=True,
         message="Password has been successfully updated. You may now sign in with your new credentials."
     )
+
+
+@router.get(
+    "/admin/status",
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve administrative platform overview"
+)
+async def get_admin_status(
+    admin_user: models.User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Administrative endpoint returning platform user statistics and operational status."""
+    total_users = db.query(models.User).count()
+    active_users = db.query(models.User).filter(models.User.is_active == 1).count()
+    admins_count = db.query(models.User).filter(models.User.role.in_(["admin", "superadmin"])).count()
+
+    return {
+        "status": "operational",
+        "admin_authenticated_as": admin_user.email,
+        "role": admin_user.role,
+        "metrics": {
+            "total_registered_users": total_users,
+            "active_users": active_users,
+            "platform_administrators": admins_count
+        }
+    }
+
+
+@router.get(
+    "/admin/users",
+    response_model=list[schemas.UserResponse],
+    status_code=status.HTTP_200_OK,
+    summary="List all registered platform users (Admin only)"
+)
+async def list_admin_users(
+    admin_user: models.User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Administrative endpoint listing registered platform users with roles and status."""
+    users = db.query(models.User).order_by(models.User.created_at.desc()).all()
+    return [
+        schemas.UserResponse(
+            id=u.id,
+            email=u.email,
+            full_name=u.full_name,
+            role=u.role,
+            is_active=bool(u.is_active),
+            is_verified=bool(u.is_verified),
+            created_at=u.created_at,
+            last_login_at=u.last_login_at
+        )
+        for u in users
+    ]
+
 

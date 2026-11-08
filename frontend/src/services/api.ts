@@ -22,9 +22,15 @@ import {
 } from '../types';
 
 const getApiBase = (): string => {
-  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  // Support both VITE_API_BASE_URL and VITE_API_URL environment variables
+  const envUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL;
   if (envUrl && envUrl.trim() !== '') {
-    return envUrl.trim().replace(/\/+$/, '');
+    const trimmed = envUrl.trim().replace(/\/+$/, '');
+    // Ensure /api/v1 prefix is preserved if user provided bare domain (e.g. https://phishfree-api.vercel.app)
+    if (!trimmed.endsWith('/api/v1') && !trimmed.endsWith('/api')) {
+      return `${trimmed}/api/v1`;
+    }
+    return trimmed;
   }
   // In production web environment (e.g. Vercel unified deploy), use relative /api/v1
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {

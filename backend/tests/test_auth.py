@@ -116,3 +116,50 @@ def test_password_reset_workflow():
     })
     assert login_res.status_code == 200
 
+
+def test_admin_login_and_privilege_separation():
+    """Validates separate admin credentials, token role claim, and administrative access control."""
+    # 1. Login as Admin
+    admin_login = client.post("/api/v1/auth/login", json={
+        "email": "admin@phishfree.io",
+        "password": "AdminPassword123!",
+        "remember_me": True
+    })
+    assert admin_login.status_code == 200
+    admin_data = admin_login.json()
+    assert admin_data["user"]["role"] == "admin"
+    admin_token = admin_data["access_token"]
+
+    # 2. Admin access to administrative overview
+    status_res = client.get("/api/v1/auth/admin/status", headers={"Authorization": f"Bearer {admin_token}"})
+    assert status_res.status_code == 200
+    assert status_res.json()["status"] == "operational"
+    assert status_res.json()["role"] == "admin"
+    assert status_res.json()["metrics"]["total_registered_users"] >= 2
+
+    # 3. Admin access to user list
+    users_res = client.get("/api/v1/auth/admin/users", headers={"Authorization": f"Bearer {admin_token}"})
+    assert users_res.status_code == 200
+    assert isinstance(users_res.json(), list)
+
+    # 4. Standard analyst login
+    analyst_login = client.post("/api/v1/auth/login", json={
+        "email": "analyst@phishfree.io",
+        "password": "Password123!"
+    })
+    assert analyst_login.status_code == 200
+    analyst_token = analyst_login.json()["access_token"]
+
+    # 5. Non-admin attempting to access admin endpoints is rejected with 403 Forbidden
+    forbidden_res = client.get("/api/v1/auth/admin/status", headers={"Authorization": f"Bearer {analyst_token}"})
+    assert forbidden_res.status_code == 403
+    assert "Administrative privileges required" in forbidden_res.json()["detail"]
+
+    forbidden_users = client.get("/api/v1/auth/admin/users", headers={"Authorization": f"Bearer {analyst_token}"})
+    assert forbidden_users.status_code == 403
+
+    # 6. Unauthenticated request rejected with 401 Unauthorized
+    unauth_res = client.get("/api/v1/auth/admin/status")
+    assert unauth_res.status_code == 401
+
+
