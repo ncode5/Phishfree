@@ -4,6 +4,25 @@ This guide provides end-to-end instructions for deploying **PhishFree** (Cyberse
 
 ---
 
+## 🌟 Active Live Production Deployments
+
+The platform is officially deployed, hardened, and active on Vercel:
+
+| Target | Production URL | Description |
+| :--- | :--- | :--- |
+| **Frontend Application** | [https://phishfree-rust.vercel.app](https://phishfree-rust.vercel.app) | React + Vite + TypeScript Cybersecurity Intelligence SPA |
+| **Backend Serverless API** | [https://phishfree-api.vercel.app](https://phishfree-api.vercel.app) | FastAPI Python Serverless Engine on Vercel |
+| **Interactive OpenAPI Docs** | [https://phishfree-api.vercel.app/docs](https://phishfree-api.vercel.app/docs) | Swagger UI for interactive endpoint testing |
+| **Health Check Endpoint** | [https://phishfree-api.vercel.app/api/v1/health](https://phishfree-api.vercel.app/api/v1/health) | Live runtime diagnostic and database verification |
+
+> [!NOTE]
+> **Understanding Preview URLs vs Production URLs**:
+> During builds, Vercel generates preview URLs for each deployment hash (such as `phishfree-p3piuy67c-niru22.vercel.app` or `phishfree-j2j561w0b-niru22.vercel.app`).
+> - **Backend Preview URLs**: Serving the FastAPI JSON API only. Opening these URLs in a standard web browser displays the JSON root `{"project": ...}` or `{"detail": "Not Found"}` because there is no HTML UI hosted on the backend.
+> - **Frontend Production URL**: [https://phishfree-rust.vercel.app](https://phishfree-rust.vercel.app) is the complete web application with the full interactive dashboard, scanner, threat graph, and authentication interface.
+
+---
+
 ## 1. Architecture Overview
 
 PhishFree supports **two production deployment topologies** on Vercel:
