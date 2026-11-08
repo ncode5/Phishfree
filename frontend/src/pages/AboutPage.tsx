@@ -81,7 +81,7 @@ export const AboutPage: React.FC = () => {
               <CheckCircle2 className="w-4 h-4" /> Fully Implemented & Verified
             </div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-              MODULE 1: Intelligent URL and Website Analysis
+              Intelligent URL and Website Analysis
             </h2>
           </div>
           <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-semibold">
@@ -158,16 +158,16 @@ export const AboutPage: React.FC = () => {
           <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
             System Expansion Roadmap
           </span>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Integrated Platform Modules</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Integrated Platform Capabilities</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            The platform architecture has been decoupled to allow seamless integration of forensic modules:
+            The platform architecture integrates cohesive forensic capabilities:
           </p>
         </div>
 
         <div className="space-y-3">
           <div className="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 flex items-start gap-3">
             <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-[11px] font-mono font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shrink-0 mt-0.5">
-              MODULE 2 · LIVE
+              TLS WEB TRUST · ACTIVE
             </span>
             <div>
               <span className="text-sm font-bold text-slate-900 dark:text-white block">TLS Certificate & Digital Trust Analysis</span>
@@ -180,7 +180,7 @@ export const AboutPage: React.FC = () => {
 
           <div className="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 flex items-start gap-3">
             <span className="px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-[11px] font-mono font-bold text-indigo-800 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shrink-0 mt-0.5">
-              MODULE 3 · LIVE
+              AI SCAM DETECTION · ACTIVE
             </span>
             <div>
               <span className="text-sm font-bold text-slate-900 dark:text-white block">AI-Powered Scam & Message Analysis</span>
@@ -194,7 +194,7 @@ export const AboutPage: React.FC = () => {
 
           <div className="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 flex items-start gap-3">
             <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-[11px] font-mono font-bold text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 shrink-0 mt-0.5">
-              MODULE 4 · LIVE
+              THREAT CORRELATION · ACTIVE
             </span>
             <div>
               <span className="text-sm font-bold text-slate-900 dark:text-white block">Intelligent Threat Correlation</span>
@@ -207,7 +207,7 @@ export const AboutPage: React.FC = () => {
 
           <div className="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 flex items-start gap-3">
             <span className="px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950/60 text-[11px] font-mono font-bold text-teal-800 dark:text-teal-300 border border-teal-200 dark:border-teal-800 shrink-0 mt-0.5">
-              MODULE 5 · LIVE
+              WEBSITE SECURITY · ACTIVE
             </span>
             <div>
               <span className="text-sm font-bold text-slate-900 dark:text-white block">Passive Website Security Assessment</span>
@@ -220,7 +220,7 @@ export const AboutPage: React.FC = () => {
 
           <div className="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 flex items-start gap-3">
             <span className="px-2.5 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/60 text-[11px] font-mono font-bold text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800 shrink-0 mt-0.5">
-              MODULE 6 · LIVE
+              WEB3 REGISTRY · ACTIVE
             </span>
             <div>
               <span className="text-sm font-bold text-slate-900 dark:text-white block">Decentralized Threat Intelligence (Web3)</span>

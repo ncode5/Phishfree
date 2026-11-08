@@ -194,7 +194,7 @@ async def health_check(
         database=db_status,
         timestamp=datetime.now(timezone.utc),
         version="1.0.0",
-        active_module="Module 1 (URL Analysis) + Module 2 (TLS & Digital Trust Analysis) + Module 3 (AI Scam & Message Analysis) + Module 4 (Intelligent Threat Correlation) + Module 5 (Website Security Assessment) + Module 6 (Decentralized Threat Intelligence Blockchain Registry)"
+        active_module="Unified Cyber Threat Intelligence Suite (URL & Domain Analysis, TLS Cryptographic Trust, AI Social Engineering Detection, Campaign Correlation, Security Posture Audit, Blockchain Registry)"
     )
 
 

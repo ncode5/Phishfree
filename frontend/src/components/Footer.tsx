@@ -42,27 +42,27 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Core Modules */}
+          {/* Platform Capabilities */}
           <div>
             <h4 className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
-              System Modules
+              Security Services
             </h4>
             <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <li className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Module 1: URL & Site Analysis
+                URL & Phishing Forensics
               </li>
-              <li className="text-slate-500 dark:text-slate-500 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-                Module 2: TLS Web Trust
+              <li className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                TLS & Digital Trust Analysis
               </li>
-              <li className="text-slate-500 dark:text-slate-500 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-                Module 3: AI Scam Detection
+              <li className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                AI Scam & Lure Detection
               </li>
-              <li className="text-slate-500 dark:text-slate-500 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-                Module 6: Web3 On-Chain Intel
+              <li className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                Decentralized Threat Registry
               </li>
             </ul>
           </div>

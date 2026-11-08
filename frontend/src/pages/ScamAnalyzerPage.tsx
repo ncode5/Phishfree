@@ -39,7 +39,7 @@ const ANALYSIS_PIPELINE_STEPS = [
   { id: 'sanitize', label: 'Input Sanitization & Sensitive Text Masking', icon: Lock },
   { id: 'extract', label: 'Entity Extraction (URLs, Crypto, UPI, Contacts)', icon: Globe },
   { id: 'patterns', label: 'Heuristic Pattern & Social Engineering Detection', icon: AlertTriangle },
-  { id: 'cross', label: 'Module 1 & 2 URL/TLS Deep Security Corroboration', icon: Shield },
+  { id: 'cross', label: 'Embedded URL & TLS Cryptographic Verification', icon: Shield },
   { id: 'ai', label: 'Evidence Aggregation & Grounded AI Explanation', icon: Sparkles },
 ];
 
@@ -165,9 +165,9 @@ export const ScamAnalyzerPage: React.FC = () => {
     <div className="max-w-6xl mx-auto space-y-10 pb-16">
       {/* Header Banner */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100 dark:bg-[#00D29E]/20 border border-emerald-300 dark:border-[#00D29E]/40 text-xs font-bold text-emerald-950 dark:text-[#00E5A3]">
-          <MessageSquare className="w-3.5 h-3.5 text-emerald-800 dark:text-[#00E5A3]" />
-          <span>Module 3 — AI Scam & Social Engineering Intelligence</span>
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 dark:bg-yellow-400/10 border border-blue-200 dark:border-yellow-400/30 text-xs font-bold text-blue-700 dark:text-yellow-400">
+          <MessageSquare className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" />
+          <span>AI Scam & Social Engineering Intelligence</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-white">
           Inspect Suspicious Messages & Scams
@@ -220,7 +220,7 @@ export const ScamAnalyzerPage: React.FC = () => {
               onChange={(e) => setAnalyzeUrls(e.target.checked)}
               className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-[#070C18] text-emerald-700 focus:ring-emerald-600 focus:ring-offset-0 cursor-pointer"
             />
-            <span>Deep-scan extracted URLs & TLS certificates via Module 1 & 2</span>
+            <span>Deep-scan extracted URLs & TLS certificates automatically</span>
           </label>
 
           <button
@@ -652,10 +652,10 @@ export const ScamAnalyzerPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Shield className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                    Cross-Module URL & TLS Security Inspection ({report.extracted_url_analyses.length})
+                    Extracted URL & TLS Security Inspection ({report.extracted_url_analyses.length})
                   </h3>
                 </div>
-                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Powered by Module 1 & 2</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Automated Cryptographic Inspection</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

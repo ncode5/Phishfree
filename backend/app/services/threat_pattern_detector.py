@@ -215,22 +215,22 @@ class ThreatPatternDetector:
             dom_data = current_report.details.get("domain_analysis") or {}
             if dom_data.get("is_brand_impersonation") or dom_data.get("is_punycode"):
                 mod1_flag = True
-                corroboration_findings.append("Module 1: Brand impersonation or punycode spoofing identified.")
+                corroboration_findings.append("URL & Domain Analysis: Brand impersonation or punycode spoofing identified.")
 
             # Mod 2 check
             tls_data = current_report.details.get("tls_analysis") or {}
             if tls_data.get("certificate_status") in ("EXPIRED", "UNTRUSTED") or not tls_data.get("hostname_match", True):
                 mod2_flag = True
-                corroboration_findings.append(f"Module 2: TLS invalid or hostname mismatch ({tls_data.get('certificate_status')}).")
+                corroboration_findings.append(f"TLS Transport Security: TLS invalid or hostname mismatch ({tls_data.get('certificate_status')}).")
 
         if report_type == "MESSAGE" or is_credential_lure:
             mod3_flag = True
-            corroboration_findings.append("Module 3: Urgency, fear, or deceptive social engineering tactics detected.")
+            corroboration_findings.append("Behavioral Analysis: Urgency, fear, or deceptive social engineering tactics detected.")
 
         if (mod1_flag and mod2_flag) or (mod1_flag and mod3_flag) or (mod2_flag and mod3_flag):
             patterns.append(
                 schemas.ThreatPatternSchema(
-                    pattern_name="MULTI_MODULE_CORROBORATION",
+                    pattern_name="MULTI_VECTOR_CORROBORATION",
                     description="Multi-engine telemetry corroborates threat: independent indicators across URL structure, TLS trust, and message context reinforce risk.",
                     severity="HIGH" if (mod1_flag and mod2_flag and mod3_flag) else "MEDIUM",
                     confidence=0.91,

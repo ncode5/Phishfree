@@ -198,7 +198,7 @@ export const ThreatIntelPage: React.FC = () => {
       <div className="border-b border-slate-300 dark:border-[#1A2844] pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-50 dark:bg-yellow-400/10 text-blue-700 dark:text-yellow-400 border border-blue-200 dark:border-yellow-400/30 mb-3">
-            <Network className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> Module 4: Intelligent Threat Correlation
+            <Network className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> Intelligent Threat Correlation
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-3">
             Threat Intelligence Graph & Campaign Correlation
@@ -389,7 +389,7 @@ export const ThreatIntelPage: React.FC = () => {
                     </span>
                   </div>
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
-                    Multi-Module Threat Synthesis
+                    Unified Threat Synthesis
                   </h2>
                   <p className="text-slate-700 dark:text-slate-300 text-sm mt-1 max-w-2xl leading-relaxed">
                     {correlation.summary}
@@ -642,7 +642,7 @@ export const ThreatIntelPage: React.FC = () => {
               {correlation.patterns.length === 0 ? (
                 <div className="p-6 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-center text-slate-600 dark:text-slate-400 text-sm">
                   <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400 mx-auto mb-2" />
-                  No cross-module malicious correlation patterns identified. Findings appear isolated and non-coordinated.
+                  No coordinated campaign attack patterns identified. Findings appear isolated and non-coordinated.
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -753,7 +753,7 @@ export const ThreatIntelPage: React.FC = () => {
                   <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
                     <span className="text-xs font-bold text-slate-700 dark:text-slate-400 uppercase tracking-wider">Correlated Heuristic Rules</span>
                     <div className="text-xs text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-2.5 rounded-lg mt-1">
-                      {correlation.evidence_transparency.rule_based_correlations.length} multi-module correlation rule(s) evaluated and confirmed.
+                      {correlation.evidence_transparency.rule_based_correlations.length} heuristic correlation rule(s) evaluated and confirmed.
                     </div>
                   </div>
                 </div>

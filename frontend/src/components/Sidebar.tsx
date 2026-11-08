@@ -9,7 +9,6 @@ import {
   Users,
   FileText,
   Settings,
-  ArrowUpRight,
   ChevronRight
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -145,23 +144,9 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="p-4 border-t border-slate-200 dark:border-[#1A2844] space-y-4">
-        {/* Methodology Card */}
-        <div className="p-3 rounded-xl bg-slate-100 dark:bg-[#0D1629] border border-slate-300 dark:border-[#1A2844]">
-          <p className="text-[11px] text-slate-800 dark:text-slate-300 leading-snug mb-2 font-medium">
-            Evidence, not assumptions. Passive analysis. Explainable findings. A safer next step.
-          </p>
-          <Link
-            to="/about"
-            className="text-[11px] font-bold text-emerald-800 dark:text-[#00E5A3] hover:text-emerald-900 dark:hover:text-emerald-300 flex items-center gap-1 transition-colors"
-          >
-            <span>Our methodology</span>
-            <ArrowUpRight className="w-3 h-3" />
-          </Link>
-        </div>
-
+      <div className="p-4 border-t border-slate-200 dark:border-[#1A2844]">
         {/* User Profile */}
-        <div className="flex items-center gap-2.5 px-1 pt-1">
+        <div className="flex items-center gap-2.5 px-1 py-1">
           <div className="w-8 h-8 rounded-full bg-blue-600 dark:bg-yellow-400 text-white dark:text-slate-950 font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
             {getInitials(user?.full_name)}
           </div>

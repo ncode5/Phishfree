@@ -368,7 +368,7 @@ export const ReportPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">Security Evidence & Indicators</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Granular detections collected by independent verification modules</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Granular detections collected by automated forensic analyzers</p>
             </div>
           </div>
 

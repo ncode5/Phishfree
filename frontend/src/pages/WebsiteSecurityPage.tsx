@@ -123,8 +123,8 @@ export const WebsiteSecurityPage: React.FC = () => {
     <div className="space-y-8 max-w-7xl mx-auto pb-12 font-sans">
       {/* Header */}
       <div className="border-b border-slate-300 dark:border-[#1A2844] pb-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-[#00D29E]/20 text-emerald-950 dark:text-[#00E5A3] border border-emerald-300 dark:border-[#00D29E]/40 mb-3">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-800 dark:text-[#00E5A3]" /> Module 5: Website Security Assessment
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-50 dark:bg-yellow-400/10 text-blue-700 dark:text-yellow-400 border border-blue-200 dark:border-yellow-400/30 mb-3">
+          <ShieldCheck className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> Website Security Assessment
         </div>
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-3">
           Passive Website Security Posture & Configuration Audit

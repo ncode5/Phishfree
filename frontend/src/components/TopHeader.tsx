@@ -3,8 +3,6 @@ import { useLocation, Link, useNavigate } from 'react-router-dom';
 import {
   Folder,
   ChevronRight,
-  Calendar,
-  Bell,
   Sun,
   Moon,
   Laptop,
@@ -15,13 +13,13 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import { NotificationsMenu } from './NotificationsMenu';
 
 export const TopHeader: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, resolvedTheme, setTheme } = useTheme();
   const { user, logout } = useAuth();
-  const [currentUtc, setCurrentUtc] = useState<string>('');
   const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -48,23 +46,6 @@ export const TopHeader: React.FC = () => {
     if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
     return name.substring(0, 2).toUpperCase();
   };
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const day = now.getUTCDate().toString().padStart(2, '0');
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const month = months[now.getUTCMonth()];
-      const year = now.getUTCFullYear();
-      const hours = now.getUTCHours().toString().padStart(2, '0');
-      const minutes = now.getUTCMinutes().toString().padStart(2, '0');
-      setCurrentUtc(`${day} ${month} ${year} · ${hours}:${minutes} UTC`);
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 10000);
-    return () => clearInterval(interval);
-  }, []);
 
   const getPageTitle = () => {
     switch (location.pathname) {
@@ -151,22 +132,8 @@ export const TopHeader: React.FC = () => {
           Dashboard
         </Link>
 
-        {/* Live UTC Clock */}
-        <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-800 dark:text-slate-200 font-bold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-[#1A2844] bg-slate-100 dark:bg-[#0D1629]">
-          <Calendar className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
-          <span className="font-mono text-[11px]">{currentUtc || '08 Nov 2026 · 17:15 UTC'}</span>
-        </div>
-
-        {/* Notification Bell */}
-        <div 
-          tabIndex={0}
-          role="button"
-          aria-label="Notifications"
-          className="relative p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer"
-        >
-          <Bell className="w-4 h-4" />
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 absolute top-2 right-2 ring-2 ring-white dark:ring-[#070C18]" />
-        </div>
+        {/* Notifications Menu with real-time cybersecurity alerts */}
+        <NotificationsMenu />
 
         {/* Top Header User Profile & Dropdown */}
         <div className="relative" ref={menuRef}>

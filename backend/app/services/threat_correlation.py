@@ -426,7 +426,7 @@ class ThreatCorrelationService:
         recommendations: List[str] = []
 
         if not patterns:
-            reasoning.append("No multi-module malicious correlation patterns were detected for this submission.")
+            reasoning.append("No cross-vector malicious correlation patterns were detected for this submission.")
             mitigating.append("Target indicators do not appear in active campaign clusters or repeated scam lures.")
             recommendations.append("Continue monitoring indicator; exercise standard verification practices.")
             return schemas.CorrelationExplanationSchema(

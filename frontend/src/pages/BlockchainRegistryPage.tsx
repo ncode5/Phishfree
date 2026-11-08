@@ -190,7 +190,7 @@ export const BlockchainRegistryPage: React.FC = () => {
           </button>
           <div className="flex items-center space-x-2 px-3 py-1.5 bg-emerald-100 dark:bg-[#00D29E]/20 border border-emerald-300 dark:border-[#00D29E]/40 rounded-xl text-emerald-950 dark:text-[#00E5A3] text-xs font-bold">
             <span className="w-2 h-2 rounded-full bg-emerald-700 dark:bg-[#00D29E] animate-pulse"></span>
-            <span>Module 6 Active</span>
+            <span>On-Chain Registry Active</span>
           </div>
         </div>
       </div>

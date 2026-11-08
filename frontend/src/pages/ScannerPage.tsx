@@ -90,9 +90,9 @@ export const ScannerPage: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-[#00D29E]/20 border border-emerald-300 dark:border-[#00D29E]/40 text-xs font-bold text-emerald-950 dark:text-[#00E5A3]">
-          <Shield className="w-3.5 h-3.5 text-emerald-800 dark:text-[#00E5A3]" />
-          <span>Module 1 · URL Security Scanner</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-yellow-400/10 border border-blue-200 dark:border-yellow-400/30 text-xs font-bold text-blue-700 dark:text-yellow-400">
+          <Shield className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" />
+          <span>URL Security Scanner</span>
         </div>
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-950 dark:text-white">
           Investigate Website & URL Threats
