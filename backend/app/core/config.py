@@ -16,6 +16,15 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "AI-Powered Web Threat Detection & Digital Trust Intelligence"
     API_V1_PREFIX: str = "/api/v1"
 
+    # Authentication & Session Security
+    JWT_SECRET_KEY: str = "c7d91e6b8a2f4c3d9e0b1a2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+    REMEMBER_ME_EXPIRE_DAYS: int = 7
+    SESSION_COOKIE_NAME: str = "phishfree_session"
+    COOKIE_SAMESITE: str = "lax"
+    COOKIE_SECURE: bool = False  # Set to True automatically in production if https is detected
+
     # Database: Supports hosted PostgreSQL (Neon / Supabase) via DATABASE_URL,
     # with SQLite fallback for offline local testing
     DATABASE_URL: str = "sqlite:///./trust_intel.db"

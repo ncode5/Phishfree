@@ -14,7 +14,11 @@ import {
   BlockchainNetworkStatus,
   BlockchainRegisterResponse,
   BlockchainVerifyResponse,
-  BlockchainReportDetails
+  BlockchainReportDetails,
+  User,
+  AuthResponse,
+  ForgotPasswordResponse,
+  AuthMessageResponse
 } from '../types';
 
 const getApiBase = (): string => {
@@ -31,12 +35,37 @@ const getApiBase = (): string => {
 
 const API_BASE = getApiBase();
 
+export const TOKEN_STORAGE_KEY = 'phishfree_auth_token';
+
+let inMemoryToken: string | null = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_STORAGE_KEY) : null;
+
+export const setAuthToken = (token: string | null) => {
+  inMemoryToken = token;
+  if (typeof window !== 'undefined') {
+    if (token) {
+      localStorage.setItem(TOKEN_STORAGE_KEY, token);
+    } else {
+      localStorage.removeItem(TOKEN_STORAGE_KEY);
+    }
+  }
+};
+
 const apiClient = axios.create({
   baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
   timeout: 30000,
+});
+
+// Automatically inject Authorization header if token is present
+apiClient.interceptors.request.use((config) => {
+  const token = inMemoryToken || (typeof window !== 'undefined' ? localStorage.getItem(TOKEN_STORAGE_KEY) : null);
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export const api = {
@@ -186,6 +215,53 @@ export const api = {
 
   async getBlockchainReportDetails(reportId: string): Promise<BlockchainReportDetails> {
     const response = await apiClient.get<BlockchainReportDetails>(`/blockchain/report/${reportId}`);
+    return response.data;
+  },
+
+  // ==========================================
+  // Authentication & User Management Endpoints
+  // ==========================================
+
+  async register(payload: { full_name: string; email: string; password: string; terms_accepted?: boolean }): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>('/auth/register', payload);
+    if (response.data.access_token) {
+      setAuthToken(response.data.access_token);
+    }
+    return response.data;
+  },
+
+  async login(payload: { email: string; password: string; remember_me?: boolean }): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>('/auth/login', payload);
+    if (response.data.access_token) {
+      setAuthToken(response.data.access_token);
+    }
+    return response.data;
+  },
+
+  async logout(): Promise<AuthMessageResponse> {
+    try {
+      const response = await apiClient.post<AuthMessageResponse>('/auth/logout');
+      return response.data;
+    } finally {
+      setAuthToken(null);
+    }
+  },
+
+  async getCurrentUser(): Promise<User> {
+    const response = await apiClient.get<User>('/auth/me');
+    return response.data;
+  },
+
+  async forgotPassword(email: string): Promise<ForgotPasswordResponse> {
+    const response = await apiClient.post<ForgotPasswordResponse>('/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  async resetPassword(token: string, newPassword: string): Promise<AuthMessageResponse> {
+    const response = await apiClient.post<AuthMessageResponse>('/auth/reset-password', {
+      token,
+      new_password: newPassword,
+    });
     return response.data;
   },
 };

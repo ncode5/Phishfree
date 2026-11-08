@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime, timezone
+from typing import Optional, Dict, Any, List
 from sqlalchemy import Column, String, Integer, Float, Text, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from app.database.connection import Base
@@ -217,6 +218,58 @@ class BlockchainReportRegistration(Base):
     last_verified_at = Column(DateTime(timezone=True), nullable=True)
     error_message = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), default=utc_now)
+
+
+class User(Base):
+    """Stores registered cybersecurity analysts and platform operators."""
+    __tablename__ = "users"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid, index=True)
+    full_name = Column(String(100), nullable=False)
+    email = Column(String(255), unique=True, nullable=False, index=True)
+    password_hash = Column(String(255), nullable=False)
+    role = Column(String(50), nullable=False, default="security_analyst")
+    account_status = Column(String(50), nullable=False, default="ACTIVE")
+    is_active = Column(Integer, nullable=False, default=1)  # 1=active, 0=disabled
+    is_verified = Column(Integer, nullable=False, default=1)
+    last_login = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utc_now)
+    updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
+
+    # Backward/forward compatible aliases
+    @property
+    def hashed_password(self) -> str:
+        return self.password_hash
+
+    @hashed_password.setter
+    def hashed_password(self, value: str):
+        self.password_hash = value
+
+    @property
+    def last_login_at(self) -> Optional[datetime]:
+        return self.last_login
+
+    @last_login_at.setter
+    def last_login_at(self, value: Optional[datetime]):
+        self.last_login = value
+
+    # Relationships
+    reset_tokens = relationship("PasswordResetToken", back_populates="user", cascade="all, delete-orphan")
+
+
+class PasswordResetToken(Base):
+    """Stores cryptographically hashed, single-use password reset tokens."""
+    __tablename__ = "password_reset_tokens"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid, index=True)
+    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    token_hash = Column(String(64), nullable=False, index=True)  # SHA-256 digest of the token
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+    is_used = Column(Integer, nullable=False, default=0)  # 0=unused, 1=used
+    created_at = Column(DateTime(timezone=True), default=utc_now)
+
+    # Relationships
+    user = relationship("User", back_populates="reset_tokens")
 
 
 

@@ -666,3 +666,61 @@ class BlockchainNetworkStatusResponse(BaseModel):
     wallet_balance_eth: Optional[float] = None
 
 
+# ====================================================
+# Authentication & User Management Schemas
+# ====================================================
+
+class UserRegisterRequest(BaseModel):
+    full_name: str = Field(..., min_length=2, max_length=100, description="Full name of the security analyst")
+    email: str = Field(..., min_length=5, max_length=255, description="Valid email address")
+    password: str = Field(..., min_length=8, max_length=128, description="Strong account password (minimum 8 characters)")
+    terms_accepted: bool = Field(True, description="Acceptance of platform terms of service")
+
+
+class UserLoginRequest(BaseModel):
+    email: str = Field(..., min_length=5, max_length=255)
+    password: str = Field(..., min_length=1, max_length=128)
+    remember_me: bool = Field(False, description="Persist session for extended duration")
+
+
+class UserResponse(BaseModel):
+    id: str
+    email: str
+    full_name: str
+    role: str
+    is_active: bool
+    is_verified: bool
+    created_at: datetime
+    last_login_at: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse
+    message: str = "Authentication successful"
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: str = Field(..., min_length=5, max_length=255)
+
+
+class ForgotPasswordResponse(BaseModel):
+    success: bool = True
+    message: str
+    dev_reset_token: Optional[str] = None
+    dev_reset_url: Optional[str] = None
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(..., min_length=10, max_length=255, description="Single-use password reset token")
+    new_password: str = Field(..., min_length=8, max_length=128, description="New strong account password")
+
+
+class AuthMessageResponse(BaseModel):
+    success: bool = True
+    message: str
+
+

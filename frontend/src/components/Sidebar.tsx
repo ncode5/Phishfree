@@ -8,17 +8,25 @@ import {
   ShieldCheck,
   Users,
   FileText,
-  SlidersHorizontal,
   Settings,
   ArrowUpRight,
   ChevronRight
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const { resolvedTheme } = useTheme();
+  const { user } = useAuth();
   const isDark = resolvedTheme === 'dark';
+
+  const getInitials = (name?: string) => {
+    if (!name) return 'AG';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+  };
 
   const workspaceNav = [
     { to: '/', label: 'Overview', icon: Home, badge: null },
@@ -30,7 +38,6 @@ export const Sidebar: React.FC = () => {
   ];
 
   const manageNav = [
-    { to: '/about', label: 'Integrations', icon: SlidersHorizontal },
     { to: '/history', label: 'Settings', icon: Settings },
   ];
 
@@ -155,12 +162,16 @@ export const Sidebar: React.FC = () => {
 
         {/* User Profile */}
         <div className="flex items-center gap-2.5 px-1 pt-1">
-          <div className="w-8 h-8 rounded-full bg-emerald-800 dark:bg-[#00D29E] text-white dark:text-slate-950 font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
-            AG
+          <div className="w-8 h-8 rounded-full bg-blue-600 dark:bg-yellow-400 text-white dark:text-slate-950 font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
+            {getInitials(user?.full_name)}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-xs font-bold text-slate-950 dark:text-white truncate">Ankur Giri</div>
-            <div className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 truncate">Security analyst</div>
+            <div className="text-xs font-bold text-slate-950 dark:text-white truncate">
+              {user?.full_name || 'Ankur Giri'}
+            </div>
+            <div className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 truncate">
+              {user?.role === 'admin' ? 'Platform Admin' : 'Security Analyst'}
+            </div>
           </div>
         </div>
       </div>

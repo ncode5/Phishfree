@@ -12,8 +12,11 @@ from app.services.threat_correlation import ThreatCorrelationService
 from app.services.website_security_assessment import WebsiteSecurityAssessmentService
 from app.services.blockchain_service import BlockchainService
 from app.services.report_verification_service import ReportVerificationService
+from app.api.auth import router as auth_router
 
 router = APIRouter(tags=["Security Analysis"])
+router.include_router(auth_router)
+
 analysis_service = AnalysisService()
 message_analyzer = MessageAnalyzer(analysis_service)
 correlation_service = ThreatCorrelationService()

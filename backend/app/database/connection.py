@@ -78,6 +78,18 @@ def init_db():
                     conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN details JSON"))
                     conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN created_at TIMESTAMP"))
                     conn.commit()
+
+                # Non-destructive migrations for users table
+                user_res = conn.execute(text("PRAGMA table_info(users)")).fetchall()
+                existing_user_cols = {row[1] for row in user_res}
+                if existing_user_cols:
+                    if "is_active" not in existing_user_cols:
+                        conn.execute(text("ALTER TABLE users ADD COLUMN is_active INTEGER DEFAULT 1"))
+                    if "is_verified" not in existing_user_cols:
+                        conn.execute(text("ALTER TABLE users ADD COLUMN is_verified INTEGER DEFAULT 1"))
+                    if "account_status" not in existing_user_cols:
+                        conn.execute(text("ALTER TABLE users ADD COLUMN account_status TEXT DEFAULT 'ACTIVE'"))
+                    conn.commit()
             elif engine.dialect.name == "postgresql":
                 # Ensure columns exist on PostgreSQL
                 conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS normalized_value TEXT;"))
@@ -86,9 +98,32 @@ def init_db():
                 conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS risk_score REAL DEFAULT 0.0;"))
                 conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS details JSONB;"))
                 conn.execute(text("ALTER TABLE threat_indicators ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP;"))
+                conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS is_active INTEGER DEFAULT 1;"))
+                conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS is_verified INTEGER DEFAULT 1;"))
+                conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS account_status TEXT DEFAULT 'ACTIVE';"))
                 conn.commit()
 
         print("Database schema successfully verified/initialized.")
+
+        # Seed default demonstration security analyst if user repository is empty
+        try:
+            with SessionLocal() as db:
+                analyst = db.query(models.User).filter(models.User.email == "analyst@phishfree.io").first()
+                if not analyst:
+                    from app.services.auth_service import AuthService
+                    demo_user = models.User(
+                        email="analyst@phishfree.io",
+                        full_name="Ankur Giri",
+                        hashed_password=AuthService.hash_password("Password123!"),
+                        role="security_analyst",
+                        is_active=1,
+                        is_verified=1
+                    )
+                    db.add(demo_user)
+                    db.commit()
+                    print("Default demo analyst seeded: analyst@phishfree.io / Password123!")
+        except Exception as e:
+            print(f"Notice: User seeding check bypassed: {e}")
     except Exception as e:
         print(f"Warning: Database initialization encountered an error: {str(e)}", file=sys.stderr)
 

@@ -411,6 +411,7 @@ export interface ThreatIntelOverview {
     risk_level: string;
     score: number;
     patterns_count: number;
+    target_label?: string;
     created_at?: string;
   }[];
   top_patterns: {
@@ -584,6 +585,40 @@ export interface BlockchainReportDetails {
   last_verified_at?: string | null;
   explorer_url?: string | null;
   error_message?: string | null;
+}
+
+// ==========================================
+// Authentication & User Types
+// ==========================================
+
+export interface User {
+  id: string;
+  email: string;
+  full_name: string;
+  role: string;
+  is_active: boolean;
+  is_verified: boolean;
+  created_at: string;
+  last_login_at?: string | null;
+}
+
+export interface AuthResponse {
+  access_token: string;
+  token_type: string;
+  user: User;
+  message: string;
+}
+
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message: string;
+  dev_reset_token?: string | null;
+  dev_reset_url?: string | null;
+}
+
+export interface AuthMessageResponse {
+  success: boolean;
+  message: string;
 }
 
 

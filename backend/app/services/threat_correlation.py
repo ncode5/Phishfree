@@ -38,28 +38,99 @@ class ThreatCorrelationService:
         current_report = None
 
         if report_type.upper() == "URL":
-            if not url_report:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"URL Analysis report '{report_id}' not found.")
-            current_report = url_report
-            resolved_type = "URL"
+            if url_report:
+                current_report = url_report
+                resolved_type = "URL"
         elif report_type.upper() == "MESSAGE":
-            if not msg_report:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Message Analysis report '{report_id}' not found.")
-            current_report = msg_report
-            resolved_type = "MESSAGE"
+            if msg_report:
+                current_report = msg_report
+                resolved_type = "MESSAGE"
         else:
-            # AUTO resolution
+            # AUTO resolution: check exact ID first
             if url_report:
                 current_report = url_report
                 resolved_type = "URL"
             elif msg_report:
                 current_report = msg_report
                 resolved_type = "MESSAGE"
-            else:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"Report '{report_id}' was not found in either URL or Message repositories."
+
+        # If not matched by exact UUID, smartly resolve by domain, URL, indicator value, or message preview
+        if not current_report:
+            clean_target = report_id.strip()
+            # 1. Exact match on AnalysisReport domain or URLs
+            url_match = (
+                db.query(models.AnalysisReport)
+                .filter(
+                    (models.AnalysisReport.domain == clean_target)
+                    | (models.AnalysisReport.submitted_url == clean_target)
+                    | (models.AnalysisReport.normalized_url == clean_target)
                 )
+                .order_by(desc(models.AnalysisReport.created_at))
+                .first()
+            )
+            # 2. Substring match on domain or submitted_url
+            if not url_match:
+                url_match = (
+                    db.query(models.AnalysisReport)
+                    .filter(
+                        (models.AnalysisReport.domain.ilike(f"%{clean_target}%"))
+                        | (models.AnalysisReport.submitted_url.ilike(f"%{clean_target}%"))
+                    )
+                    .order_by(desc(models.AnalysisReport.created_at))
+                    .first()
+                )
+            if url_match:
+                current_report = url_match
+                resolved_type = "URL"
+                report_id = current_report.id
+
+        if not current_report:
+            clean_target = report_id.strip()
+            # 3. Match on ThreatIndicator value to find associated analysis report
+            ind_match = (
+                db.query(models.ThreatIndicator)
+                .filter(
+                    (models.ThreatIndicator.normalized_value == clean_target)
+                    | (models.ThreatIndicator.indicator_value == clean_target)
+                    | (models.ThreatIndicator.normalized_value.ilike(f"%{clean_target}%"))
+                    | (models.ThreatIndicator.indicator_value.ilike(f"%{clean_target}%"))
+                )
+                .first()
+            )
+            if ind_match:
+                url_match = (
+                    db.query(models.AnalysisReport)
+                    .filter(
+                        (models.AnalysisReport.domain == ind_match.indicator_value)
+                        | (models.AnalysisReport.submitted_url.ilike(f"%{ind_match.indicator_value}%"))
+                    )
+                    .order_by(desc(models.AnalysisReport.created_at))
+                    .first()
+                )
+                if url_match:
+                    current_report = url_match
+                    resolved_type = "URL"
+                    report_id = current_report.id
+
+        if not current_report:
+            clean_target = report_id.strip()
+            # 4. Message preview match
+            msg_match = (
+                db.query(models.MessageAnalysisReport)
+                .filter(models.MessageAnalysisReport.message_preview.ilike(f"%{clean_target}%"))
+                .order_by(desc(models.MessageAnalysisReport.created_at))
+                .first()
+            )
+            if msg_match:
+                current_report = msg_match
+                resolved_type = "MESSAGE"
+                report_id = current_report.id
+
+        if not current_report:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Report or entity '{report_id}' was not found. Please select an active investigation from the list below or search by domain (e.g. paypa1-security-update.com)."
+            )
 
         # 2. Extract and link indicators
         if resolved_type == "URL":
@@ -279,20 +350,45 @@ class ThreatCorrelationService:
         detected_patterns = db.query(models.ThreatCorrelation).count()
         total_correlations = db.query(models.CorrelationReport).count()
 
-        # Recent correlations
-        recent_crs = db.query(models.CorrelationReport).order_by(desc(models.CorrelationReport.created_at)).limit(5).all()
-        recent_list = [
-            {
+        # Recent correlations with human-readable target labels
+        recent_crs = db.query(models.CorrelationReport).order_by(desc(models.CorrelationReport.created_at)).limit(6).all()
+        recent_list = []
+        for cr in recent_crs:
+            label = cr.report_id[:8]
+            if cr.report_type == "URL":
+                u = db.query(models.AnalysisReport).filter(models.AnalysisReport.id == cr.report_id).first()
+                if u and (u.domain or u.submitted_url):
+                    label = u.domain or u.submitted_url
+            elif cr.report_type == "MESSAGE":
+                m = db.query(models.MessageAnalysisReport).filter(models.MessageAnalysisReport.id == cr.report_id).first()
+                if m and m.message_preview:
+                    label = m.message_preview[:28] + ("..." if len(m.message_preview) > 28 else "")
+
+            recent_list.append({
                 "id": cr.id,
                 "report_id": cr.report_id,
                 "report_type": cr.report_type,
                 "risk_level": cr.risk_level,
                 "score": cr.correlation_score,
                 "patterns_count": len(cr.patterns or []),
+                "target_label": label,
                 "created_at": cr.created_at.isoformat() if cr.created_at else None
-            }
-            for cr in recent_crs
-        ]
+            })
+
+        # Fallback if no CorrelationReports yet: populate from top AnalysisReports
+        if not recent_list:
+            top_reports = db.query(models.AnalysisReport).order_by(desc(models.AnalysisReport.created_at)).limit(6).all()
+            for tr in top_reports:
+                recent_list.append({
+                    "id": tr.id,
+                    "report_id": tr.id,
+                    "report_type": "URL",
+                    "risk_level": tr.risk_level,
+                    "score": tr.risk_score or 0.0,
+                    "patterns_count": 0,
+                    "target_label": tr.domain or tr.submitted_url or tr.id[:8],
+                    "created_at": tr.created_at.isoformat() if tr.created_at else None
+                })
 
         # Top patterns
         pattern_counts = db.query(

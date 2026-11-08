@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import {
   Folder,
   ChevronRight,
@@ -7,14 +7,47 @@ import {
   Bell,
   Sun,
   Moon,
-  Laptop
+  Laptop,
+  LogOut,
+  User as UserIcon,
+  ShieldCheck,
+  ChevronDown
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 export const TopHeader: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { theme, resolvedTheme, setTheme } = useTheme();
+  const { user, logout } = useAuth();
   const [currentUtc, setCurrentUtc] = useState<string>('');
+  const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close user menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    setUserMenuOpen(false);
+    await logout();
+    navigate('/login', { replace: true });
+  };
+
+  const getInitials = (name?: string) => {
+    if (!name) return 'AG';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+  };
 
   useEffect(() => {
     const updateTime = () => {
@@ -135,12 +168,74 @@ export const TopHeader: React.FC = () => {
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 absolute top-2 right-2 ring-2 ring-white dark:ring-[#070C18]" />
         </div>
 
-        {/* Top Header User Avatar */}
-        <div 
-          className="w-7 h-7 rounded-full bg-emerald-800 dark:bg-[#00D29E] text-white dark:text-slate-950 font-bold text-xs flex items-center justify-center shrink-0 shadow-sm"
-          title="Ankur Giri (Security Analyst)"
-        >
-          AG
+        {/* Top Header User Profile & Dropdown */}
+        <div className="relative" ref={menuRef}>
+          <button
+            type="button"
+            onClick={() => setUserMenuOpen(!userMenuOpen)}
+            className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-yellow-400/40"
+            aria-label="User Account Menu"
+            aria-expanded={userMenuOpen}
+          >
+            <div 
+              className="w-8 h-8 rounded-full bg-blue-600 dark:bg-yellow-400 text-white dark:text-slate-950 font-bold text-xs flex items-center justify-center shrink-0 shadow-sm"
+              title={user?.full_name || 'Ankur Giri'}
+            >
+              {getInitials(user?.full_name)}
+            </div>
+            <ChevronDown className="w-3 h-3 text-slate-500 dark:text-slate-400 hidden sm:block" />
+          </button>
+
+          {/* User Dropdown Menu */}
+          {userMenuOpen && (
+            <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-[#0D1629] border border-slate-200 dark:border-[#1A2844] shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+              {/* User Identity Header */}
+              <div className="px-4 py-3 border-b border-slate-100 dark:border-[#1A2844]">
+                <div className="text-xs font-bold text-slate-950 dark:text-white truncate">
+                  {user?.full_name || 'Ankur Giri'}
+                </div>
+                <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 truncate">
+                  {user?.email || 'analyst@phishfree.io'}
+                </div>
+                <div className="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 dark:bg-yellow-400/10 border border-blue-200 dark:border-yellow-400/20 text-blue-700 dark:text-yellow-400 text-[10px] font-bold uppercase tracking-wider">
+                  <ShieldCheck className="w-3 h-3" />
+                  <span>{user?.role === 'admin' ? 'Administrator' : 'Security Analyst'}</span>
+                </div>
+              </div>
+
+              {/* Navigation Actions */}
+              <div className="py-1">
+                <Link
+                  to="/history"
+                  onClick={() => setUserMenuOpen(false)}
+                  className="w-full px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.04] flex items-center gap-2.5 transition-colors"
+                >
+                  <UserIcon className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Investigation History & Activity</span>
+                </Link>
+                <Link
+                  to="/about"
+                  onClick={() => setUserMenuOpen(false)}
+                  className="w-full px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.04] flex items-center gap-2.5 transition-colors"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Architecture & Methodology</span>
+                </Link>
+              </div>
+
+              {/* Sign Out Action */}
+              <div className="border-t border-slate-100 dark:border-[#1A2844] pt-1">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full px-4 py-2.5 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2.5 transition-colors text-left"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Sign Out of Platform</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

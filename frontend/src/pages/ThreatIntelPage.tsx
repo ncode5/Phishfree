@@ -50,11 +50,18 @@ export const ThreatIntelPage: React.FC = () => {
   const [expandingNeighborhood, setExpandingNeighborhood] = useState(false);
 
   // Load platform-wide overview metrics
-  const fetchOverview = async () => {
+  const fetchOverview = async (autoSelectDefault: boolean = true) => {
     try {
       setOverviewLoading(true);
       const data = await apiService.getThreatIntelOverview();
       setOverview(data);
+
+      // Auto-load top correlated investigation if none is active
+      if (autoSelectDefault && !initialReportId && data.recent_correlations && data.recent_correlations.length > 0) {
+        const top = data.recent_correlations[0];
+        setReportIdInput(top.target_label || top.report_id);
+        handleCorrelate(top.report_id);
+      }
     } catch (err: any) {
       console.error('Failed to load overview metrics', err);
     } finally {
@@ -63,13 +70,13 @@ export const ThreatIntelPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchOverview();
+    fetchOverview(!initialReportId);
   }, []);
 
   // Trigger correlation query
   const handleCorrelate = async (targetId: string) => {
     if (!targetId || !targetId.trim()) {
-      setError('Please provide a valid Report ID.');
+      setError('Please provide a domain, URL, or report ID to investigate.');
       return;
     }
     setLoading(true);
@@ -79,10 +86,13 @@ export const ThreatIntelPage: React.FC = () => {
     try {
       const data = await apiService.correlateReport(targetId.trim(), 'AUTO');
       setCorrelation(data);
-      setSearchParams({ reportId: targetId.trim() });
+      setSearchParams({ reportId: data.report_id });
     } catch (err: any) {
       console.error('Correlation error', err);
-      setError(err?.response?.data?.detail || 'Unable to correlate report. Ensure report ID is valid.');
+      setError(
+        err?.response?.data?.detail ||
+        'Unable to correlate investigation. Please select one of the active threat investigations below or search by domain (e.g. paypa1-security-update.com).'
+      );
     } finally {
       setLoading(false);
     }
@@ -187,8 +197,8 @@ export const ThreatIntelPage: React.FC = () => {
       {/* Page Title & Subtitle */}
       <div className="border-b border-slate-300 dark:border-[#1A2844] pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-[#00D29E]/20 text-emerald-950 dark:text-[#00E5A3] border border-emerald-300 dark:border-[#00D29E]/40 mb-3">
-            <Network className="w-3.5 h-3.5 text-emerald-800 dark:text-[#00E5A3]" /> Module 4: Intelligent Threat Correlation
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-50 dark:bg-yellow-400/10 text-blue-700 dark:text-yellow-400 border border-blue-200 dark:border-yellow-400/30 mb-3">
+            <Network className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> Module 4: Intelligent Threat Correlation
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-white flex items-center gap-3">
             Threat Intelligence Graph & Campaign Correlation
@@ -198,10 +208,10 @@ export const ThreatIntelPage: React.FC = () => {
           </p>
         </div>
         <button
-          onClick={() => { fetchOverview(); if (correlation) handleCorrelate(correlation.report_id); }}
+          onClick={() => { fetchOverview(false); if (correlation) handleCorrelate(correlation.report_id); }}
           className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0D1629] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-200 rounded-xl text-sm font-bold border border-slate-300 dark:border-[#1A2844] shadow-sm transition"
         >
-          <RefreshCw className="w-4 h-4 text-emerald-800 dark:text-[#00E5A3]" /> Refresh Telemetry
+          <RefreshCw className="w-4 h-4 text-blue-600 dark:text-yellow-400" /> Refresh Telemetry
         </button>
       </div>
 
@@ -211,7 +221,7 @@ export const ThreatIntelPage: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <div className="phish-card p-4">
               <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Database className="w-3.5 h-3.5 text-indigo-700 dark:text-indigo-400" /> Indicators
+                <Database className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> Indicators
               </div>
               <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.total_indicators}</div>
               <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-medium">Monitored entities</div>
@@ -219,7 +229,7 @@ export const ThreatIntelPage: React.FC = () => {
 
             <div className="phish-card p-4">
               <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Globe className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" /> Domains
+                <Globe className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> Domains
               </div>
               <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.unique_domains}</div>
               <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-medium">Unique root hosts</div>
@@ -227,7 +237,7 @@ export const ThreatIntelPage: React.FC = () => {
 
             <div className="phish-card p-4">
               <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Server className="w-3.5 h-3.5 text-purple-700 dark:text-purple-400" /> IP Subnets
+                <Server className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> IP Subnets
               </div>
               <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.unique_ips}</div>
               <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-medium">Hosting IPs tracked</div>
@@ -235,26 +245,26 @@ export const ThreatIntelPage: React.FC = () => {
 
             <div className="phish-card p-4">
               <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Lock className="w-3.5 h-3.5 text-emerald-800 dark:text-emerald-400" /> Certificates
+                <Lock className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> Certificates
               </div>
               <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.unique_certificates}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">X.509 fingerprints</div>
+              <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-medium">X.509 fingerprints</div>
             </div>
 
             <div className="phish-card p-4">
-              <div className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Share2 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" /> Relationships
+              <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <Share2 className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> Relationships
               </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{overview.suspicious_relationships}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Graph connections</div>
+              <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.suspicious_relationships}</div>
+              <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-medium">Graph connections</div>
             </div>
 
             <div className="phish-card p-4">
-              <div className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-                <Zap className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" /> Patterns
+              <div className="text-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <Zap className="w-3.5 h-3.5 text-blue-600 dark:text-yellow-400" /> Patterns
               </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{overview.detected_threat_patterns}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Campaign rules matched</div>
+              <div className="text-2xl font-extrabold text-slate-950 dark:text-white font-mono">{overview.detected_threat_patterns}</div>
+              <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-medium">Campaign rules matched</div>
             </div>
           </div>
         )}
@@ -262,10 +272,10 @@ export const ThreatIntelPage: React.FC = () => {
         {/* Target Search / Selection Box */}
         <div className="phish-card p-6">
           <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-            <Search className="w-5 h-5 text-emerald-700 dark:text-emerald-400" /> Investigate & Correlate Report
+            <Search className="w-5 h-5 text-blue-600 dark:text-yellow-400" /> Investigate Threat Campaign
           </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-            Enter a Report ID from any URL scan (Module 1/2) or Scam Message scan (Module 3) to construct its real-time correlation graph.
+          <p className="text-sm text-slate-700 dark:text-slate-300 mb-4 font-medium">
+            Search any domain, URL, indicator or report ID to construct its real-time multi-vector threat topology graph.
           </p>
 
           <form
@@ -274,15 +284,15 @@ export const ThreatIntelPage: React.FC = () => {
           >
             <input
               type="text"
-              placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000"
+              placeholder="Enter domain, URL, or report ID (e.g. paypa1-security-update.com)"
               value={reportIdInput}
               onChange={(e) => setReportIdInput(e.target.value)}
-              className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 font-mono focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
+              className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 font-mono focus:outline-none focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-yellow-400/50 focus:border-blue-500 dark:focus:border-yellow-400 transition"
             />
             <button
               type="submit"
               disabled={loading || !reportIdInput.trim()}
-              className="px-6 py-2.5 bg-[#047857] hover:bg-[#065f46] disabled:opacity-50 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition shadow-sm"
+              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-yellow-400 dark:hover:bg-yellow-500 text-white dark:text-slate-950 disabled:opacity-50 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition shadow-sm"
             >
               {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Network className="w-4 h-4" />}
               {loading ? 'Correlating...' : 'Analyze Correlation'}
@@ -292,35 +302,69 @@ export const ThreatIntelPage: React.FC = () => {
           {/* Quick select from recent correlations */}
           {overview?.recent_correlations && overview.recent_correlations.length > 0 && (
             <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-bold mr-2 uppercase tracking-wider">Recent Correlations:</span>
+              <span className="text-xs text-slate-800 dark:text-slate-300 font-bold mr-2 uppercase tracking-wider">Active Investigations:</span>
               <div className="inline-flex flex-wrap gap-2 mt-2">
-                {overview.recent_correlations.map((rc) => (
-                  <button
-                    key={rc.id}
-                    onClick={() => { setReportIdInput(rc.report_id); handleCorrelate(rc.report_id); }}
-                    className="text-xs px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 flex items-center gap-1.5 transition font-semibold"
-                  >
-                    <span className="font-mono">{rc.report_id.slice(0, 8)}...</span>
-                    <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
-                      rc.risk_level === 'CONFIRMED_MALICIOUS' ? 'bg-rose-50 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300' :
-                      rc.risk_level === 'HIGH_RISK' ? 'bg-orange-50 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300' :
-                      rc.risk_level === 'SUSPICIOUS' ? 'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' : 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300'
-                    }`}>
-                      {rc.risk_level}
-                    </span>
-                  </button>
-                ))}
+                {overview.recent_correlations.map((rc) => {
+                  const isSelected = correlation?.report_id === rc.report_id;
+                  const label = rc.target_label || `${rc.report_id.slice(0, 8)}...`;
+                  return (
+                    <button
+                      key={rc.id}
+                      onClick={() => {
+                        setReportIdInput(label);
+                        handleCorrelate(rc.report_id);
+                      }}
+                      className={`text-xs px-3 py-1.5 rounded-lg border flex items-center gap-2 transition font-semibold ${
+                        isSelected
+                          ? 'bg-blue-50 dark:bg-yellow-400/15 border-blue-400 dark:border-yellow-400 text-blue-900 dark:text-yellow-300 shadow-sm'
+                          : 'bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800'
+                      }`}
+                    >
+                      <span className="font-mono">{label}</span>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                        rc.risk_level === 'CONFIRMED_MALICIOUS' ? 'bg-rose-100 text-rose-900 dark:bg-rose-950/80 dark:text-rose-300' :
+                        rc.risk_level === 'HIGH_RISK' ? 'bg-orange-100 text-orange-900 dark:bg-orange-950/80 dark:text-orange-300' :
+                        rc.risk_level === 'SUSPICIOUS' ? 'bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-300' :
+                        'bg-emerald-100 text-emerald-900 dark:bg-emerald-950/80 dark:text-emerald-300'
+                      }`}>
+                        {rc.risk_level.replace('_', ' ')}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
 
           {error && (
-            <div className="mt-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-sm flex items-center gap-2">
+            <div className="mt-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 text-sm flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
         </div>
+
+        {/* Loading state */}
+        {loading && !correlation && (
+          <div className="phish-card p-12 text-center flex flex-col items-center justify-center">
+            <RefreshCw className="w-8 h-8 animate-spin text-blue-600 dark:text-yellow-400 mb-3" />
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Correlating Multi-Vector Telemetry...</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-md">
+              Traversing DNS infrastructure, TLS certificates, and message patterns to map threat relationships.
+            </p>
+          </div>
+        )}
+
+        {/* Ready / Waiting for selection state */}
+        {!correlation && !loading && (
+          <div className="phish-card p-12 text-center flex flex-col items-center justify-center">
+            <Network className="w-12 h-12 text-slate-400 dark:text-slate-600 mb-3" />
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Ready for Investigation</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-md">
+              Select one of the active threat investigations above or search any domain to generate its real-time correlation graph.
+            </p>
+          </div>
+        )}
 
         {/* Active Correlation Analysis Dossier */}
         {correlation && (
@@ -476,7 +520,7 @@ export const ThreatIntelPage: React.FC = () => {
                           <circle
                             r="20"
                             fill={isDark ? '#0f172a' : '#ffffff'}
-                            stroke={isSelected ? (isDark ? '#f8fafc' : '#047857') : visuals.color}
+                            stroke={isSelected ? (isDark ? '#FACC15' : '#2563EB') : visuals.color}
                             strokeWidth={isSelected ? 3 : 2}
                             className="transition-colors duration-200 group-hover:scale-110 shadow-sm"
                           />
@@ -517,7 +561,7 @@ export const ThreatIntelPage: React.FC = () => {
               <div className="phish-card p-5 flex flex-col justify-between">
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white text-base pb-3 border-b border-slate-200 dark:border-slate-800 mb-4 flex items-center gap-2">
-                    <Info className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+                    <Info className="w-4 h-4 text-blue-600 dark:text-yellow-400" />
                     Indicator Inspector
                   </h3>
 
@@ -525,7 +569,7 @@ export const ThreatIntelPage: React.FC = () => {
                     <div className="space-y-4">
                       <div>
                         <div className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">Entity Type</div>
-                        <div className="text-sm font-semibold text-emerald-800 dark:text-emerald-300 mt-0.5">{selectedNode.indicator_type}</div>
+                        <div className="text-sm font-semibold text-blue-700 dark:text-yellow-400 mt-0.5">{selectedNode.indicator_type}</div>
                       </div>
 
                       <div>
@@ -567,7 +611,7 @@ export const ThreatIntelPage: React.FC = () => {
                       <button
                         onClick={() => handleExpandNode(selectedNode.id)}
                         disabled={expandingNeighborhood}
-                        className="w-full mt-2 py-2 px-3 bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/80 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition"
+                        className="w-full mt-2 py-2 px-3 bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200 dark:bg-yellow-400/10 dark:hover:bg-yellow-400/20 dark:text-yellow-400 dark:border-yellow-400/30 border rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition"
                       >
                         {expandingNeighborhood ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5" />}
                         {expandingNeighborhood ? 'Expanding...' : 'Expand 2-Hop Neighborhood'}
@@ -640,7 +684,7 @@ export const ThreatIntelPage: React.FC = () => {
               {/* Grounded Narrative */}
               <div className="phish-card p-6">
                 <h3 className="font-bold text-slate-900 dark:text-white text-base mb-4 flex items-center gap-2">
-                  <Cpu className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+                  <Cpu className="w-5 h-5 text-blue-600 dark:text-yellow-400" />
                   Evidence-Grounded AI Explanation
                 </h3>
 
@@ -652,7 +696,7 @@ export const ThreatIntelPage: React.FC = () => {
                   <div className="text-xs font-bold text-slate-700 dark:text-slate-400 uppercase tracking-wider">Reasoning Factors</div>
                   {correlation.explanation.reasoning.map((r, i) => (
                     <div key={i} className="text-xs text-slate-700 dark:text-slate-300 flex items-start gap-2 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800">
-                      <span className="text-emerald-700 dark:text-emerald-400 font-bold">•</span>
+                      <span className="text-blue-600 dark:text-yellow-400 font-bold">•</span>
                       <span>{r}</span>
                     </div>
                   ))}
@@ -662,7 +706,7 @@ export const ThreatIntelPage: React.FC = () => {
                   <div className="space-y-1.5 pt-3 border-t border-slate-200 dark:border-slate-800">
                     <div className="text-xs font-bold text-slate-700 dark:text-slate-400 uppercase tracking-wider">Tactical Recommendations</div>
                     {correlation.explanation.recommendations.map((rec, i) => (
-                      <div key={i} className="text-xs text-emerald-800 dark:text-emerald-400 flex items-center gap-2 font-medium">
+                      <div key={i} className="text-xs text-blue-800 dark:text-yellow-400 flex items-center gap-2 font-medium">
                         <CheckCircle className="w-3.5 h-3.5 flex-shrink-0 text-emerald-600 dark:text-emerald-400" />
                         <span>{rec}</span>
                       </div>
@@ -674,7 +718,7 @@ export const ThreatIntelPage: React.FC = () => {
               {/* Evidence Transparency */}
               <div className="phish-card p-6">
                 <h3 className="font-bold text-slate-900 dark:text-white text-base mb-4 flex items-center gap-2">
-                  <Layers className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+                  <Layers className="w-5 h-5 text-blue-600 dark:text-yellow-400" />
                   Forensic Evidence Transparency
                 </h3>
 
