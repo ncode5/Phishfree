@@ -26,14 +26,52 @@ import {
   Area,
   XAxis,
   YAxis,
-  Tooltip,
-  PieChart,
-  Pie,
-  Cell
+  Tooltip
 } from 'recharts';
 import { api } from '../services/api';
 import { DashboardStats } from '../types';
 import { useTheme } from '../context/ThemeContext';
+
+// Mathematical SVG Arc Helpers for rock-solid zero-dependency Donut Chart
+function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
+  const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+  return {
+    x: centerX + radius * Math.cos(angleInRadians),
+    y: centerY + radius * Math.sin(angleInRadians),
+  };
+}
+
+function describeDonutSlice(
+  cx: number,
+  cy: number,
+  innerR: number,
+  outerR: number,
+  startAngle: number,
+  endAngle: number,
+  padAngle = 1.8
+) {
+  const effectiveStart = startAngle + padAngle;
+  const effectiveEnd = endAngle - padAngle;
+
+  let sweepAngle = effectiveEnd - effectiveStart;
+  while (sweepAngle < 0) sweepAngle += 360;
+  while (sweepAngle >= 360) sweepAngle -= 360;
+
+  const startOuter = polarToCartesian(cx, cy, outerR, effectiveStart);
+  const endOuter = polarToCartesian(cx, cy, outerR, effectiveEnd);
+  const startInner = polarToCartesian(cx, cy, innerR, effectiveEnd);
+  const endInner = polarToCartesian(cx, cy, innerR, effectiveStart);
+
+  const largeArcFlag = sweepAngle > 180 ? 1 : 0;
+
+  return [
+    `M ${startOuter.x.toFixed(2)} ${startOuter.y.toFixed(2)}`,
+    `A ${outerR} ${outerR} 0 ${largeArcFlag} 1 ${endOuter.x.toFixed(2)} ${endOuter.y.toFixed(2)}`,
+    `L ${startInner.x.toFixed(2)} ${startInner.y.toFixed(2)}`,
+    `A ${innerR} ${innerR} 0 ${largeArcFlag} 0 ${endInner.x.toFixed(2)} ${endInner.y.toFixed(2)}`,
+    'Z',
+  ].join(' ');
+}
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -44,6 +82,7 @@ export const DashboardPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [timeFilter, setTimeFilter] = useState<'7D' | '30D' | '90D'>('7D');
   const [showHelper, setShowHelper] = useState<boolean>(false);
+  const [hoveredThreat, setHoveredThreat] = useState<string | null>(null);
 
   // Selected investigation row for the live snapshot preview
   const [selectedSnapshot, setSelectedSnapshot] = useState({
@@ -93,13 +132,47 @@ export const DashboardPage: React.FC = () => {
     { day: '07 Nov', investigations: 232, highRisk: 48 },
   ];
 
-  // Threat Distribution Donut Data
-  const donutData = [
-    { name: 'Safe Websites', value: 20, color: '#10B981' },
-    { name: 'Phishing Websites', value: 18, color: '#3B82F6' },
-    { name: 'Suspicious Websites', value: 14, color: '#F59E0B' },
-    { name: 'Malicious URLs', value: 48, color: '#EF4444' },
+  // Threat Distribution categories matching exact dashboard design reference
+  const threatCategories = [
+    {
+      id: 'safe',
+      name: 'Safe Websites',
+      percent: 20,
+      count: '2,000',
+      color: '#00D29E',
+      startAngle: 38,
+      endAngle: 110,
+    },
+    {
+      id: 'phishing',
+      name: 'Phishing Websites',
+      percent: 18,
+      count: '1,800',
+      color: '#3B82F6',
+      startAngle: 333.2,
+      endAngle: 398,
+    },
+    {
+      id: 'suspicious',
+      name: 'Suspicious Websites',
+      percent: 14,
+      count: '1,400',
+      color: '#F59E0B',
+      startAngle: 282.8,
+      endAngle: 333.2,
+    },
+    {
+      id: 'malicious',
+      name: 'Malicious URLs',
+      percent: 48,
+      count: '4,800',
+      color: '#EF4444',
+      startAngle: 110,
+      endAngle: 282.8,
+    },
   ];
+
+  const activeThreat = threatCategories.find((c) => c.id === hoveredThreat);
 
   // Recent investigation sample rows
   const recentRows = [
@@ -736,70 +809,155 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* 6. Row 4: Threat Distribution Donut Section */}
-      <div className="phish-card p-5">
-        <div className="flex items-center justify-between mb-2">
+      <div className="phish-card p-5 sm:p-6 transition-all duration-200">
+        <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="text-base font-extrabold text-slate-950 dark:text-white">Threat Distribution</h2>
-            <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">Percentage breakdown of scanned websites and URLs</p>
+            <h2 className="text-base font-bold text-slate-950 dark:text-white tracking-tight">
+              Threat Distribution
+            </h2>
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-0.5">
+              Percentage breakdown of scanned websites and URLs
+            </p>
           </div>
-          <span className="text-[11px] font-mono font-bold text-slate-800 dark:text-slate-300 bg-slate-100 dark:bg-[#070C18] px-2.5 py-1 rounded-md border border-slate-300 dark:border-[#1A2844]">
+          <span className="text-[11px] font-mono font-medium text-slate-700 dark:text-slate-300 bg-slate-100/90 dark:bg-[#070C18] px-2.5 py-1 rounded-md border border-slate-300 dark:border-[#1A2844]">
             Example data
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 pt-2">
-          {/* Donut Chart with Centered Total */}
-          <div className="h-52 relative flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={donutData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={85}
-                  paddingAngle={3}
-                  dataKey="value"
-                >
-                  {donutData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(val: any) => [`${val}%`, 'Share']}
-                  contentStyle={{
-                    backgroundColor: isDark ? '#0D1629' : '#FFFFFF',
-                    borderColor: isDark ? '#1A2844' : '#CBD5E1',
-                    color: isDark ? '#FFFFFF' : '#0F172A',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    fontWeight: 600
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-            {/* Center label */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-[10px] font-bold text-slate-700 dark:text-slate-400 uppercase tracking-wider">
-                Total scans
-              </span>
-              <span className="text-xl font-extrabold font-mono text-slate-950 dark:text-white">
-                10,000
-              </span>
+        <div className="grid grid-cols-1 md:grid-cols-12 items-center gap-6 lg:gap-8 pt-3">
+          {/* Donut Chart with Centered Metric - 100% Zero-Collapse SVG Precision */}
+          <div className="md:col-span-5 flex items-center justify-center py-2">
+            <div className="relative flex items-center justify-center">
+              <svg
+                viewBox="0 0 240 240"
+                className="w-52 h-52 sm:w-56 sm:h-56 select-none"
+                style={{ overflow: 'visible' }}
+              >
+                <g>
+                  {threatCategories.map((slice) => {
+                    const isHovered = hoveredThreat === slice.id;
+                    const isMuted = hoveredThreat !== null && !isHovered;
+                    const d = describeDonutSlice(
+                      120,
+                      120,
+                      68,
+                      95,
+                      slice.startAngle,
+                      slice.endAngle,
+                      1.8
+                    );
+                    return (
+                      <path
+                        key={slice.id}
+                        d={d}
+                        fill={slice.color}
+                        stroke={isDark ? '#0D1629' : '#FFFFFF'}
+                        strokeWidth={3}
+                        strokeLinejoin="round"
+                        className="cursor-pointer transition-all duration-200"
+                        style={{
+                          opacity: isMuted ? 0.45 : 1,
+                          transform: isHovered ? 'scale(1.035)' : 'scale(1)',
+                          transformOrigin: '120px 120px',
+                          filter: isHovered ? `drop-shadow(0 0 8px ${slice.color}90)` : 'none',
+                        }}
+                        onMouseEnter={() => setHoveredThreat(slice.id)}
+                        onMouseLeave={() => setHoveredThreat(null)}
+                      />
+                    );
+                  })}
+                </g>
+
+                {/* Mathematical Center Metric - Guaranteed Center in all viewports */}
+                {activeThreat ? (
+                  <g className="transition-all duration-200">
+                    <text
+                      x="120"
+                      y="108"
+                      textAnchor="middle"
+                      className="text-[10px] font-bold tracking-wider fill-slate-600 dark:fill-[#94A3B8] uppercase"
+                    >
+                      {activeThreat.name}
+                    </text>
+                    <text
+                      x="120"
+                      y="132"
+                      textAnchor="middle"
+                      className="text-xl font-extrabold font-mono fill-slate-950 dark:fill-white"
+                    >
+                      {activeThreat.percent}%
+                    </text>
+                    <text
+                      x="120"
+                      y="147"
+                      textAnchor="middle"
+                      className="text-[10px] font-bold font-mono fill-slate-700 dark:fill-slate-300"
+                    >
+                      {activeThreat.count}
+                    </text>
+                  </g>
+                ) : (
+                  <g className="transition-all duration-200">
+                    <text
+                      x="120"
+                      y="112"
+                      textAnchor="middle"
+                      className="text-[10px] font-bold tracking-wider fill-slate-600 dark:fill-[#8FA2B7] uppercase"
+                    >
+                      TOTAL SCANS
+                    </text>
+                    <text
+                      x="120"
+                      y="137"
+                      textAnchor="middle"
+                      className="text-2xl font-extrabold font-mono fill-slate-950 dark:fill-white"
+                    >
+                      10,000
+                    </text>
+                  </g>
+                )}
+              </svg>
             </div>
           </div>
 
-          {/* Legend Table */}
-          <div className="space-y-3 text-xs max-w-sm">
-            {donutData.map((item) => (
-              <div key={item.name} className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-3 h-3 rounded" style={{ backgroundColor: item.color }} />
-                  <span className="font-bold text-slate-800 dark:text-slate-200">{item.name}</span>
-                </div>
-                <span className="font-extrabold font-mono text-slate-950 dark:text-white">{item.value}%</span>
-              </div>
-            ))}
+          {/* Legend Rows - Precision Spacing matching Screenshot */}
+          <div className="md:col-span-7 flex justify-center md:justify-start">
+            <div className="flex flex-col justify-center space-y-3.5 w-full max-w-md">
+              {threatCategories.map((item) => {
+                const isHovered = hoveredThreat === item.id;
+                const isMuted = hoveredThreat !== null && !isHovered;
+                return (
+                  <div
+                    key={item.id}
+                    className={`flex items-center justify-between py-2 px-3 -mx-3 rounded-lg cursor-pointer transition-all duration-150 ${
+                      isHovered
+                        ? 'bg-slate-100 dark:bg-white/[0.06]'
+                        : 'hover:bg-slate-50 dark:hover:bg-white/[0.03]'
+                    }`}
+                    style={{ opacity: isMuted ? 0.5 : 1 }}
+                    onMouseEnter={() => setHoveredThreat(item.id)}
+                    onMouseLeave={() => setHoveredThreat(null)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="w-3.5 h-3.5 rounded-[4px] shadow-sm transition-transform duration-150"
+                        style={{
+                          backgroundColor: item.color,
+                          transform: isHovered ? 'scale(1.2)' : 'scale(1)',
+                          boxShadow: isHovered ? `0 0 10px ${item.color}80` : 'none',
+                        }}
+                      />
+                      <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                        {item.name}
+                      </span>
+                    </div>
+                    <span className="text-sm font-bold font-mono text-slate-950 dark:text-white">
+                      {item.percent}%
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
