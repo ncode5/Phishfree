@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 from urllib.parse import parse_qsl, urlencode
 
 # When deploying with backend as root directory in Vercel
@@ -23,6 +24,34 @@ class VercelPathRewriteASGIMiddleware:
 
     async def __call__(self, scope, receive, send):
         if scope.get("type") == "http":
+            # Diagnostic inspector: probe live ASGI environment
+            if b"debug=1" in scope.get("query_string", b""):
+                headers_dict = {
+                    k.decode("latin-1", "replace"): v.decode("latin-1", "replace")
+                    for k, v in scope.get("headers", [])
+                }
+                body = json.dumps({
+                    "original_path_in_scope": scope.get("path"),
+                    "raw_path": scope.get("raw_path", b"").decode("latin-1", "replace"),
+                    "query_string": scope.get("query_string", b"").decode("latin-1", "replace"),
+                    "headers": headers_dict,
+                    "root_path": scope.get("root_path")
+                }, indent=2).encode("utf-8")
+                await send({
+                    "type": "http.response.start",
+                    "status": 200,
+                    "headers": [
+                        (b"content-type", b"application/json"),
+                        (b"content-length", str(len(body)).encode())
+                    ]
+                })
+                await send({
+                    "type": "http.response.body",
+                    "body": body,
+                    "more_body": False
+                })
+                return
+
             current_path = scope.get("path", "")
             if current_path in ("/api/index.py", "/api/index", "/api", ""):
                 query_string = scope.get("query_string", b"").decode("latin-1")
