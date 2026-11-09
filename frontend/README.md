@@ -1,43 +1,76 @@
-# Digital Trust Intelligence - Frontend
+# PhishFree — Frontend Application
 
-Modern cybersecurity dashboard for AI-Powered Web Threat Detection & Digital Trust Intelligence.
+Modern, responsive cybersecurity intelligence dashboard for AI-powered web threat detection, digital trust analysis, social engineering defense, and decentralized blockchain verification.
+
+## Live Production Deployment
+- **Live Application:** [https://phishfree-rust.vercel.app](https://phishfree-rust.vercel.app)
+- **Live Backend API Target:** [https://phishfree-api.vercel.app/api/v1](https://phishfree-api.vercel.app/api/v1)
+
+---
 
 ## Technology Stack
-- **React 18** with **TypeScript**
-- **Vite** build tooling
-- **Tailwind CSS** with dark-mode cybersecurity SaaS aesthetic
-- **React Router v6** for client-side routing
-- **Recharts** for risk distribution and telemetry metrics
-- **Lucide React** for icons
-- **Axios** for API client communication
+- **React 18** with **TypeScript 5.5**
+- **Vite** modern ESM build tooling
+- **Tailwind CSS 3.4** with dual-theme system (Cyber Dark / Daylight High-Contrast Light)
+- **React Router v6** with protected route guards (`AuthGuard`)
+- **Recharts** for SVG risk distribution donuts and metric breakdowns
+- **Lucide React** for enterprise security iconography
+- **Axios** with automatic cookie and Bearer session management
 
-## User Experience & Pages
-1. **Security Dashboard (`/`)**: Real-time aggregate counters (Total URLs, Confirmed Malicious, High-Risk, Suspicious, Low-Risk), interactive Recharts Donut risk breakdown, preset quick-scan triggers, and recent investigations log.
-2. **URL Threat Scanner (`/scanner`)**: Cyber scanning console with multi-stage animated verification pipeline, validation indicators, preset demo targets (safe, typosquatting lookalike, IP host, Punycode, SSRF blocked), and actionable error handling.
-3. **Forensic Analysis Report (`/reports/:id`)**: Comprehensive security dossier with dedicated tabs:
-   - **Evidence Findings**: Granular security anomalies with severity badges.
-   - **Domain & Typosquatting**: Subdomain depth, Punycode, Levenshtein brand similarity.
-   - **DNS Records**: A, AAAA, MX, NS, and TXT record tables.
-   - **Redirect Chain**: Hop-by-hop HTTP status and IP tracer.
-   - **Threat Intelligence**: VirusTotal detection statistics.
-   - **TLS & Digital Trust (Module 2)**: HTTPS status, X.509 certificate metadata, validity & remaining days, SAN domain matching, cipher suite, public key size, chain trust verification, and crt.sh Certificate Transparency audit logs.
-   - **Sepolia Web3 Registry**: Deterministic SHA-256 report commitment publishing to Ethereum Sepolia Testnet.
-4. **Investigation History (`/history`)**: Filterable, searchable audit trail of previous scans with real-time classification filters and quick inspection links.
-5. **About & Architecture (`/about`)**: Architectural whitepaper detailing the convergence of AI, Cybersecurity, and Web3.
+---
 
-## Vercel Deployment
+## Responsive & Adaptive Interface
 
-### Unified Monorepo
-When deploying the repository root to Vercel, the root `vercel.json` automatically builds the frontend and sets `frontend/dist` as the output directory.
+Tested and optimized across all device categories:
+- **Small Smartphones (320px–360px)**: Compact cards, responsive gauges, wrapped tables.
+- **Standard Smartphones (375px–430px)**: Slide-out touch navigation drawer, stacked metric widgets.
+- **Tablets (600px–900px)**: Adaptive 2-column grids, collapsible sidebar.
+- **Laptops & Desktops (1024px–1920px)**: Full multi-column cockpit, persistent left sidebar.
+- **Ultrawide Displays (1920px+)**: Centered max-width containers maintaining visual balance.
 
-### Isolated Frontend Deployment
-If deploying the frontend independently:
-1. In Vercel, set the Root Directory to `frontend`.
-2. Configure environment variable:
-   ```env
-   VITE_API_BASE_URL=https://your-backend.vercel.app/api/v1
-   ```
-3. Deploy! SPA client-side routing is configured via `frontend/vercel.json`.
+### Dual-Mode Theme Toggle
+- **Dim Cybersecurity Mode**: Deep `#0d1117` dark palette accented with high-visibility `#FFD000` indicators.
+- **Light Corporate Mode**: High-contrast blue corporate cybersecurity theme engineered for daytime audits.
+
+---
+
+## Application Views & Navigation
+
+1. **User Authentication (`/login`, `/register`)**:
+   - Secure login with memory-hard Argon2id hash verification.
+   - One-click **"Fill Demo Analyst Credentials"** button (`analyst@phishfree.io` / `Password123!`).
+   - Self-registration with NIST password strength meter.
+   - Cryptographic single-use password recovery (`/forgot-password`, `/reset-password`).
+2. **Unified Command Dashboard (`/`)**:
+   - Real-time aggregate counters (Threats Blocked, Active Campaigns, Monitored Domains, Detection Accuracy).
+   - Interactive Recharts Donut risk breakdown.
+   - Instant hero fast-scanner bar.
+   - Recent investigation log with sliding Incident Snapshot Drawer.
+3. **URL Threat Scanner (`/scanner`)**:
+   - 6-stage animated forensic pipeline (Validation -> Typosquatting -> DNS -> Redirects -> Threat Intel -> AI Synthesis).
+   - Benchmark demonstration target pills (Official site, brand typosquatting, Punycode homoglyph, IP host, SSRF loopback intercept).
+4. **AI Scam Analyzer (`/scam-analyzer`)**:
+   - Social engineering heuristic engine for SMS, emails, and chat lures.
+   - Automatic PII masking (passwords, OTPs, card numbers).
+   - Entity extraction for crypto wallets (BTC, ETH, SOL), phone numbers, and pivot URLs.
+5. **Passive Website Security (`/security`)**:
+   - Passive posture audit across 9 defensive HTTP headers (HSTS, CSP, X-Frame-Options, COOP...).
+   - Privacy-preserving cookie security audit (`Secure`, `HttpOnly`, `SameSite`).
+   - Mixed active and passive content detection.
+   - `security.txt` and `robots.txt` compliance scoring with copy-ready remediation directives.
+6. **Threat Intelligence & Topology (`/threat-intel`)**:
+   - Interactive SVG relationship graph connecting URLs, Root Domains, Hosting IPs, and TLS Certificates.
+   - Dynamic 2-hop neighborhood expansion and campaign pattern clustering.
+7. **Web3 Threat Registry (`/blockchain`)**:
+   - Ethereum Sepolia testnet console with live JSON-RPC node status.
+   - Keccak-256 report fingerprinting and Etherscan transaction receipt tracking.
+   - Independent tamper-verification tool (`VERIFIED` vs `TAMPERED`).
+8. **Forensic Analysis Report Dossier (`/reports/:id`)**:
+   - Multi-tab investigative dossier (Findings, Domain, DNS, Redirect Hops, TLS Trust, Threat Feeds, Raw JSON).
+9. **Investigation History (`/history`)**:
+   - Filterable, searchable audit trail of previous investigations by risk level, domain, or timestamp.
+
+---
 
 ## Local Development Setup
 
@@ -55,7 +88,7 @@ Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
-Default contents:
+Default configuration:
 ```env
 VITE_API_BASE_URL=http://localhost:8000/api/v1
 ```
@@ -64,10 +97,10 @@ VITE_API_BASE_URL=http://localhost:8000/api/v1
 ```bash
 npm run dev
 ```
-The app will run at `http://localhost:5173`.
+The interface will open at `http://localhost:5173`.
 
 ### Production Build Verification
 ```bash
 npm run build
 ```
-Build output is generated in `frontend/dist/`.
+Build output is generated in `frontend/dist/` with zero TypeScript compiler errors.

@@ -34,6 +34,30 @@ Welcome to **PhishFree** — an AI-powered cybersecurity intelligence platform b
   - **Light Mode**: High-contrast blue corporate cybersecurity theme.
   - **Dim Mode**: Modern dark cybersecurity palette highlighted with high-visibility `#FFD000` accents.
 
+### Core Analyst Workflow Decision Tree
+
+```mermaid
+flowchart TD
+    Target["Suspicious Target<br>(URL, Domain, or Message)"] --> Choice{"Choose Tool"}
+    
+    Choice -->|"Websites & Links"| Scanner["URL Security Scanner<br>(/scanner)"]
+    Choice -->|"SMS / Emails / Chats"| Scam["Scam & Social Engineering<br>(/scam-analyzer)"]
+    Choice -->|"Configuration Audit"| Security["Website Security Posture<br>(/security)"]
+    
+    Scam --> NLP["NLP Heuristics & PII Masking<br>(Extracts Links & Wallets)"]
+    NLP -->|"Pivot Links"| Scanner
+    
+    Security --> Headers["9 Security Headers Matrix<br>(Cookies, Mixed Content, security.txt)"]
+    
+    Scanner --> Pipeline["6-Stage Forensic Pipeline<br>(DNS, Typosquatting, TLS, Redirects)"]
+    Pipeline --> Dossier["Forensic Report Dossier<br>(/reports/:id)"]
+    
+    Dossier --> Web3["Decentralized Web3 Registry<br>(/blockchain)"]
+    Dossier --> Graph["Threat Topology Graph<br>(/threat-intel)"]
+    
+    Web3 --> Sepolia["Sepolia Smart Contract<br>(Keccak-256 Tamper Verification)"]
+```
+
 ---
 
 ## 2. User Accounts & Authentication
@@ -45,9 +69,9 @@ Welcome to **PhishFree** — an AI-powered cybersecurity intelligence platform b
 4. Review the security disclosures and submit to initialize your workspace.
 
 ### Signing In (`/login`)
-- Enter your credentials or use the pre-configured sandbox analyst credentials:
+- Enter your credentials or use the pre-configured sandbox analyst credentials (or click the **"Fill Demo Analyst Credentials"** button on the login screen):
   - **Email:** `analyst@phishfree.io`
-  - **Password:** `PhishFree2026!`
+  - **Password:** `Password123!`
 - PhishFree secures authentication using **Argon2id password hashing** and stateless, cryptographic **JWT session tokens**.
 
 ### Password Reset Flow (`/forgot-password`)
@@ -222,6 +246,7 @@ Navigate to **History** (`/history`) to manage past investigations:
 **Q: What credentials can I use to test the platform right now?**  
 **A:** You can sign in with:  
 - **Email:** `analyst@phishfree.io`  
-- **Password:** `PhishFree2026!`  
-Or create your own analyst account on the registration page.
+- **Password:** `Password123!` (or click **"Fill Demo Analyst Credentials"** on `/login`)  
+- **Admin Email:** `admin@phishfree.io` (Password: `AdminPassword123!`)  
+Or create your own custom analyst account on the registration page (`/register`).
 

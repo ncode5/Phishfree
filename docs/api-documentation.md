@@ -2,9 +2,11 @@
 
 ## AI-Powered Web Threat Detection & Digital Trust Intelligence
 
-### Base URLs
-- Local Development: `http://localhost:8000/api/v1`
-- Vercel Production: `https://<your-project>.vercel.app/api/v1`
+### Base URLs & Interactive Documentation
+- **Production REST API:** `https://phishfree-api.vercel.app/api/v1`
+- **Interactive Swagger UI:** `https://phishfree-api.vercel.app/docs`
+- **Alternative ReDoc UI:** `https://phishfree-api.vercel.app/redoc`
+- **Local Development:** `http://localhost:8000/api/v1`
 
 ---
 
@@ -458,6 +460,209 @@ Returns the complete `schemas.SecurityAssessmentResponse` object including score
     }
   ]
 }
+```
+
+---
+
+### 19. Register Security Analyst Account (Module 7)
+**Endpoint:** `POST /api/v1/auth/register`  
+**Description:** Registers a new cybersecurity analyst or incident responder account with Argon2id-hashed credentials, initializes default preferences, and sets a secure `HttpOnly`, `SameSite=Lax` session cookie alongside a returned bearer access token.
+
+#### Request Payload
+```json
+{
+  "email": "analyst@enterprise-soc.io",
+  "password": "SecurePassword123!",
+  "full_name": "Jane Doe",
+  "role": "security_analyst"
+}
+```
+
+#### Successful Response (`201 Created` - `schemas.AuthResponse`)
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer",
+  "user": {
+    "id": "e4f3a2b1-5c6d-7e8f-9a0b-1c2d3e4f5a6b",
+    "email": "analyst@enterprise-soc.io",
+    "full_name": "Jane Doe",
+    "role": "security_analyst",
+    "is_active": true,
+    "is_verified": true,
+    "created_at": "2026-11-09T08:00:00Z",
+    "last_login_at": null
+  },
+  "message": "Registration successful. Welcome to PhishFree."
+}
+```
+
+---
+
+### 20. Authenticate Security Analyst Credentials (Module 7)
+**Endpoint:** `POST /api/v1/auth/login`  
+**Description:** Verifies user credentials against the stored Argon2id hash with brute-force rate-limiting and audit logging. Issues an authenticated session token.
+
+#### Request Payload
+```json
+{
+  "email": "analyst@phishfree.io",
+  "password": "Password123!",
+  "remember_me": true
+}
+```
+
+#### Successful Response (`200 OK` - `schemas.AuthResponse`)
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer",
+  "user": {
+    "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+    "email": "analyst@phishfree.io",
+    "full_name": "Demo Security Analyst",
+    "role": "security_analyst",
+    "is_active": true,
+    "is_verified": true,
+    "created_at": "2026-11-07T12:00:00Z",
+    "last_login_at": "2026-11-09T08:30:00Z"
+  },
+  "message": "Authentication successful."
+}
+```
+
+---
+
+### 21. Terminate Session and Logout (Module 7)
+**Endpoint:** `POST /api/v1/auth/logout`  
+**Description:** Clears the active `phishfree_session` HttpOnly cookie and invalidates client session state.
+
+#### Successful Response (`200 OK` - `schemas.AuthMessageResponse`)
+```json
+{
+  "success": true,
+  "message": "Session successfully terminated."
+}
+```
+
+---
+
+### 22. Retrieve Current Authenticated Profile (Module 7)
+**Endpoint:** `GET /api/v1/auth/me`  
+**Headers:** `Authorization: Bearer <access_token>` *(or via HttpOnly cookie)*  
+**Description:** Validates the active session token and returns metadata and assigned privileges for the current analyst.
+
+#### Successful Response (`200 OK` - `schemas.UserResponse`)
+```json
+{
+  "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+  "email": "analyst@phishfree.io",
+  "full_name": "Demo Security Analyst",
+  "role": "security_analyst",
+  "is_active": true,
+  "is_verified": true,
+  "created_at": "2026-11-07T12:00:00Z",
+  "last_login_at": "2026-11-09T08:30:00Z"
+}
+```
+
+---
+
+### 23. Request Single-Use Password Reset Token (Module 7)
+**Endpoint:** `POST /api/v1/auth/forgot-password`  
+**Description:** Initiates a password reset request. Generates a cryptographically random, SHA-256 hashed, single-use token with a 60-minute expiration window. Never leaks whether an account exists to prevent email enumeration.
+
+#### Request Payload
+```json
+{
+  "email": "analyst@phishfree.io"
+}
+```
+
+#### Successful Response (`200 OK` - `schemas.ForgotPasswordResponse`)
+```json
+{
+  "success": true,
+  "message": "If an account with this email exists, password reset instructions have been dispatched.",
+  "dev_reset_token": null,
+  "dev_reset_url": null
+}
+```
+
+---
+
+### 24. Complete Password Reset (Module 7)
+**Endpoint:** `POST /api/v1/auth/reset-password`  
+**Description:** Validates the single-use token against its SHA-256 hash in `password_reset_tokens`, verifies expiration, applies NIST password complexity checks, updates password hash using Argon2id, and invalidates all existing tokens.
+
+#### Request Payload
+```json
+{
+  "token": "7a3f8b1c9d2e4f5a6b0c1d2e3f4a5b6c7d8e9f0a",
+  "new_password": "NewStrongPassword456!"
+}
+```
+
+#### Successful Response (`200 OK` - `schemas.AuthMessageResponse`)
+```json
+{
+  "success": true,
+  "message": "Password has been successfully updated. You may now sign in with your new credentials."
+}
+```
+
+---
+
+### 25. Platform Administrative Overview (Module 7 - Admin Only)
+**Endpoint:** `GET /api/v1/auth/admin/status`  
+**Headers:** `Authorization: Bearer <admin_token>`  
+**Description:** Administrative telemetry endpoint returning active user metrics, verification states, and platform operating status. Requires `admin` or `superadmin` role.
+
+#### Successful Response (`200 OK`)
+```json
+{
+  "status": "operational",
+  "admin_authenticated_as": "admin@phishfree.io",
+  "role": "admin",
+  "metrics": {
+    "total_registered_users": 18,
+    "active_users": 18,
+    "platform_administrators": 2
+  }
+}
+```
+
+---
+
+### 26. List Platform Users (Module 7 - Admin Only)
+**Endpoint:** `GET /api/v1/auth/admin/users`  
+**Headers:** `Authorization: Bearer <admin_token>`  
+**Description:** Lists all registered platform accounts with role assignments and account statuses in reverse chronological order. Requires `admin` or `superadmin` role.
+
+#### Successful Response (`200 OK` - `list[schemas.UserResponse]`)
+```json
+[
+  {
+    "id": "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+    "email": "admin@phishfree.io",
+    "full_name": "SecOps Platform Administrator",
+    "role": "admin",
+    "is_active": true,
+    "is_verified": true,
+    "created_at": "2026-11-07T12:00:00Z",
+    "last_login_at": "2026-11-09T08:45:00Z"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+    "email": "analyst@phishfree.io",
+    "full_name": "Demo Security Analyst",
+    "role": "security_analyst",
+    "is_active": true,
+    "is_verified": true,
+    "created_at": "2026-11-07T12:00:00Z",
+    "last_login_at": "2026-11-09T08:30:00Z"
+  }
+]
 ```
 
 

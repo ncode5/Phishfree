@@ -5,46 +5,11 @@
 ### 1. Architectural Philosophy
 The platform is designed around the core principle of **evidence-based, explainable cybersecurity**. Rather than providing an opaque binary classification (`SAFE` vs `MALICIOUS`), the system operates as a transparent forensic pipeline. Each investigation collects raw technical telemetry, evaluates it against rule-based indicators with configurable weights, and explains the findings in plain, actionable language.
 
-```
+---
 
-### Module 5: Website Security Assessment Schema
+### 2. High-Level System Architecture
 
 ```
-┌──────────────────────────────────────────────┐
-│          WebsiteSecurityAssessments          │
-├──────────────────────────────────────────────┤
-│ id: String (UUID) [PK]                       │
-│ report_id: String (UUID) [FK -> AnalysisRep] │
-│ target_url: Text                             │
-│ security_score: Float (0-100)                │
-│ security_label: String (e.g. Strong / Weak)  │
-│ coverage: JSON (checks attempted / percent)  │
-│ category_scores: JSON (6 weighted dimensions)│
-│ summary: Text                                │
-│ recommendations: JSON (actionable fixes)     │
-│ assessment_status: String                    │
-│ created_at: DateTime [Indexed]               │
-└──────────────────────┬───────────────────────┘
-                       │ 1
-                       │
-                       │ *
-┌──────────────────────┴───────────────────────┐
-│            WebsiteSecurityFindings           │
-├──────────────────────────────────────────────┤
-│ id: String (UUID) [PK]                       │
-│ assessment_id: String (UUID) [FK]            │
-│ category: String                             │
-│ title: String                                │
-│ description: Text                            │
-│ evidence: JSON                               │
-│ severity: String (CRIT/HIGH/MED/LOW/INFO)    │
-│ confidence: Float (0.0-1.0)                  │
-│ recommendation: Text                         │
-│ source: String                               │
-│ created_at: DateTime                         │
-└──────────────────────────────────────────────┘
-```
-
 USER INTERACTION
        │
        ▼
@@ -105,6 +70,13 @@ FASTAPI SERVERLESS BACKEND (Vercel Python Functions)
        │        ├── Safe Web3 transaction broadcasting, gas checks & receipt confirmation
        │        └── Independent tamper-verification (VERIFIED, TAMPERED, NOT_REGISTERED)
        │
+       ├── 12. Module 7: User Authentication & Role-Based Access Control (RBAC)
+       │        ├── Argon2id cryptographic password hashing (memory-hard, GPU-resistant)
+       │        ├── Cryptographic JWT session tokens (HttpOnly, SameSite=Lax cookies + Bearer auth)
+       │        ├── SecOps RBAC (Security Analyst vs Security Administrator)
+       │        ├── Rate-limited single-use cryptographic password reset tokens
+       │        └── Automated demonstration account seeding (Analyst & Administrator)
+       │
        ▼
 EVIDENCE AGGREGATION & GRAPH CORRELATION ENGINE
        │
@@ -116,56 +88,17 @@ AI EXPLANATION LAYER
        │ Synthesizes findings; deterministic fallback when LLM unavailable
        ▼
 HOSTED DATABASE LAYER (Neon / Supabase PostgreSQL with NullPool)
-       │ AnalysisReports, Findings, ThreatIndicators
+       │ AnalysisReports, Findings, ThreatIndicators, Users, Registrations
        ▼
 WEB3 ANCHORING ENGINE (Sepolia Testnet)
-       │ Deterministic SHA-256 report commitment published to decentralized registry
+       │ Deterministic SHA-256 / Keccak-256 report commitment published to decentralized registry
        ▼
 STRUCTURED REPORT OUTPUT -> REACT DASHBOARD
 ```
 
-### Module 5: Website Security Assessment Schema
-
-```
-┌──────────────────────────────────────────────┐
-│          WebsiteSecurityAssessments          │
-├──────────────────────────────────────────────┤
-│ id: String (UUID) [PK]                       │
-│ report_id: String (UUID) [FK -> AnalysisRep] │
-│ target_url: Text                             │
-│ security_score: Float (0-100)                │
-│ security_label: String (e.g. Strong / Weak)  │
-│ coverage: JSON (checks attempted / percent)  │
-│ category_scores: JSON (6 weighted dimensions)│
-│ summary: Text                                │
-│ recommendations: JSON (actionable fixes)     │
-│ assessment_status: String                    │
-│ created_at: DateTime [Indexed]               │
-└──────────────────────┬───────────────────────┘
-                       │ 1
-                       │
-                       │ *
-┌──────────────────────┴───────────────────────┐
-│            WebsiteSecurityFindings           │
-├──────────────────────────────────────────────┤
-│ id: String (UUID) [PK]                       │
-│ assessment_id: String (UUID) [FK]            │
-│ category: String                             │
-│ title: String                                │
-│ description: Text                            │
-│ evidence: JSON                               │
-│ severity: String (CRIT/HIGH/MED/LOW/INFO)    │
-│ confidence: Float (0.0-1.0)                  │
-│ recommendation: Text                         │
-│ source: String                               │
-│ created_at: DateTime                         │
-└──────────────────────────────────────────────┘
-```
-
-
 ---
 
-### 2. Module Decoupling and Multi-Domain Convergence
+### 3. Module Decoupling and Multi-Domain Convergence
 
 #### Domain 1: Artificial Intelligence (AI)
 - **Role**: Translation of complex raw telemetry into human-comprehensible summaries and prescriptive recommendations.
@@ -181,9 +114,15 @@ STRUCTURED REPORT OUTPUT -> REACT DASHBOARD
 - **Integration Point**: Reports (URL, Message, or Website Security) undergo deterministic canonicalization and Ethereum Keccak-256 fingerprinting. The fingerprint is anchored on-chain via `ThreatReportRegistry.sol` on the Sepolia Testnet.
 - **Verification Engine**: Allows external parties or auditors to independently re-evaluate reports and verify whether any data has been modified post-registration (detecting tampering with zero false passes on outages).
 
+#### Domain 4: Identity, Access Control & SecOps Governance (Module 7)
+- **Role**: Enterprise-grade identity federation, authentication, and role-based access control.
+- **Cryptographic Strength**: Employs Argon2id password hashing to defeat high-speed GPU dictionary and rainbow table attacks.
+- **Session Architecture**: Issues dual-layer stateless JSON Web Tokens (JWT) usable either via secure, `HttpOnly`, `SameSite=Lax` cookies or explicit `Authorization: Bearer <token>` request headers for automated API clients.
+- **Role Hierarchy**: Enforces granular authorization separating standard `security_analyst` privileges from elevated administrative oversight (`admin`, `superadmin`).
+
 ---
 
-### 3. Vercel Serverless Architecture & Database Pooling
+### 4. Vercel Serverless Architecture & Database Pooling
 
 To ensure scalable, zero-maintenance hosting without container overhead:
 1. **Frontend**: Built via `vite build` into static assets hosted on Vercel's global CDN with SPA rewrites (`/index.html`).
@@ -197,48 +136,11 @@ To ensure scalable, zero-maintenance hosting without container overhead:
 
 ---
 
-### 4. Database Schema Design (SQLAlchemy)
+### 5. Database Schema Design (SQLAlchemy)
+
+#### 5.1 Core Threat Analysis Schema (Module 1 & 2)
 
 ```
-
-### Module 5: Website Security Assessment Schema
-
-```
-┌──────────────────────────────────────────────┐
-│          WebsiteSecurityAssessments          │
-├──────────────────────────────────────────────┤
-│ id: String (UUID) [PK]                       │
-│ report_id: String (UUID) [FK -> AnalysisRep] │
-│ target_url: Text                             │
-│ security_score: Float (0-100)                │
-│ security_label: String (e.g. Strong / Weak)  │
-│ coverage: JSON (checks attempted / percent)  │
-│ category_scores: JSON (6 weighted dimensions)│
-│ summary: Text                                │
-│ recommendations: JSON (actionable fixes)     │
-│ assessment_status: String                    │
-│ created_at: DateTime [Indexed]               │
-└──────────────────────┬───────────────────────┘
-                       │ 1
-                       │
-                       │ *
-┌──────────────────────┴───────────────────────┐
-│            WebsiteSecurityFindings           │
-├──────────────────────────────────────────────┤
-│ id: String (UUID) [PK]                       │
-│ assessment_id: String (UUID) [FK]            │
-│ category: String                             │
-│ title: String                                │
-│ description: Text                            │
-│ evidence: JSON                               │
-│ severity: String (CRIT/HIGH/MED/LOW/INFO)    │
-│ confidence: Float (0.0-1.0)                  │
-│ recommendation: Text                         │
-│ source: String                               │
-│ created_at: DateTime                         │
-└──────────────────────────────────────────────┘
-```
-
 ┌─────────────────────────────────┐
 │         AnalysisReports         │
 ├─────────────────────────────────┤
@@ -273,7 +175,54 @@ To ensure scalable, zero-maintenance hosting without container overhead:
 └─────────────────────────────────┘
 ```
 
-### 5. Module 5: Website Security Assessment Schema
+#### 5.2 Threat Correlation & Campaign Schema (Module 4)
+
+```
+┌──────────────────────────────────────────────┐
+│             ThreatRelationships              │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ source_indicator_id: String [FK]             │
+│ target_indicator_id: String [FK]             │
+│ relationship_type: String (HOSTS, USES_CERT) │
+│ confidence: Float                            │
+│ first_observed: DateTime                     │
+│ last_observed: DateTime                      │
+└──────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────┐
+│              CorrelationReports              │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ campaign_name: String                        │
+│ root_indicator_value: Text                   │
+│ correlated_risk_score: Float                 │
+│ pattern_matches: JSON                        │
+│ graph_topology: JSON (nodes & edges)         │
+│ created_at: DateTime [Indexed]               │
+└──────────────────────────────────────────────┘
+```
+
+#### 5.3 AI Scam & Message Analysis Schema (Module 3)
+
+```
+┌──────────────────────────────────────────────┐
+│            MessageAnalysisReports            │
+├──────────────────────────────────────────────┤
+│ id: String (UUID) [PK]                       │
+│ message_hash: String(64) [SHA-256, Indexed]  │
+│ sanitized_preview: String(200)               │
+│ risk_score: Float (0-100)                    │
+│ risk_level: String (SAFE..CRITICAL)          │
+│ confidence: Float (0.0-1.0)                  │
+│ detected_intent: String                      │
+│ extracted_entities: JSON (URLs, wallets, PII)│
+│ ai_summary: Text                             │
+│ created_at: DateTime [Indexed]               │
+└──────────────────────────────────────────────┘
+```
+
+#### 5.4 Website Security Assessment Schema (Module 5)
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -311,45 +260,7 @@ To ensure scalable, zero-maintenance hosting without container overhead:
 └──────────────────────────────────────────────┘
 ```
 
-### Module 5: Website Security Assessment Schema
-
-```
-┌──────────────────────────────────────────────┐
-│          WebsiteSecurityAssessments          │
-├──────────────────────────────────────────────┤
-│ id: String (UUID) [PK]                       │
-│ report_id: String (UUID) [FK -> AnalysisRep] │
-│ target_url: Text                             │
-│ security_score: Float (0-100)                │
-│ security_label: String (e.g. Strong / Weak)  │
-│ coverage: JSON (checks attempted / percent)  │
-│ category_scores: JSON (6 weighted dimensions)│
-│ summary: Text                                │
-│ recommendations: JSON (actionable fixes)     │
-│ assessment_status: String                    │
-│ created_at: DateTime [Indexed]               │
-└──────────────────────┬───────────────────────┘
-                       │ 1
-                       │
-                       │ *
-┌──────────────────────┴───────────────────────┐
-│            WebsiteSecurityFindings           │
-├──────────────────────────────────────────────┤
-│ id: String (UUID) [PK]                       │
-│ assessment_id: String (UUID) [FK]            │
-│ category: String                             │
-│ title: String                                │
-│ description: Text                            │
-│ evidence: JSON                               │
-│ severity: String (CRIT/HIGH/MED/LOW/INFO)    │
-│ confidence: Float (0.0-1.0)                  │
-│ recommendation: Text                         │
-│ source: String                               │
-│ created_at: DateTime                         │
-└──────────────────────────────────────────────┘
-```
-
-### Module 6: Decentralized Threat Intelligence Schema
+#### 5.5 Decentralized Threat Intelligence Schema (Module 6)
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -371,6 +282,39 @@ To ensure scalable, zero-maintenance hosting without container overhead:
 │ registered_at: DateTime [UTC]                          │
 │ last_verified_at: DateTime [UTC]                       │
 │ error_message: Text                                    │
+│ created_at: DateTime [UTC]                             │
+└────────────────────────────────────────────────────────┘
+```
+
+#### 5.6 User Identity & Role-Based Access Control Schema (Module 7)
+
+```
+┌────────────────────────────────────────────────────────┐
+│                         users                          │
+├────────────────────────────────────────────────────────┤
+│ id: String(36) [PK, UUID]                              │
+│ full_name: String(100)                                 │
+│ email: String(255) [Unique, Indexed]                   │
+│ password_hash: String(255) [Argon2id Digest]           │
+│ role: String(50) [security_analyst / admin / superadmin│
+│ account_status: String(50) [ACTIVE / SUSPENDED]        │
+│ is_active: Integer (1=active, 0=disabled)              │
+│ is_verified: Integer (1=verified, 0=unverified)        │
+│ last_login: DateTime [UTC, Nullable]                   │
+│ created_at: DateTime [UTC]                             │
+│ updated_at: DateTime [UTC]                             │
+└──────────────────────────┬─────────────────────────────┘
+                           │ 1
+                           │
+                           │ *
+┌──────────────────────────┴─────────────────────────────┐
+│                 password_reset_tokens                  │
+├────────────────────────────────────────────────────────┤
+│ id: String(36) [PK, UUID]                              │
+│ user_id: String(36) [FK -> users.id, Indexed]          │
+│ token_hash: String(64) [SHA-256 Digest, Indexed]       │
+│ expires_at: DateTime [UTC]                             │
+│ is_used: Integer (0=unused, 1=used)                    │
 │ created_at: DateTime [UTC]                             │
 └────────────────────────────────────────────────────────┘
 ```
