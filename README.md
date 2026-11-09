@@ -126,17 +126,17 @@ flowchart TD
 
 | Screen # | Module / Feature | Captured Interface State | Screenshot Preview |
 | :---: | :--- | :--- | :---: |
-| **01** | **User Authentication (`/login`)** | Analyst authentication with Argon2id credentials and one-click demo credentials filling | ![01 Login](screenshots/01_login.png) |
-| **02** | **Command Dashboard (`/`)** | Real-time threat counters, active campaign stats, Recharts donut breakdown, and recent scans | ![02 Dashboard](screenshots/02_dashboard_home.png) |
-| **03** | **URL Threat Scanner (`/scanner`)** | 6-stage animated forensic pipeline with benchmark demo pills and SSRF interception | ![03 Scanner](screenshots/03_url_scanner.png) |
-| **04** | **Threat Intelligence (`/threat-intel`)** | Dynamic SVG threat topology graph correlating URLs, DNS IPs, and TLS certificates | ![04 Threat Intel](screenshots/04_threat_intel.png) |
-| **05** | **Website Security (`/security`)** | Passive posture audit evaluating 9 defensive HTTP headers, cookie security, and configuration files | ![05 Website Security](screenshots/05_website_security.png) |
-| **06** | **AI Scam Analyzer (`/scam-analyzer`)** | Multi-intent SMS/email heuristic analysis with PII masking and crypto wallet extraction | ![06 Scam Analyzer](screenshots/06_scam_analyzer.png) |
-| **07** | **Web3 Threat Registry (`/blockchain`)** | Ethereum Sepolia testnet threat registry with JSON-RPC telemetry, hashes, and tamper verification | ![07 Blockchain](screenshots/07_blockchain_registry.png) |
-| **08** | **Scan History (`/history`)** | Comprehensive audit trail of past security investigations with keyword search and risk level filtering | ![08 Scan History](screenshots/08_scan_history.png) |
-| **09** | **Mobile Navigation Drawer** | Touch-friendly slide-out navigation drawer providing full access on mobile screens (320px–430px) | ![09 Mobile Drawer](screenshots/09_mobile_responsive_drawer.png) |
-| **10** | **Light Mode Theme** | High-contrast enterprise cybersecurity blue palette engineered for accessible daylight auditing | ![10 Light Mode](screenshots/10_light_mode_toggle.png) |
-| **11** | **SSRF Defense Engine** | Interception of private IP addresses, loopback (127.0.0.1), and cloud metadata (169.254.169.254) | ![11 SSRF Blocked](screenshots/11_error_handling_ssrf_blocked.png) |
+| **01** | **User Authentication (`/login`)** | Analyst authentication portal with Argon2id credentials and one-click demo credentials filling | ![01 Login](screenshots/01_login.png) |
+| **02** | **Unified Dashboard (`/`)** | Central Security Operations cockpit with threats blocked tally, active campaigns, and Recharts donut distribution | ![02 Dashboard](screenshots/02_dashboard.png) |
+| **03** | **URL Threat Scanner (`/scanner`)** | 6-stage animated forensic pipeline with benchmark demo target pills | ![03 Scanner](screenshots/03_scanner_input.png) |
+| **04** | **Forensic Dossier & TLS (`/reports/:id`)** | Comprehensive threat dossier displaying risk breakdown, X.509 cert details, and TLS cipher audit | ![04 Report and TLS](screenshots/04_report_view_and_tls.png) |
+| **05** | **AI Scam Analyzer (`/scam-analyzer`)** | Multi-intent SMS, email, and social engineering heuristic analysis with PII masking and link extraction | ![05 Scam Analyzer](screenshots/05_message_scam_analyzer.png) |
+| **06** | **Threat Intelligence (`/threat-intel`)** | Dynamic SVG threat topology relationship graph correlating URLs, DNS IPs, and TLS certificates | ![06 Threat Intel](screenshots/06_threat_intel_graph.png) |
+| **07** | **Website Security (`/security`)** | Passive posture audit evaluating 9 defensive HTTP headers, cookie security, and configuration files | ![07 Website Security](screenshots/07_website_security_assessment.png) |
+| **08** | **Web3 Threat Registry (`/blockchain`)** | Ethereum Sepolia testnet threat registry console with real-time JSON-RPC state and Keccak-256 hashes | ![08 Blockchain Registry](screenshots/08_blockchain_registry.png) |
+| **09** | **On-Chain Report Verification (`/blockchain`)** | Independent tamper verification querying smart contract to verify report hash integrity | ![09 Tamper Verification](screenshots/09_blockchain_verification_success.png) |
+| **10** | **Scan History Navigation (`/history`)** | Comprehensive audit trail of past security investigations with keyword search and risk level filtering | ![10 Scan History](screenshots/10_history_navigation.png) |
+| **11** | **SSRF Defense Engine (`/scanner`)** | Pre-flight security guard blocking private IP addresses, loopback (127.0.0.1), and cloud metadata | ![11 SSRF Blocked](screenshots/11_error_handling_ssrf_blocked.png) |
 
 ---
 
