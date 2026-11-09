@@ -25,7 +25,7 @@ Prior to final demonstration, a rigorous security hardening and live browser val
 | **CORS Origin Filtering Tests** | 3 | 3 | 0 | **PASS** | `test_cors_security.py` |
 | **SSRF Security Matrix Tests** | 23 | 23 | 0 | **PASS** | `test_ssrf_hardening.py` |
 | **API Error Handling Tests** | 6 | 6 | 0 | **PASS** | `test_error_handling.py` |
-| **Playwright Browser E2E Tests** | 10 | 10 | 0 | **PASS** | 10 screenshots in `screenshots/` |
+| **Playwright Browser E2E Tests** | 11 | 11 | 0 | **PASS** | 11 screenshots in `screenshots/` |
 | **Hardhat Smart Contract Suite** | 13 | 13 | 0 | **PASS** | 13 passing (682ms) |
 | **Full Backend Pytest Suite** | 172 | 172 | 0 | **PASS** | 172 passing (26.62s) |
 | **Frontend Production Build** | 1 | 1 | 0 | **PASS** | `tsc && vite build` (7.45s) |
@@ -61,18 +61,19 @@ Automated headless Chromium testing was conducted against the live, running fron
 
 | # | Workflow / Page Tested | Expected Result | Actual Result | Screenshot File | Status |
 |---|---|---|---|---|:---:|
-| **1** | **Dashboard Loading** (`/`) | Stats cards, 5-tier threat pie chart, and recent scans render cleanly. | Rendered with all cards, charts, and navigation headers. | `screenshots/01_dashboard.png` | **PASS** |
-| **2** | **URL Scanner Execution** (`/scanner`) | Form accepts URL, displays loading state, redirects to `/reports/{id}`. | Submitted `https://example.com`; redirected to report view. | `screenshots/02_scanner_input.png` | **PASS** |
-| **3** | **Report View & TLS Display** (`/reports/:id`) | Displays risk metrics, category findings, and Digital Trust / TLS card. | Rendered Risk Score (0.0), TLS trust score, cipher suite, and cert issuer. | `screenshots/03_report_view_and_tls.png` | **PASS** |
-| **4** | **Message Scam Analyzer** (`/scam-analyzer`) | Evaluates scam lure, scores urgency, extracts embedded phishing URL. | Evaluated Chase bank lure; surfaced scam score and extracted URL scan. | `screenshots/04_message_scam_analyzer.png` | **PASS** |
-| **5** | **Threat Intelligence Graph** (`/threat-intel`) | Interactive force-directed correlation graph and cluster statistics load. | Rendered node-edge threat graph, cluster cards, and IOC breakdown. | `screenshots/05_threat_intel_graph.png` | **PASS** |
-| **6** | **Website Security Posture** (`/security`) | Audits security headers, cookies, and TLS; displays radar & score. | Evaluated target; rendered score (60.2), category breakdown, and advice. | `screenshots/06_website_security_assessment.png` | **PASS** |
-| **7** | **Blockchain Registry** (`/blockchain`) | Queries Sepolia RPC; displays block height, contract, and table. | Rendered block height 12089534, contract link, and on-chain table. | `screenshots/07_blockchain_registry.png` | **PASS** |
-| **8** | **On-Chain Report Verification** (`/blockchain`) | Inputting report ID verifies against smart contract and confirms provenance. | Inputted `synth-audit-1794122121`; displayed VERIFIED provenance badge. | `screenshots/08_blockchain_verification_success.png` | **PASS** |
-| **9** | **Historic Scans Navigation** (`/history`) | History table loads persistent reports; search and pagination functional. | Rendered scan history table with risk filters and clickable report links. | `screenshots/09_history_navigation.png` | **PASS** |
-| **10**| **SSRF Interception Display** (`/scanner`) | Malicious loopback destination (`http://127.0.0.1:8000`) is rejected. | Displayed clear security error; internal request blocked before execution. | `screenshots/10_error_handling_ssrf_blocked.png` | **PASS** |
+| **1** | **Authentication Portal** (`/login`) | Analyst login form with Argon2id hashing, remember-me, and demo fill. | Rendered security login portal, demo auto-fill, and branded visual panel. | `screenshots/01_login.png` | **PASS** |
+| **2** | **Dashboard Loading** (`/`) | Stats cards, 5-tier threat pie chart, and recent scans render cleanly. | Rendered with all cards, charts, and navigation headers. | `screenshots/02_dashboard.png` | **PASS** |
+| **3** | **URL Scanner Execution** (`/scanner`) | Form accepts URL, displays loading state, redirects to `/reports/{id}`. | Submitted `http://paypa1-security-update.com/login`; redirected to report view. | `screenshots/03_scanner_input.png` | **PASS** |
+| **4** | **Report View & TLS Display** (`/reports/:id`) | Displays risk metrics, category findings, and Digital Trust / TLS card. | Rendered Risk Score, TLS trust score, cipher suite, and cert issuer. | `screenshots/04_report_view_and_tls.png` | **PASS** |
+| **5** | **Message Scam Analyzer** (`/scam-analyzer`) | Evaluates scam lure, scores urgency, extracts embedded phishing URL. | Evaluated Chase bank lure; surfaced scam score and extracted URL scan. | `screenshots/05_message_scam_analyzer.png` | **PASS** |
+| **6** | **Threat Intelligence Graph** (`/threat-intel`) | Interactive force-directed correlation graph and cluster statistics load. | Rendered node-edge threat graph, cluster cards, and IOC breakdown. | `screenshots/06_threat_intel_graph.png` | **PASS** |
+| **7** | **Website Security Posture** (`/security`) | Audits security headers, cookies, and TLS; displays radar & score. | Evaluated target; rendered score, category breakdown, and advice. | `screenshots/07_website_security_assessment.png` | **PASS** |
+| **8** | **Blockchain Registry** (`/blockchain`) | Queries Sepolia RPC; displays block height, contract, and table. | Rendered Sepolia network status, contract link, and on-chain table. | `screenshots/08_blockchain_registry.png` | **PASS** |
+| **9** | **On-Chain Report Verification** (`/blockchain`) | Inputting report ID verifies against smart contract and confirms provenance. | Inputted report fingerprint; displayed VERIFIED provenance badge. | `screenshots/09_blockchain_verification_success.png` | **PASS** |
+| **10**| **Historic Scans Navigation** (`/history`) | History table loads persistent reports; search and pagination functional. | Rendered scan history table with risk filters and clickable report links. | `screenshots/10_history_navigation.png` | **PASS** |
+| **11**| **SSRF Interception Display** (`/scanner`) | Malicious loopback destination (`http://127.0.0.1:8000`) is rejected. | Displayed clear security error; internal request blocked before execution. | `screenshots/11_error_handling_ssrf_blocked.png` | **PASS** |
 
-**Playwright Browser Campaign Verdict:** **10/10 PASSED (100%)**
+**Playwright Browser Campaign Verdict:** **11/11 PASSED (100%)**
 
 ---
 
